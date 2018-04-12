@@ -1,0 +1,22 @@
+.QuantityInput span {
+  margin-left: 8px;
+  margin-right: 8px;
+  padding: 5px;
+  width: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.QuantityInput {
+  display: block;
+}
+.QuantityInput * {
+  display: inline-block;
+}
+.QuantityInput input {
+  background: transparent;
+  padding: 5px;
+  text-align: center;
+  width: 35px;
+  border: solid rgba(169, 169, 169, 0.5) 1px;
+}

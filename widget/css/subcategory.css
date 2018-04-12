@@ -1,0 +1,46 @@
+.CategoryList {
+  height: 100%;
+  overflow: auto;
+}
+
+.CategoryList-banner {
+  width: 100%;
+  padding-bottom: 8%;
+}
+
+.CategoryList-grid {
+  column-count: 2;
+  padding: 0 5%;
+  text-align: center;
+}
+
+.Category {
+  display: inline-flex;
+  padding-bottom: 5%;
+}
+
+.Category-image {
+  max-width: 100%;
+}
+
+.Category-name {
+  line-height: 1em;
+}
+
+@media only screen and (max-width: 760px) {
+  .Category-name {
+    font-size: 1.25em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .Category-name {
+    font-size: 1.75em;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .Category-name {
+    font-size: 2em;
+  }
+}

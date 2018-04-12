@@ -1,0 +1,23 @@
+{
+  "author": "Tyler Caldwell",
+  "pluginName": "magento-storefront",
+  "pluginDescription": "Frontend consuming Magento API backend.",
+  "supportEmail": "tylercaldwell217@gmail.com",
+  "control": {
+    "content": {
+      "enabled": true
+    },
+    "design": {
+      "enabled": true
+    },
+    "settings": {
+      "enabled": false
+    },
+    "customTabs": [
+      { "title": "Integration Settings", "url": "/integration/index.html" }
+    ]
+  },
+  "widget": {},
+  "features": [],
+  "languages": ["en"]
+}

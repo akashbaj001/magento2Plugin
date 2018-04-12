@@ -1,0 +1,81 @@
+@media only screen and (max-width: 760px) {
+  .Nav {
+    font-size: 1em;
+  }
+
+  .Overlay-content li {
+    font-size: 1.25em;
+  }
+
+  .Overlay h2 {
+    font-size: 1.5em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .Nav {
+    font-size: 1.5em;
+  }
+
+  .Overlay-content li {
+    font-size: 1.5em;
+  }
+
+  .Overlay h2 {
+    font-size: 2em;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .Nav {
+    font-size: 2em;
+  }
+
+  .Overlay-content li {
+    font-size: 1.5em;
+  }
+
+  .Overlay h2 {
+    font-size: 2em;
+  }
+}
+
+.Overlay-content li {
+  line-height: 1em;
+}
+
+.Nav {
+  line-height: 1em;
+  background-color: #4a4a4a;
+  bottom: 0;
+  width: 100%;
+  height: 10%;
+  position: fixed;
+  flex-shrink: 0;
+  display: table;
+}
+
+.Nav > .Nav-list {
+  display: flex;
+  list-style-type: none;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.Nav > .Nav-list > .Nav-list-item {
+  display: inline-block;
+  -webkit-flex: 1; /* Safari 6.1+ */
+  -ms-flex: 1; /* IE 10 */
+  flex: 1;
+  text-align: center;
+  width: 25%;
+}
+
+.Nav > .Nav-list > .Nav-list-item > a {
+  color: #ffff;
+  text-decoration: none;
+}
+
+.Nav > .Nav-list > .Nav-list-item > .active {
+  color: #7f7f7f;
+}

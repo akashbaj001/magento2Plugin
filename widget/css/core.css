@@ -1,0 +1,47 @@
+html,
+body,
+#main {
+  height: 100%;
+}
+
+#content {
+  height: 90%;
+}
+
+#main {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+body,
+p,
+h1,
+ul {
+  margin: 0;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+}
+
+ul {
+  padding: 0;
+}
+
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.sk-spinner {
+  color: white;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  margin-top: -9px;
+  margin-left: -27px;
+  width: 54px;
+}
