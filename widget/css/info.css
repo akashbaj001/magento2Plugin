@@ -1,0 +1,49 @@
+@media only screen and (max-width: 760px) {
+  .Info {
+    font-size: 1em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .Info {
+    font-size: 2em;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .Info {
+    font-size: 3em;
+  }
+}
+
+.Info {
+  padding: 5%;
+  overflow: auto;
+  line-height: 1.25em;
+}
+
+.Info .Info-item:after {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: rgba(169, 169, 169, 0.5);
+  margin-top: 3.5%;
+}
+
+.Info .Info-item .Info-item-body .Info-item-body-left,
+.Info .Info-item .Info-item-body .Info-item-body-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.Info .Info-item .Info-item-body .Info-item-body-right .Info-item-update {
+  float: right;
+}
+
+.Info .Info-form {
+  padding-top: 15%;
+  padding-left: 5%;
+  padding-right: 5%;
+}

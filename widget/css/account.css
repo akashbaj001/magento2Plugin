@@ -1,0 +1,61 @@
+@media only screen and (max-width: 760px) {
+  .Account {
+    font-size: 1.5em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .Account {
+    font-size: 2em;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .Account {
+    font-size: 3em;
+  }
+}
+
+.Account {
+  height: 100%;
+  overflow: auto;
+  line-height: 1.5em;
+}
+
+.Account > .Account-banner {
+  text-align: center;
+  height: 25%;
+  background: rgba(255, 255, 255, 0.2);
+  display: table;
+  width: 100%;
+}
+
+.Account > .Account-banner > .Account-banner-content {
+  display: table-cell;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.Account > .Account-banner > .Account-banner-content > .Account-customerName {
+  display: block;
+  font-size: 2em;
+}
+
+.Account > .Account-list {
+  list-style-type: none;
+  height: 75%;
+  margin-top: 5%;
+  padding: 0 4%;
+}
+
+.Account > .Account-list > .Account-list-item {
+  height: 12%;
+}
+
+.Account > .Account-list > .Account-list-item:after {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: rgba(169, 169, 169, 0.5);
+}

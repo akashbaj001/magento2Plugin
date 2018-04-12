@@ -1,0 +1,83 @@
+@media only screen and (max-width: 760px) {
+  .Product {
+    font-size: 1.25em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .Product {
+    font-size: 2.5em;
+  }
+
+  .Product-atc {
+    padding: 20px 12px !important;
+    font-size: 20px !important;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .Product {
+    font-size: 3em;
+  }
+
+  .Product-atc {
+    padding: 30px 20px !important;
+    font-size: 30px !important;
+  }
+}
+
+.QuantityInput input {
+  width: 100px;
+}
+
+.Product {
+  height: 100%;
+  overflow: auto;
+  line-height: 1em;
+}
+
+.Product-details {
+  padding: 4%;
+}
+
+.Product-atc {
+  width: 35%;
+  margin-left: 7%;
+}
+
+.Product-sticky {
+  align-items: center;
+  display: flex;
+  width: 100%;
+  position: fixed;
+  bottom: 10%;
+  height: 10%;
+  border-top: solid rgba(169, 169, 169, 0.5) 1px;
+}
+
+.Product-wrapper {
+  height: 79%;
+  overflow: auto;
+}
+
+.Product .QuantityInput {
+  width: 50%;
+  padding-left: 2%;
+}
+
+.Product-title,
+.Product-price {
+  font-size: 1.4em;
+}
+
+.Product-description {
+  font-size: 0.9em;
+}
+
+.Product-section h2 {
+  font-size: 1.4em;
+}
+
+.Product-section p {
+  font-size: 0.9em;
+}

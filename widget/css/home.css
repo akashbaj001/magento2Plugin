@@ -1,0 +1,18 @@
+.Home {
+  height: 100%;
+  text-align: center;
+  overflow: auto;
+}
+
+.Home .Home-adBanner {
+  max-width: 100%;
+}
+
+.Home .Home-card,
+.Home-adBanner {
+  padding-bottom: 4%;
+}
+
+.Home .Home-card .Home-card-image {
+  width: 100%;
+}

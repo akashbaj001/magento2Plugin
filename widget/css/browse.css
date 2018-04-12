@@ -1,0 +1,99 @@
+@media only screen and (max-width: 760px) {
+  .Browse-title {
+    font-size: 1.5em;
+  }
+
+  .Browse-card {
+    font-size: 1em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .Browse-title {
+    font-size: 3em;
+  }
+
+  .Browse-card {
+    font-size: 1.5em;
+  }
+
+  .Browse-card-button {
+    padding: 20px 30px !important;
+    font-size: 25px !important;
+    line-height: 1.333333 !important;
+    border-radius: 6px !important;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .Browse-title {
+    font-size: 4.5em;
+  }
+
+  .Browse-card {
+    font-size: 3em;
+  }
+
+  .Browse-card-button {
+    padding: 30px 48px !important;
+    font-size: 25px !important;
+    line-height: 1.333333 !important;
+    border-radius: 6px !important;
+  }
+}
+
+.Browse {
+  height: 100%;
+  padding: 0 4%;
+  overflow: auto;
+}
+
+.Browse-title {
+  padding-bottom: 2%;
+}
+
+.Browse-card {
+  display: flex;
+  padding-bottom: 6%;
+  line-height: 1em;
+}
+
+.Browse-card-image {
+  width: 100%;
+}
+
+.Browse-card-left {
+  width: 30%;
+}
+
+.Browse-card-right {
+  width: 70%;
+  padding-left: 5%;
+}
+
+.Browse-card-right-top {
+  padding-bottom: 5%;
+}
+
+.Browse-card-right-top,
+.Browse-card-right-bottom,
+.Browse-card-name,
+.Browse-card-description {
+  display: block;
+}
+
+.Browse-card-left,
+.Browse-card-right,
+.Browse-card-price,
+.Browse-card-button {
+  display: inline-block;
+}
+
+.Browse-card-price,
+.Browse-card-button {
+  vertical-align: middle;
+}
+
+.Browse-card-button {
+  float: right;
+}

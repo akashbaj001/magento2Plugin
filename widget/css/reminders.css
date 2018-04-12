@@ -1,0 +1,58 @@
+.Reminders {
+  padding: 4%;
+  height: 100%;
+  overflow: auto;
+}
+
+.Reminders .Reminders-header {
+  font-size: 1.5em;
+  padding-bottom: 5%;
+}
+
+.Reminders .Reminder:after {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: rgba(169, 169, 169, 0.5);
+}
+
+.Reminder {
+  margin-bottom: 5%;
+}
+
+.Reminders .Reminders-toggle-wrapper {
+  padding-bottom: 5%;
+}
+
+.Reminders .Reminder-remove {
+  cursor: pointer;
+  color: #a93239;
+  float: right;
+}
+
+.Reminders .Reminder-right,
+.Reminders .Reminder-left {
+  display: inline-block;
+}
+
+.Reminders .Reminder-right {
+  width: 15%;
+}
+
+.Reminders .Reminder-left {
+  width: 80%;
+}
+
+.Reminders .Reminder-left,
+.Reminders .Reminder-right {
+  vertical-align: middle;
+}
+
+.Reminders #Reminders-toggle-label {
+  padding-right: 10px;
+}
+
+.Reminders .Reminders-toggle-wrapper .Reminders-toggle {
+  vertical-align: middle;
+}

@@ -1,0 +1,57 @@
+.Cart {
+  padding: 4%;
+  overflow: auto;
+}
+
+.Cart,
+.Cart-card-image {
+  height: 100%;
+}
+
+.Cart-card {
+  width: 100%;
+  display: flex;
+  padding-bottom: 10%;
+}
+
+.Cart-card-left {
+  width: 50%;
+  padding-left: 4%;
+}
+
+.Cart-card-right {
+  width: 45%;
+}
+
+.Cart-card-image {
+  width: 20%;
+}
+
+.Cart-card-left,
+.Cart-card-right,
+.Cart-card-image {
+  display: inline-block;
+  height: 100%;
+}
+
+.Cart-card-remove {
+  width: 10%;
+  cursor: pointer;
+  color: #a93239;
+}
+
+.Cart-bottom {
+  display: block;
+  width: 100%;
+}
+
+.Cart-bottom-left,
+.Cart-bottom-right {
+  width: 50%;
+  display: inline-block;
+}
+
+.Cart .QuantityInput {
+  width: 90%;
+  display: inline-block;
+}

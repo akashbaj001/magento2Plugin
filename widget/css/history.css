@@ -1,0 +1,73 @@
+@media only screen and (max-width: 760px) {
+  .History {
+    font-size: 1em;
+  }
+}
+
+@media only screen and (min-width: 760px) and (max-width: 1000px) {
+  .History {
+    font-size: 2em;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .History {
+    font-size: 3em;
+  }
+}
+
+.History {
+  line-height: 1.75em;
+  padding: 5%;
+  overflow: auto;
+}
+
+.History .History-title {
+  font-size: 1.25em;
+}
+
+.History .History-accordion {
+  padding-top: 5%;
+}
+
+.History .History-card .History-card-title .History-card-title-price {
+  float: right;
+}
+
+.History .History-card-title .History-card-title-left,
+.History .History-card-title .History-card-title-right {
+  display: inline-block;
+  width: 50%;
+}
+
+.History .History-card .History-card-body .History-card-link {
+  float: left;
+  width: 82.5%;
+}
+
+.History .History-card .History-card-body .History-card-price {
+  float: right;
+}
+
+.History .History-card .History-card-body .History-card-body-reorder {
+  margin-left: 75%;
+  margin-top: 7.5%;
+}
+
+.History .History-card .History-card-body {
+  animation: fadein 0.35s ease-in;
+}
+
+.History-card-link,
+.History-card-qty,
+.History-card-price {
+  display: inline-block;
+}
+
+.History .History-card:after {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: rgba(169, 169, 169, 0.5);
+}
