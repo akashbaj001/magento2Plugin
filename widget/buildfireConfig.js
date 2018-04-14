@@ -1,3 +1,8 @@
+buildfire.datastore.onUpdate(({ data: { content } }) => {
+  window.buildfireConfig = content;
+  document.body.style.backgroundImage = `url(${content.backgroundImageURL})`;
+}, true);
+
 buildfire.datastore.get('content', (err, res) => {
   document.body.style.backgroundImage = `url(${
     res.data.content.backgroundImageURL

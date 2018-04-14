@@ -26,8 +26,8 @@
   }
 }
 
-.QuantityInput input {
-  width: 100px;
+.Product .QuantityInput input {
+  width: 50px;
 }
 
 .Product {

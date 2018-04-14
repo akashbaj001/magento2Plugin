@@ -98,7 +98,7 @@ export const getCustomer = () =>
       url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 6xjaj87m3mhm6r78tqptt3dkjbdfrdhh' }
+      headers: { Authorization: 'Bearer jvhkm7xejjlcy63ajh4aj5dyj1icxtpt' }
     })
   );
 

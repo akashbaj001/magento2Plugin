@@ -13,7 +13,9 @@ const TYPE_SHIPPING = 'shipping';
 class InfoContainer extends Component {
   state = {
     isHydrated: false,
-    selectedCountryID: 'US'
+    overlayType: 'billing',
+    billingCountry: 'United States',
+    shippingCountry: 'United States'
   };
 
   componentDidMount() {
@@ -58,7 +60,7 @@ class InfoContainer extends Component {
           ({ default_shipping }) => default_shipping
         )}
         countryList={this.state.countryList}
-        selectedCountryID={this.state[`${this.state.overlayType}Country`]}
+        selectedCountryName={this.state[`${this.state.overlayType}Country`]}
         onClickUpdate={this.handleClickUpdate}
         shouldShowEditOverlay={this.state.shouldShowEditOverlay}
         onClickCloseOverlay={this.handleClickCloseOverlay}

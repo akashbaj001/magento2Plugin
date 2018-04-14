@@ -11,19 +11,31 @@ class BrowseContainer extends Component {
   };
 
   componentDidMount() {
-    getCategoryDetails(this.props.match.params.id)
-      .then(category => {
-        getProductsForCategory(this.props.match.params.id).then(products => {
-          this.setState({
-            isHydrated: true,
-            products: JSON.parse(products).items.filter(
-              item => item.status === 1
-            ),
-            category: JSON.parse(category)
-          });
-        });
-      })
-      .catch(err => console.log(err));
+    const data = JSON.parse(
+      sessionStorage.getItem(`browse${this.props.match.params.id}`)
+    );
+    data
+      ? this.setState(data)
+      : getCategoryDetails(this.props.match.params.id)
+          .then(category => {
+            getProductsForCategory(this.props.match.params.id).then(
+              products => {
+                const loadData = {
+                  isHydrated: true,
+                  products: JSON.parse(products).items.filter(
+                    item => item.status === 1
+                  ),
+                  category: JSON.parse(category)
+                };
+                sessionStorage.setItem(
+                  `browse${this.props.match.params.id}`,
+                  JSON.stringify(loadData)
+                );
+                this.setState(loadData);
+              }
+            );
+          })
+          .catch(err => console.log(err));
   }
 
   handleClickAddToCart = ({ target }) =>

@@ -13,19 +13,29 @@ class ProductContainer extends Component {
   };
 
   componentDidMount() {
-    getProduct(this.props.match.params.sku)
-      .then(res =>
-        getAttributeById(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData =>
-          this.setState({
-            isHydrated: true,
-            product: {
-              ...JSON.parse(res),
-              fragranceData: JSON.parse(fragranceData)
-            }
-          })
-        )
-      )
-      .catch(err => console.log(err));
+    const data = JSON.parse(
+      sessionStorage.getItem(`product${this.props.match.params.sku}`)
+    );
+    data
+      ? this.setState(data)
+      : getProduct(this.props.match.params.sku)
+          .then(res =>
+            getAttributeById(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData => {
+              const loadData = {
+                isHydrated: true,
+                product: {
+                  ...JSON.parse(res),
+                  fragranceData: JSON.parse(fragranceData)
+                }
+              };
+              sessionStorage.setItem(
+                `product${this.props.match.params.sku}`,
+                JSON.stringify(loadData)
+              );
+              this.setState(loadData);
+            })
+          )
+          .catch(err => console.log(err));
   }
 
   handleChangeQuantity = ({ target }) => {

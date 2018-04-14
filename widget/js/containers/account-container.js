@@ -8,9 +8,9 @@ class AccountContainer extends Component {
   };
 
   componentDidMount() {
-    buildfire.auth.login(null, (err, { firstName }) =>
-      this.setState({ customerName: firstName || '', isHydrated: true })
-    );
+    //buildfire.auth.login(null, (err, { firstName }) =>
+    this.setState({ customerName: /*firstName ||*/ '', isHydrated: true });
+    //);
   }
 
   render() {

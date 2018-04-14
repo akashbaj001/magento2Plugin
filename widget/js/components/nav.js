@@ -22,39 +22,44 @@ class Nav extends Component {
   };
 
   componentDidMount() {
-    const categories = getCategories()
-      .then(res => {
-        const parsedRes = JSON.parse(res);
+    const data = JSON.parse(sessionStorage.getItem('nav'));
+    data
+      ? this.setState(data)
+      : getCategories()
+          .then(res => {
+            const parsedRes = JSON.parse(res);
 
-        const activeCategories = parsedRes.children_data.filter(
-          ({ is_active }) => is_active
-        );
+            const activeCategories = parsedRes.children_data.filter(
+              ({ is_active }) => is_active
+            );
 
-        const promises = activeCategories.map(({ id }) =>
-          getCategoryDetails(id)
-        );
+            const promises = activeCategories.map(({ id }) =>
+              getCategoryDetails(id)
+            );
 
-        Promise.all(promises).then(res => {
-          const categories = [];
-          res.map(unparsedCategory => {
-            const category = JSON.parse(unparsedCategory);
-            if (category.include_in_menu) {
-              categories.push(category);
-            }
-          });
+            Promise.all(promises).then(res => {
+              const categories = [];
+              res.map(unparsedCategory => {
+                const category = JSON.parse(unparsedCategory);
+                if (category.include_in_menu) {
+                  categories.push(category);
+                }
+              });
 
-          this.setState({
-            isHydrated: true,
-            categories: activeCategories
-              .map((category, index) => ({
-                ...category,
-                categoryDetails: categories[index]
-              }))
-              .filter(({ categoryDetails }) => categoryDetails != null)
-          });
-        });
-      })
-      .catch(err => console.log(err));
+              const loadData = {
+                isHydrated: true,
+                categories: activeCategories
+                  .map((category, index) => ({
+                    ...category,
+                    categoryDetails: categories[index]
+                  }))
+                  .filter(({ categoryDetails }) => categoryDetails != null)
+              };
+              sessionStorage.setItem('nav', JSON.stringify(loadData));
+              this.setState(loadData);
+            });
+          })
+          .catch(err => console.log(err));
   }
 
   handleClickClose = () => this.setState({ shouldShowOverlay: false });

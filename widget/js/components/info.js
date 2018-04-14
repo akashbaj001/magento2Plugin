@@ -4,7 +4,7 @@ import '../../css/info.css';
 
 const Info = ({
   countryList,
-  selectedCountryID,
+  selectedCountryName,
   billingAddress,
   shippingAddress,
   onClickUpdate,
@@ -99,11 +99,16 @@ const Info = ({
               className="form-control"
               onChange={onInputChange}
             >
-              {countryList
-                .find(({ id }) => id === selectedCountryID)
-                .available_regions.map(({ id, name }) => (
+              {(() => {
+                const selectedCountry = countryList.find(
+                  ({ full_name_english }) =>
+                    full_name_english === selectedCountryName
+                );
+                const regions = selectedCountry.available_regions || [];
+                return regions.map(({ id, name }) => (
                   <option id={id}>{name}</option>
-                ))}
+                ));
+              })()}
             </select>
             <label htmlFor="zip-postal">Zip/Postal Code</label>
             <input
@@ -117,10 +122,11 @@ const Info = ({
               id="country"
               name={`${overlayType}Country`}
               className="form-control"
+              value={selectedCountryName}
               onChange={onInputChange}
             >
-              {countryList.map(({ id, full_name_english }) => (
-                <option id={id}>{full_name_english}</option>
+              {countryList.map(({ full_name_english }) => (
+                <option id={full_name_english}>{full_name_english}</option>
               ))}
             </select>
             <button className="btn btn-primary" onClick={onClickSubmit}>

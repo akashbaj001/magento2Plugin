@@ -1842,7 +1842,7 @@ const getCustomer = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___d
   url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 6xjaj87m3mhm6r78tqptt3dkjbdfrdhh' }
+  headers: { Authorization: 'Bearer jvhkm7xejjlcy63ajh4aj5dyj1icxtpt' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["d"] = getCustomer;
 
@@ -13329,6 +13329,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentWillMount() {
+    buildfire.datastore.onUpdate(({ data: { content } }) => {
+      this.setState({ logoImageURL: content.logoImageURL });
+    }, true);
     this.setState({
       logoImageURL: window.buildfireConfig.logoImageURL,
       isHydrated: true
@@ -36598,7 +36601,8 @@ class Nav extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentDidMount() {
-    const categories = Object(__WEBPACK_IMPORTED_MODULE_3__services_category_service__["a" /* getCategories */])().then(res => {
+    const data = JSON.parse(sessionStorage.getItem('nav'));
+    data ? this.setState(data) : Object(__WEBPACK_IMPORTED_MODULE_3__services_category_service__["a" /* getCategories */])().then(res => {
       const parsedRes = JSON.parse(res);
 
       const activeCategories = parsedRes.children_data.filter(({ is_active }) => is_active);
@@ -36614,12 +36618,14 @@ class Nav extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           }
         });
 
-        this.setState({
+        const loadData = {
           isHydrated: true,
           categories: activeCategories.map((category, index) => _extends({}, category, {
             categoryDetails: categories[index]
           })).filter(({ categoryDetails }) => categoryDetails != null)
-        });
+        };
+        sessionStorage.setItem('nav', JSON.stringify(loadData));
+        this.setState(loadData);
       });
     }).catch(err => console.log(err));
   }
@@ -37820,11 +37826,15 @@ class HomeContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentWillMount() {
+    buildfire.datastore.onUpdate(({ data: { content } }) => {
+      this.setState({ adBannerImageUrl: content.bannerImageUrl || null });
+    }, true);
     window.buildfire.notifications.localNotification.checkPermission((err, data) => data ? {} : window.buildfire.notifications.localNotification.requestPermission());
   }
 
   componentDidMount() {
-    buildfire.datastore.get('content', (err, dataStoreRes) => Object(__WEBPACK_IMPORTED_MODULE_2__services_category_service__["a" /* getCategories */])().then(res => {
+    const data = JSON.parse(sessionStorage.getItem('home'));
+    data ? this.setState(data) : buildfire.datastore.get('content', (err, dataStoreRes) => Object(__WEBPACK_IMPORTED_MODULE_2__services_category_service__["a" /* getCategories */])().then(res => {
       const activeCategories = JSON.parse(res).children_data.filter(({ is_active }) => is_active);
 
       Promise.all(activeCategories.map(({ id }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_category_service__["b" /* getCategoryDetails */])(id))).then(res => {
@@ -37836,13 +37846,15 @@ class HomeContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           }
         });
 
-        this.setState({
+        const loadData = {
           isHydrated: true,
           adBannerImageUrl: dataStoreRes.data.content.bannerImageUrl || null,
           categories: activeCategories.map((category, index) => _extends({}, category, {
             categoryDetails: categories[index]
           })).filter(({ categoryDetails }) => categoryDetails != null)
-        });
+        };
+        sessionStorage.setItem('home', JSON.stringify(loadData));
+        this.setState(loadData);
       });
     }).catch(err => console.log(err)));
   }
@@ -37980,12 +37992,17 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
   }
 
   componentDidMount() {
-    Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["b" /* getProduct */])(this.props.match.params.sku).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["a" /* getAttributeById */])(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData => this.setState({
-      isHydrated: true,
-      product: _extends({}, JSON.parse(res), {
-        fragranceData: JSON.parse(fragranceData)
-      })
-    }))).catch(err => console.log(err));
+    const data = JSON.parse(sessionStorage.getItem(`product${this.props.match.params.sku}`));
+    data ? this.setState(data) : Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["b" /* getProduct */])(this.props.match.params.sku).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["a" /* getAttributeById */])(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData => {
+      const loadData = {
+        isHydrated: true,
+        product: _extends({}, JSON.parse(res), {
+          fragranceData: JSON.parse(fragranceData)
+        })
+      };
+      sessionStorage.setItem(`product${this.props.match.params.sku}`, JSON.stringify(loadData));
+      this.setState(loadData);
+    })).catch(err => console.log(err));
   }
 
   render() {
@@ -40860,7 +40877,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Product {\n    font-size: 1.25em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Product {\n    font-size: 2.5em;\n  }\n\n  .Product-atc {\n    padding: 20px 12px !important;\n    font-size: 20px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Product {\n    font-size: 3em;\n  }\n\n  .Product-atc {\n    padding: 30px 20px !important;\n    font-size: 30px !important;\n  }\n}\n\n.QuantityInput input {\n  width: 100px;\n}\n\n.Product {\n  height: 100%;\n  overflow: auto;\n  line-height: 1em;\n}\n\n.Product-details {\n  padding: 4%;\n}\n\n.Product-atc {\n  width: 35%;\n  margin-left: 7%;\n}\n\n.Product-sticky {\n  align-items: center;\n  display: flex;\n  width: 100%;\n  position: fixed;\n  bottom: 10%;\n  height: 10%;\n  border-top: solid rgba(169, 169, 169, 0.5) 1px;\n}\n\n.Product-wrapper {\n  height: 79%;\n  overflow: auto;\n}\n\n.Product .QuantityInput {\n  width: 50%;\n  padding-left: 2%;\n}\n\n.Product-title,\n.Product-price {\n  font-size: 1.4em;\n}\n\n.Product-description {\n  font-size: 0.9em;\n}\n\n.Product-section h2 {\n  font-size: 1.4em;\n}\n\n.Product-section p {\n  font-size: 0.9em;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Product {\n    font-size: 1.25em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Product {\n    font-size: 2.5em;\n  }\n\n  .Product-atc {\n    padding: 20px 12px !important;\n    font-size: 20px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Product {\n    font-size: 3em;\n  }\n\n  .Product-atc {\n    padding: 30px 20px !important;\n    font-size: 30px !important;\n  }\n}\n\n.Product .QuantityInput input {\n  width: 50px;\n}\n\n.Product {\n  height: 100%;\n  overflow: auto;\n  line-height: 1em;\n}\n\n.Product-details {\n  padding: 4%;\n}\n\n.Product-atc {\n  width: 35%;\n  margin-left: 7%;\n}\n\n.Product-sticky {\n  align-items: center;\n  display: flex;\n  width: 100%;\n  position: fixed;\n  bottom: 10%;\n  height: 10%;\n  border-top: solid rgba(169, 169, 169, 0.5) 1px;\n}\n\n.Product-wrapper {\n  height: 79%;\n  overflow: auto;\n}\n\n.Product .QuantityInput {\n  width: 50%;\n  padding-left: 2%;\n}\n\n.Product-title,\n.Product-price {\n  font-size: 1.4em;\n}\n\n.Product-description {\n  font-size: 0.9em;\n}\n\n.Product-section h2 {\n  font-size: 1.4em;\n}\n\n.Product-section p {\n  font-size: 0.9em;\n}\n", ""]);
 
 // exports
 
@@ -40923,14 +40940,16 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentDidMount() {
-    // TODO I guess if you're loading all the product data you could just pass if you have it else load..., would just have to load fragrance here as well
-    Object(__WEBPACK_IMPORTED_MODULE_1__services_category_service__["b" /* getCategoryDetails */])(this.props.match.params.id).then(category => {
+    const data = JSON.parse(sessionStorage.getItem(`browse${this.props.match.params.id}`));
+    data ? this.setState(data) : Object(__WEBPACK_IMPORTED_MODULE_1__services_category_service__["b" /* getCategoryDetails */])(this.props.match.params.id).then(category => {
       Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["c" /* getProductsForCategory */])(this.props.match.params.id).then(products => {
-        this.setState({
+        const loadData = {
           isHydrated: true,
           products: JSON.parse(products).items.filter(item => item.status === 1),
           category: JSON.parse(category)
-        });
+        };
+        sessionStorage.setItem(`browse${this.props.match.params.id}`, JSON.stringify(loadData));
+        this.setState(loadData);
       });
     }).catch(err => console.log(err));
   }
@@ -41080,7 +41099,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.5em;\n  }\n\n  .Browse-card {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding-bottom: 2%;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  float: right;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.5em;\n  }\n\n  .Browse-card {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  float: right;\n}\n", ""]);
 
 // exports
 
@@ -41145,10 +41164,10 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       selectedShippingMethod: this.state.shippingMethods.find(({ method_code }) => methodCode === method_code)
     }), this.handleClickCheckOut = () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["f" /* placeOrder */])().then(res => {
       console.log(res);
-      // TODO to get the two below custom attributes you have to do a GET to the product details for every product purchased
-      // TODO if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
-      // TODO when adding to data store, include app_product_reminder_message
-      // TODO what about the sku? they probably want a link back to the product.
+      // TODO
+      // to get the two below custom attributes you have to do a GET to the product details for every product purchased
+      // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
+      // when adding to data store, include app_product_reminder_message
       if (true) {
         buildfire.datastore.insert({
           reminders: [{
@@ -41162,8 +41181,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentDidMount() {
-    // TODO set productDetails on each item
-    // TODO if you press cancel login it still reroutes you lol ...
+    // TODO if you press cancel login it still reroutes
     buildfire.auth.login();
     Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])().then(res => {
       const parsedRes = JSON.parse(res);
@@ -41475,8 +41493,6 @@ exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n}\n\n.Cart,
 
 
 
-// TODO when you load current user save to local storage?
-
 class AccountContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   constructor(...args) {
     var _temp;
@@ -41487,7 +41503,9 @@ class AccountContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
   }
 
   componentDidMount() {
-    buildfire.auth.login(null, (err, { firstName }) => this.setState({ customerName: firstName || '', isHydrated: true }));
+    //buildfire.auth.login(null, (err, { firstName }) =>
+    this.setState({ customerName: /*firstName ||*/'', isHydrated: true });
+    //);
   }
 
   render() {
@@ -47248,7 +47266,9 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
     return _temp = super(...args), this.state = {
       isHydrated: false,
-      selectedCountryID: 'US'
+      overlayType: 'billing',
+      billingCountry: 'United States',
+      shippingCountry: 'United States'
     }, this.handleClickUpdate = ({ target: name }) => this.setState(() => ({
       shouldShowEditOverlay: true,
       overlayType: name === 'billing' ? TYPE_BILLING : TYPE_SHIPPING
@@ -47271,7 +47291,7 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       billingAddress: this.state.customer.addresses.find(({ default_billing }) => default_billing),
       shippingAddress: this.state.customer.addresses.find(({ default_shipping }) => default_shipping),
       countryList: this.state.countryList,
-      selectedCountryID: this.state[`${this.state.overlayType}Country`],
+      selectedCountryName: this.state[`${this.state.overlayType}Country`],
       onClickUpdate: this.handleClickUpdate,
       shouldShowEditOverlay: this.state.shouldShowEditOverlay,
       onClickCloseOverlay: this.handleClickCloseOverlay,
@@ -47301,7 +47321,7 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
 const Info = ({
   countryList,
-  selectedCountryID,
+  selectedCountryName,
   billingAddress,
   shippingAddress,
   onClickUpdate,
@@ -47435,11 +47455,15 @@ const Info = ({
           className: 'form-control',
           onChange: onInputChange
         },
-        countryList.find(({ id }) => id === selectedCountryID).available_regions.map(({ id, name }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-          'option',
-          { id: id },
-          name
-        ))
+        (() => {
+          const selectedCountry = countryList.find(({ full_name_english }) => full_name_english === selectedCountryName);
+          const regions = selectedCountry.available_regions || [];
+          return regions.map(({ id, name }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'option',
+            { id: id },
+            name
+          ));
+        })()
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'label',
@@ -47463,11 +47487,12 @@ const Info = ({
           id: 'country',
           name: `${overlayType}Country`,
           className: 'form-control',
+          value: selectedCountryName,
           onChange: onInputChange
         },
-        countryList.map(({ id, full_name_english }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        countryList.map(({ full_name_english }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'option',
-          { id: id },
+          { id: full_name_english },
           full_name_english
         ))
       ),
@@ -47620,7 +47645,8 @@ class SubcategoryContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Componen
   }
 
   componentDidMount() {
-    Object(__WEBPACK_IMPORTED_MODULE_1__services_category_service__["b" /* getCategoryDetails */])(this.props.match.params.id).then(res => {
+    const data = JSON.parse(sessionStorage.getItem(`subcat${this.props.match.params.id}`));
+    data ? this.setState(data) : Object(__WEBPACK_IMPORTED_MODULE_1__services_category_service__["b" /* getCategoryDetails */])(this.props.match.params.id).then(res => {
       const category = JSON.parse(res);
 
       const promises = category.children.split(',').map(id => Object(__WEBPACK_IMPORTED_MODULE_1__services_category_service__["b" /* getCategoryDetails */])(id));
@@ -47635,11 +47661,12 @@ class SubcategoryContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Componen
         });
 
         category.childCategoryData = categories.filter(({ is_active }) => is_active).sort((categoryA, categoryB) => categoryA.position < categoryB.position ? -1 : 1);
-
-        this.setState({
+        const loadData = {
           isHydrated: true,
           category
-        });
+        };
+        sessionStorage.setItem(`subcat${this.props.match.params.id}`, JSON.stringify(loadData));
+        this.setState(loadData);
       });
     }).catch(err => console.log(err));
   }
