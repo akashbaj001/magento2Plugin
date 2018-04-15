@@ -67,17 +67,18 @@
 
 .Product-title,
 .Product-price {
-  font-size: 1.4em;
+  font-size: 1.2em;
+  padding-bottom: 5%;
 }
 
 .Product-description {
-  font-size: 0.9em;
+  font-size: 0.75em;
 }
 
 .Product-section h2 {
-  font-size: 1.4em;
+  font-size: 1em;
 }
 
-.Product-section p {
-  font-size: 0.9em;
+.Product-section div {
+  font-size: 0.75em;
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getCategoryDetails } from '../services/category-service';
 import { getProductsForCategory } from '../services/product-service';
-import { addToCart } from '../services/cart-service';
+import { getCart, addToCart } from '../services/cart-service';
 import Browse from '../components/browse';
 import Spinner from 'react-spinkit';
 
@@ -39,11 +39,14 @@ class BrowseContainer extends Component {
   }
 
   handleClickAddToCart = ({ target }) =>
-    buildfire.auth.login(null, () =>
-      addToCart({ sku: target.name, qty: 1 })
-        .then()
-        .catch(err => console.log(err))
-    );
+    buildfire.auth.login(null, () => {
+      const cart = sessionStorage.getItem('cart');
+      cart
+        ? addToCart({ sku: target.name, qty: 1, quoteID: cart.id })
+        : getCart().then(res =>
+            addToCart({ sku: target.name, qty: 1, quoteID: JSON.parse(res).id })
+          );
+    });
 
   render() {
     return this.state.isHydrated ? (

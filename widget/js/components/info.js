@@ -15,7 +15,6 @@ const Info = ({
   onInputChange,
   shippingFirstName,
   shippingLastName,
-  shippingCompany,
   shippingPhoneNumber,
   shippingStreetAddressOne,
   shippingStreetAddressTwo,
@@ -25,7 +24,6 @@ const Info = ({
   shippingCountry,
   billingFirstName,
   billingLastName,
-  billingCompany,
   billingPhoneNumber,
   billingStreetAddressOne,
   billingStreetAddressTwo,
@@ -54,13 +52,6 @@ const Info = ({
             <input
               id="last-name"
               name={`${overlayType}LastName`}
-              className="form-control"
-              onChange={onInputChange}
-            />
-            <label htmlFor="company">Company</label>
-            <input
-              id="company"
-              name={`${overlayType}Company`}
               className="form-control"
               onChange={onInputChange}
             />
@@ -106,7 +97,9 @@ const Info = ({
                 );
                 const regions = selectedCountry.available_regions || [];
                 return regions.map(({ id, name }) => (
-                  <option id={id}>{name}</option>
+                  <option id={id} key={id}>
+                    {name}
+                  </option>
                 ));
               })()}
             </select>
@@ -125,8 +118,10 @@ const Info = ({
               value={selectedCountryName}
               onChange={onInputChange}
             >
-              {countryList.map(({ full_name_english }) => (
-                <option id={full_name_english}>{full_name_english}</option>
+              {countryList.map(({ id, full_name_english }) => (
+                <option key={id} id={full_name_english}>
+                  {full_name_english}
+                </option>
               ))}
             </select>
             <button className="btn btn-primary" onClick={onClickSubmit}>

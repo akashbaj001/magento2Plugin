@@ -1311,7 +1311,7 @@ const ComponentList = (_ref) => {
     renderedElement,
     showNoItemsMessage
   } = _ref,
-      rest = _objectWithoutProperties(_ref, ['items', 'renderedElement', 'showNoItemsMessage']);
+      rest = _objectWithoutProperties(_ref, ["items", "renderedElement", "showNoItemsMessage"]);
 
   const RenderedElement = renderedElement;
   if (items && items.length > 0) {
@@ -1322,9 +1322,9 @@ const ComponentList = (_ref) => {
     })));
   } else if (showNoItemsMessage) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-      'p',
-      null,
-      'No items found.'
+      "p",
+      { className: "List-noItems" },
+      "No items found."
     );
   } else {
     return null;
@@ -1763,7 +1763,7 @@ const getCart = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___defau
   url: `${apiBasePath}${encodeURIComponent('carts/mine')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer b3cneb2bjlut4fnat1v6nce5wwkc95fm' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["b"] = getCart;
 
@@ -1772,23 +1772,24 @@ const getShippingMethods = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jqu
   url: `${apiBasePath}${encodeURIComponent('carts/mine/shipping-methods')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer b3cneb2bjlut4fnat1v6nce5wwkc95fm' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["e"] = getShippingMethods;
 
 
-const addToCart = ({ sku, qty }) => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+const addToCart = ({ sku, qty, quoteID }) => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   url: `${apiBasePath}${encodeURIComponent('carts/mine/items')}`,
-  data: {
+  data: JSON.stringify({
     cartItem: {
-      quote_id: 203254, // TODO
-      sku: sku,
-      qty: qty
+      quote_id: quoteID,
+      sku,
+      qty
     }
-  },
+  }),
   method: 'POST',
+  contentType: 'application/json',
   dataType: 'json',
-  headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["a"] = addToCart;
 
@@ -1797,16 +1798,16 @@ const removeFromCart = itemID => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jqu
   url: `${apiBasePath}${encodeURIComponent(`carts/mine/items/${itemID}`)}`,
   method: 'DELETE',
   dataType: 'json',
-  headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
-/* unused harmony export removeFromCart */
+/* harmony export (immutable) */ __webpack_exports__["g"] = removeFromCart;
 
 
 const getBillingAddress = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   url: `${apiBasePath}${encodeURIComponent('carts/mine/billing-address')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer dc8kxgk9lhck2wg9i0ldwneqofyt4guo' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* unused harmony export getBillingAddress */
 
@@ -1815,7 +1816,7 @@ const getPaymentMethods = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jque
   url: `${apiBasePath}${encodeURIComponent('carts/mine/payment-methods')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer dc8kxgk9lhck2wg9i0ldwneqofyt4guo' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* unused harmony export getPaymentMethods */
 
@@ -1824,16 +1825,18 @@ const getShippingAddress = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jqu
   url: `${apiBasePath}${encodeURIComponent('customers/me/shippingAddress')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* unused harmony export getShippingAddress */
 
 
-const placeOrder = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+const placeOrder = ({ paymentMethod, shippingMethod }) => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   url: `${apiBasePath}${encodeURIComponent('carts/mine/order')}`,
+  data: JSON.stringify({ paymentMethod, shippingMethod }),
   method: 'PUT',
   dataType: 'json',
-  headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+  contentType: 'application/json',
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["f"] = placeOrder;
 
@@ -1842,23 +1845,24 @@ const getCustomer = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___d
   url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer jvhkm7xejjlcy63ajh4aj5dyj1icxtpt' }
+  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["d"] = getCustomer;
 
 
 const updateCustomer = customer => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   url: `${apiBasePath}${encodeURIComponent(`customers/${customer.id}`)}`,
-  data: {
+  data: JSON.stringify({
     customer
-  },
+  }),
   method: 'PUT',
   dataType: 'json',
+  contentType: 'application/json',
   headers: {
     Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
   }
 }));
-/* harmony export (immutable) */ __webpack_exports__["g"] = updateCustomer;
+/* harmony export (immutable) */ __webpack_exports__["h"] = updateCustomer;
 
 
 const getCountryList = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -37988,7 +37992,18 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
       }
     }, this.handleQuantityDecrement = () => this.setState(({ quantity }) => ({
       quantity: quantity <= 1 ? 1 : quantity - 1
-    })), this.handleQuantityIncrement = () => this.setState(({ quantity }) => ({ quantity: quantity + 1 })), this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, () => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: this.state.quantity }).then().catch(err => console.log(err))), _temp;
+    })), this.handleQuantityIncrement = () => this.setState(({ quantity }) => ({ quantity: quantity + 1 })), this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, () => {
+      const cart = sessionStorage.getItem('cart');
+      cart ? Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
+        sku: target.name,
+        qty: this.state.quantity,
+        quoteID: cart.id
+      }) : Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])().then(res => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
+        sku: target.name,
+        qty: this.state.quantity,
+        quoteID: JSON.parse(res).id
+      }));
+    }), _temp;
   }
 
   componentDidMount() {
@@ -38091,13 +38106,13 @@ const Product = ({
       ),
       customAttributeDetails.map(({ name, value }) => product.custom_attributes.find(attribute => attribute.attribute_code === value) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'Product-section' },
+        { key: value, className: 'Product-section' },
         name && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'h2',
           null,
           name
         ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('p', {
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', {
           className: 'Product-section',
           dangerouslySetInnerHTML: {
             __html: product.custom_attributes.find(attribute => attribute.attribute_code === value).value
@@ -40877,7 +40892,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Product {\n    font-size: 1.25em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Product {\n    font-size: 2.5em;\n  }\n\n  .Product-atc {\n    padding: 20px 12px !important;\n    font-size: 20px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Product {\n    font-size: 3em;\n  }\n\n  .Product-atc {\n    padding: 30px 20px !important;\n    font-size: 30px !important;\n  }\n}\n\n.Product .QuantityInput input {\n  width: 50px;\n}\n\n.Product {\n  height: 100%;\n  overflow: auto;\n  line-height: 1em;\n}\n\n.Product-details {\n  padding: 4%;\n}\n\n.Product-atc {\n  width: 35%;\n  margin-left: 7%;\n}\n\n.Product-sticky {\n  align-items: center;\n  display: flex;\n  width: 100%;\n  position: fixed;\n  bottom: 10%;\n  height: 10%;\n  border-top: solid rgba(169, 169, 169, 0.5) 1px;\n}\n\n.Product-wrapper {\n  height: 79%;\n  overflow: auto;\n}\n\n.Product .QuantityInput {\n  width: 50%;\n  padding-left: 2%;\n}\n\n.Product-title,\n.Product-price {\n  font-size: 1.4em;\n}\n\n.Product-description {\n  font-size: 0.9em;\n}\n\n.Product-section h2 {\n  font-size: 1.4em;\n}\n\n.Product-section p {\n  font-size: 0.9em;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Product {\n    font-size: 1.25em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Product {\n    font-size: 2.5em;\n  }\n\n  .Product-atc {\n    padding: 20px 12px !important;\n    font-size: 20px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Product {\n    font-size: 3em;\n  }\n\n  .Product-atc {\n    padding: 30px 20px !important;\n    font-size: 30px !important;\n  }\n}\n\n.Product .QuantityInput input {\n  width: 50px;\n}\n\n.Product {\n  height: 100%;\n  overflow: auto;\n  line-height: 1em;\n}\n\n.Product-details {\n  padding: 4%;\n}\n\n.Product-atc {\n  width: 35%;\n  margin-left: 7%;\n}\n\n.Product-sticky {\n  align-items: center;\n  display: flex;\n  width: 100%;\n  position: fixed;\n  bottom: 10%;\n  height: 10%;\n  border-top: solid rgba(169, 169, 169, 0.5) 1px;\n}\n\n.Product-wrapper {\n  height: 79%;\n  overflow: auto;\n}\n\n.Product .QuantityInput {\n  width: 50%;\n  padding-left: 2%;\n}\n\n.Product-title,\n.Product-price {\n  font-size: 1.2em;\n  padding-bottom: 5%;\n}\n\n.Product-description {\n  font-size: 0.75em;\n}\n\n.Product-section h2 {\n  font-size: 1em;\n}\n\n.Product-section div {\n  font-size: 0.75em;\n}\n", ""]);
 
 // exports
 
@@ -40936,7 +40951,10 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
     return _temp = super(...args), this.state = {
       isHydrated: false
-    }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, () => Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1 }).then().catch(err => console.log(err))), _temp;
+    }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, () => {
+      const cart = sessionStorage.getItem('cart');
+      cart ? Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }) : Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["b" /* getCart */])().then(res => Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: JSON.parse(res).id }));
+    }), _temp;
   }
 
   componentDidMount() {
@@ -41056,13 +41074,13 @@ const BrowseProductCard = ({
         { to: `${__WEBPACK_IMPORTED_MODULE_2__constants_routes__["i" /* products */]}/${sku}`, className: 'text-primary' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'p',
-          { className: 'Browse-card-name' },
+          { className: 'Browse-card-name clamp-one' },
           name
         )
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'p',
-        { className: 'Browse-card-description' },
+        { className: 'Browse-card-description clamp-three' },
         custom_attributes.find(attribute => attribute.attribute_code === shortDescriptionAtName).value
       )
     ),
@@ -41099,7 +41117,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.5em;\n  }\n\n  .Browse-card {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  float: right;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.5em;\n  }\n\n  .Browse-card {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.1em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  float: right;\n}\n", ""]);
 
 // exports
 
@@ -41130,14 +41148,15 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
     return _temp = super(...args), this.state = {
       isHydrated: false,
-      shouldShowShippingMenu: false
+      shouldShowShippingMenu: false,
+      shouldShowCouponOverlay: false,
+      couponCode: ''
     }, this.handleChangeQuantity = ({ target }) => this.setState(({ items }) => {
       if (isNaN(target.value)) {
         return {};
       }
-
       const newItems = [...items];
-      const itemIndex = newItems.findIndex(item => item.sku === target.name);
+      const itemIndex = newItems.findIndex(item => item.item_id === parseInt(target.name, 10));
       if (target.value <= 1) {
         newItems[itemIndex].qty = 1;
       } else {
@@ -41147,22 +41166,27 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       return { items: newItems };
     }), this.handleQuantityDecrement = id => this.setState(({ items }) => {
       const newItems = [...items];
-      const itemIndex = newItems.findIndex(item => item.sku === id);
+      const itemIndex = newItems.findIndex(item => item.item_id === id);
       const currQty = newItems[itemIndex].qty;
       newItems[itemIndex].qty = currQty <= 1 ? 1 : currQty - 1;
       return { items: newItems };
     }), this.handleQuantityIncrement = id => this.setState(({ items }) => {
       const newItems = [...items];
-      const itemIndex = newItems.findIndex(item => item.sku === id);
+      const itemIndex = newItems.findIndex(item => item.item_id === id);
       newItems[itemIndex].qty += 1;
       return { items: newItems };
-    }), this.handleClickRemove = id => this.setState(({ items }) => {
-      // TODO DELETE from cart through service, setState if successful
-      const newItems = [...items];
-      return { items: newItems.filter(item => item.sku != id) };
-    }), this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }), this.handleClickShippingMethod = methodCode => this.setState({
+    }), this.handleClickRemove = id => {
+      buildfire.auth.login({}, () => {
+        // Save current set of items in case removal request fails.
+        const oldItems = this.state.items;
+        this.setState(({ items }) => {
+          const newItems = [...items];
+          return { items: newItems.filter(item => item.item_id != id) };
+        }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* removeFromCart */])(id).catch(() => this.setState({ items: oldItems })));
+      });
+    }, this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }), this.handleClickShippingMethod = methodCode => this.setState({
       selectedShippingMethod: this.state.shippingMethods.find(({ method_code }) => methodCode === method_code)
-    }), this.handleClickCheckOut = () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["f" /* placeOrder */])().then(res => {
+    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickCheckout = () => buildfire.auth.login(null, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["f" /* placeOrder */])().then(res => {
       console.log(res);
       // TODO
       // to get the two below custom attributes you have to do a GET to the product details for every product purchased
@@ -41177,26 +41201,28 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           }]
         }, 'reminders', false);
       }
-    }).catch(err => console.log(err)), this.getSubtotal = () => this.state.items.reduce((acc, curr) => acc += curr.price * curr.qty, 0), this.getShipping = () => this.state.selectedShippingMethod.amount, this.getDiscount = () => 0, this.getTaxes = () => 0, this.getTotal = () => this.getSubtotal() + this.getShipping() - this.getDiscount() + this.getTaxes(), _temp;
+    }).catch(err => console.log(err))), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), this.getSubtotal = () => this.state.items.reduce((acc, curr) => acc += curr.price * curr.qty, 0), this.getShipping = () => this.state.selectedShippingMethod ? this.state.selectedShippingMethod.amount : {}, this.getDiscount = () => 0, this.getTaxes = () => 0, this.getTotal = () => this.getSubtotal() + this.getShipping() - this.getDiscount() + this.getTaxes(), _temp;
   }
 
   componentDidMount() {
     // TODO if you press cancel login it still reroutes
-    buildfire.auth.login();
-    Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])().then(res => {
+    buildfire.auth.login({}, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])().then(res => {
       const parsedRes = JSON.parse(res);
 
       Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])().then(shippingMethods => {
-        Promise.all(parsedRes.items.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku))).then(products => this.setState({
-          isHydrated: true,
-          items: parsedRes.items.map(item => _extends({}, item, {
-            productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
-          })),
-          shippingMethods: JSON.parse(shippingMethods).filter(({ available }) => available),
-          selectedShippingMethod: shippingMethods && shippingMethods.length > 0 && shippingMethods[0] || null
-        }));
+        Promise.all(parsedRes.items.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku))).then(products => {
+          const parsedShippingMethods = JSON.parse(shippingMethods);
+          this.setState({
+            isHydrated: true,
+            items: parsedRes.items.map(item => _extends({}, item, {
+              productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
+            })),
+            shippingMethods: parsedShippingMethods.filter(({ available }) => available),
+            selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
+          });
+        });
       });
-    }).catch(err => console.log(err));
+    }).catch(err => console.log(err)));
   } // TODO
 
   // TODO
@@ -41204,6 +41230,10 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   render() {
     return this.state.isHydrated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_cart__["a" /* default */], {
       items: this.state.items,
+      onInputChange: this.handleInputChange,
+      shouldShowCouponOverlay: this.state.shouldShowCouponOverlay,
+      onClickCloseCouponOverlay: this.handleClickCloseCouponOverlay,
+      couponCode: this.state.couponCode,
       shippingMethods: this.state.shippingMethods,
       selectedShippingMethod: this.state.selectedShippingMethod,
       onChangeQuantity: this.handleChangeQuantity,
@@ -41213,7 +41243,8 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       onClickChangeShipping: this.handleClickChangeShipping,
       onClickCloseShipping: this.handleClickCloseShipping,
       onClickShippingMethod: this.handleClickShippingMethod,
-      onClickCheckOut: this.handleClickCheckOut,
+      onClickCheckout: this.handleClickCheckout,
+      onClickApplyCoupon: this.handleClickApplyCoupon,
       shouldShowShippingMenu: this.state.shouldShowShippingMenu,
       subTotal: this.getSubtotal(),
       shipping: this.getShipping(),
@@ -41314,6 +41345,10 @@ const CartCard = ({
 );
 
 const Cart = ({
+  onInputChange,
+  onClickApplyCoupon,
+  shouldShowCouponOverlay,
+  onClickCloseCouponOverlay,
   isLoading,
   items,
   shippingMethods,
@@ -41332,12 +41367,33 @@ const Cart = ({
   shipping,
   discount,
   taxes,
-  total
+  total,
+  couponCode
 }) => {
   if (items && items.length > 0) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       { className: 'Cart' },
+      shouldShowCouponOverlay && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__overlay__["a" /* default */], {
+        onClickClose: onClickCloseCouponOverlay,
+        isLoading: isLoading,
+        render: ({ onClickClose }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          { className: 'Overlay-content' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'label',
+            { htmlFor: 'coupon-code' },
+            'Enter your code:'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+            id: 'coupon-code',
+            name: 'couponCode',
+            className: 'List-noItems Cart-coupon form-control',
+            onChange: onInputChange,
+            value: couponCode
+          })
+        )
+      }),
       shouldShowShippingMenu && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__overlay__["a" /* default */], {
         onClickClose: onClickCloseShipping,
         isLoading: isLoading,
@@ -41367,12 +41423,12 @@ const Cart = ({
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__component_list__["a" /* default */], {
         items: items.map((_ref) => {
-          let { sku } = _ref,
-              rest = _objectWithoutProperties(_ref, ['sku']);
+          let { item_id } = _ref,
+              rest = _objectWithoutProperties(_ref, ['item_id']);
 
           return _extends({}, rest, {
-            sku,
-            uniqueKey: sku
+            item_id,
+            uniqueKey: item_id
           });
         }),
         renderedElement: CartCard,
@@ -41390,7 +41446,10 @@ const Cart = ({
           { className: 'Cart-bottom-left' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'button',
-            { className: 'btn btn-secondary' },
+            {
+              className: 'Cart-coupon-button btn btn-info',
+              onClick: onClickApplyCoupon
+            },
             'Apply Coupon Code'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41457,7 +41516,7 @@ const Cart = ({
   } else {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'p',
-      null,
+      { className: 'Cart-empty' },
       'Your cart is empty.'
     );
   }
@@ -41474,7 +41533,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-card-right {\n  width: 45%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: block;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n", ""]);
+exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-card-right {\n  width: 45%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: block;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 10% !important;\n}\n", ""]);
 
 // exports
 
@@ -41599,7 +41658,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Account {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Account {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Account {\n    font-size: 3em;\n  }\n}\n\n.Account {\n  height: 100%;\n  overflow: auto;\n  line-height: 1.5em;\n}\n\n.Account > .Account-banner {\n  text-align: center;\n  height: 25%;\n  background: rgba(255, 255, 255, 0.2);\n  display: table;\n  width: 100%;\n}\n\n.Account > .Account-banner > .Account-banner-content {\n  display: table-cell;\n  justify-content: center;\n  vertical-align: middle;\n}\n\n.Account > .Account-banner > .Account-banner-content > .Account-customerName {\n  display: block;\n  font-size: 2em;\n}\n\n.Account > .Account-list {\n  list-style-type: none;\n  height: 75%;\n  margin-top: 5%;\n  padding: 0 4%;\n}\n\n.Account > .Account-list > .Account-list-item {\n  height: 12%;\n}\n\n.Account > .Account-list > .Account-list-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Account {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Account {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Account {\n    font-size: 3em;\n  }\n}\n\n.Account {\n  height: 100%;\n  overflow: auto;\n  line-height: 1.5em;\n}\n\n.Account > .Account-banner {\n  text-align: center;\n  height: 25%;\n  background: rgba(255, 255, 255, 0.2);\n  display: table;\n  width: 100%;\n}\n\n.Account > .Account-banner > .Account-banner-content {\n  display: table-cell;\n  justify-content: center;\n  vertical-align: middle;\n}\n\n.Account > .Account-banner > .Account-banner-content > .Account-customerName {\n  display: block;\n  font-size: 2em;\n}\n\n.Account > .Account-list {\n  list-style-type: none;\n  height: 75%;\n  margin-top: 5%;\n  padding: 0 4%;\n}\n\n.Account > .Account-list > .Account-list-item {\n  height: 12%;\n}\n\n.Account > .Account-list > .Account-list-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  margin-top: 5px;\n  background: rgba(169, 169, 169, 0.5);\n}\n", ""]);
 
 // exports
 
@@ -41632,8 +41691,7 @@ class HistoryContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
   }
 
   componentDidMount() {
-    Object(__WEBPACK_IMPORTED_MODULE_1__services_orders_service__["a" /* getOrdersForCustomer */])(34826) // TODO
-    .then(res => this.setState({ isHydrated: true, orders: JSON.parse(res) })).catch(err => console.log(err));
+    Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["d" /* getCustomer */])().then(custRes => Object(__WEBPACK_IMPORTED_MODULE_1__services_orders_service__["a" /* getOrdersForCustomer */])(JSON.parse(custRes).id).then(res => this.setState({ isHydrated: true, orders: JSON.parse(res) })));
   }
 
   render() {
@@ -46639,7 +46697,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .History {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .History {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .History {\n    font-size: 3em;\n  }\n}\n\n.History {\n  line-height: 1.75em;\n  padding: 5%;\n  overflow: auto;\n}\n\n.History .History-title {\n  font-size: 1.25em;\n}\n\n.History .History-accordion {\n  padding-top: 5%;\n}\n\n.History .History-card .History-card-title .History-card-title-price {\n  float: right;\n}\n\n.History .History-card-title .History-card-title-left,\n.History .History-card-title .History-card-title-right {\n  display: inline-block;\n  width: 50%;\n}\n\n.History .History-card .History-card-body .History-card-link {\n  float: left;\n  width: 82.5%;\n}\n\n.History .History-card .History-card-body .History-card-price {\n  float: right;\n}\n\n.History .History-card .History-card-body .History-card-body-reorder {\n  margin-left: 75%;\n  margin-top: 7.5%;\n}\n\n.History .History-card .History-card-body {\n  animation: fadein 0.35s ease-in;\n}\n\n.History-card-link,\n.History-card-qty,\n.History-card-price {\n  display: inline-block;\n}\n\n.History .History-card:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .History {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .History {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .History {\n    font-size: 3em;\n  }\n}\n\n.History {\n  line-height: 1.75em;\n  padding: 5%;\n  overflow: auto;\n}\n\n.History .History-title {\n  font-size: 1.25em;\n}\n\n.History .History-accordion {\n  padding-top: 5%;\n}\n\n.History .History-card .History-card-title .History-card-title-price {\n  float: right;\n}\n\n.History .History-card-title .History-card-title-left,\n.History .History-card-title .History-card-title-right {\n  display: inline-block;\n  width: 50%;\n}\n\n.History .History-card .History-card-body .History-card-link {\n  float: left;\n  width: 82.5%;\n}\n\n.History .History-card .History-card-body .History-card-price {\n  float: right;\n}\n\n.History .History-card .History-card-body .History-card-body-reorder {\n  margin-left: 75%;\n  margin-top: 7.5%;\n  margin-bottom: 15px;\n}\n\n.History .History-card .History-card-body {\n  animation: fadein 0.35s ease-in;\n}\n\n.History-card-link,\n.History-card-qty,\n.History-card-price {\n  display: inline-block;\n}\n\n.History .History-card:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n}\n", ""]);
 
 // exports
 
@@ -47252,6 +47310,8 @@ exports.push([module.i, ".Reminders {\n  padding: 4%;\n  height: 100%;\n  overfl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_info__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_spinkit__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_spinkit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react_spinkit__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 
 
 
@@ -47272,19 +47332,37 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     }, this.handleClickUpdate = ({ target: name }) => this.setState(() => ({
       shouldShowEditOverlay: true,
       overlayType: name === 'billing' ? TYPE_BILLING : TYPE_SHIPPING
-    })), this.handleClickCloseOverlay = () => this.setState({ shouldShowEditOverlay: false }), this.handleClickSubmit = () => this.setState({ shouldShowEditOverlay: false }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* updateCustomer */])(this.state.customer)), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
+    })), this.handleClickCloseOverlay = () => this.setState({ shouldShowEditOverlay: false }), this.handleClickSubmit = () => buildfire.auth.login(null, () => this.setState(prevState => {
+      const customerToUpdate = _extends({}, prevState.customer);
+      const addressIndex = customerToUpdate.addresses.findIndex(address => ({ default_billing, default_shipping }) => this.state.overlayType == TYPE_BILLING ? default_billing : default_shipping);
+      const addressToUpdate = customerToUpdate.addresses[addressIndex];
+      addressToUpdate.city = this.state[`${this.state.overlayType}City`];
+      addressToUpdate.firstname = this.state[`${this.state.overlayType}FirstName`];
+      addressToUpdate.lastname = this.state[`${this.state.overlayType}LastName`];
+      addressToUpdate.telephone = this.state[`${this.state.overlayType}PhoneNumber`];
+      addressToUpdate.street = [this.state[`${this.state.overlayType}StreetAddressOne`], this.state[`${this.state.overlayType}StreetAddressTwo`]];
+      addressToUpdate.region = {};
+      addressToUpdate.region_id = 0;
+      addressToUpdate.postcode = this.state[`${this.state.overlayType}Zip`];
+      addressToUpdate.country_id = this.state.countryList.find(({ full_name_english }) => full_name_english === this.state[`${this.state.overlayType}Country`]).id;
+      addressToUpdate.customer_id = customerToUpdate.id;
+      addressToUpdate.default_billing = addressToUpdate.default_billing;
+      addressToUpdate.default_shipping = addressToUpdate.default_shipping;
+      customerToUpdate.addresses[addressIndex];
+      return {
+        shouldShowEditOverlay: false,
+        customer: customerToUpdate
+      };
+    }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["h" /* updateCustomer */])(this.state.customer))), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
   }
 
   componentDidMount() {
-    Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getCustomer */])().then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* getCountryList */])().then(unparsedCountries => this.setState({
+    buildfire.auth.login(null, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getCustomer */])().then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* getCountryList */])().then(unparsedCountries => this.setState({
       isHydrated: true,
       customer: JSON.parse(res),
       countryList: JSON.parse(unparsedCountries)
-    }))).catch(err => console.log(err));
+    }))).catch(err => console.log(err)));
   }
-
-  // TODO merge old customer model from GET with new customer info from form. The PUT will merge everything for you except addresses array
-
 
   render() {
     return this.state.isHydrated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_info__["a" /* default */], {
@@ -47332,7 +47410,6 @@ const Info = ({
   onInputChange,
   shippingFirstName,
   shippingLastName,
-  shippingCompany,
   shippingPhoneNumber,
   shippingStreetAddressOne,
   shippingStreetAddressTwo,
@@ -47342,7 +47419,6 @@ const Info = ({
   shippingCountry,
   billingFirstName,
   billingLastName,
-  billingCompany,
   billingPhoneNumber,
   billingStreetAddressOne,
   billingStreetAddressTwo,
@@ -47384,17 +47460,6 @@ const Info = ({
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
         id: 'last-name',
         name: `${overlayType}LastName`,
-        className: 'form-control',
-        onChange: onInputChange
-      }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'label',
-        { htmlFor: 'company' },
-        'Company'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        id: 'company',
-        name: `${overlayType}Company`,
         className: 'form-control',
         onChange: onInputChange
       }),
@@ -47460,7 +47525,7 @@ const Info = ({
           const regions = selectedCountry.available_regions || [];
           return regions.map(({ id, name }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'option',
-            { id: id },
+            { id: id, key: id },
             name
           ));
         })()
@@ -47490,9 +47555,9 @@ const Info = ({
           value: selectedCountryName,
           onChange: onInputChange
         },
-        countryList.map(({ full_name_english }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        countryList.map(({ id, full_name_english }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'option',
-          { id: full_name_english },
+          { key: id, id: full_name_english },
           full_name_english
         ))
       ),
@@ -47614,7 +47679,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Info {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Info {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Info {\n    font-size: 3em;\n  }\n}\n\n.Info {\n  padding: 5%;\n  overflow: auto;\n  line-height: 1.25em;\n}\n\n.Info .Info-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n  margin-top: 3.5%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-left,\n.Info .Info-item .Info-item-body .Info-item-body-right {\n  display: inline-block;\n  vertical-align: middle;\n  width: 50%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-right .Info-item-update {\n  float: right;\n}\n\n.Info .Info-form {\n  padding-top: 15%;\n  padding-left: 5%;\n  padding-right: 5%;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Info {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Info {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Info {\n    font-size: 3em;\n  }\n}\n\n.Info {\n  padding: 5%;\n  overflow: auto;\n  line-height: 1.25em;\n}\n\n.Info .Info-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n  margin-top: 3.5%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-left,\n.Info .Info-item .Info-item-body .Info-item-body-right {\n  display: inline-block;\n  vertical-align: middle;\n  width: 50%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-right .Info-item-update {\n  float: right;\n}\n\n.Info .Info-form {\n  padding-top: 15%;\n  padding-left: 5%;\n  padding-right: 5%;\n}\n\n.Info .Info-form * {\n  margin-bottom: 10px;\n}\n", ""]);
 
 // exports
 
@@ -47769,7 +47834,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".CategoryList {\n  height: 100%;\n  overflow: auto;\n}\n\n.CategoryList-banner {\n  width: 100%;\n  padding-bottom: 8%;\n}\n\n.CategoryList-grid {\n  column-count: 2;\n  padding: 0 5%;\n  text-align: center;\n}\n\n.Category {\n  display: inline-flex;\n  padding-bottom: 5%;\n}\n\n.Category-image {\n  max-width: 100%;\n}\n\n.Category-name {\n  line-height: 1em;\n}\n\n@media only screen and (max-width: 760px) {\n  .Category-name {\n    font-size: 1.25em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Category-name {\n    font-size: 1.75em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Category-name {\n    font-size: 2em;\n  }\n}\n", ""]);
+exports.push([module.i, ".CategoryList {\n  height: 100%;\n  overflow: auto;\n}\n\n.CategoryList-banner {\n  width: 100%;\n  padding-bottom: 8%;\n}\n\n.CategoryList-grid {\n  column-count: 2;\n  padding: 0 5%;\n  text-align: center;\n}\n\n.Category {\n  display: inline-flex;\n  padding-bottom: 20%;\n}\n\n.Category-image {\n  max-width: 100%;\n  padding-bottom: 10px;\n}\n\n.Category-name {\n  line-height: 1em;\n}\n\n@media only screen and (max-width: 760px) {\n  .Category-name {\n    font-size: 1.25em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Category-name {\n    font-size: 1.75em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Category-name {\n    font-size: 2em;\n  }\n}\n", ""]);
 
 // exports
 
@@ -47816,7 +47881,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "html,\nbody,\n#main {\n  height: 100%;\n}\n\n#content {\n  height: 90%;\n}\n\n#main {\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n}\n\nbody,\np,\nh1,\nul {\n  margin: 0;\n}\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n  color: white;\n}\n\nul {\n  padding: 0;\n}\n\na {\n  text-decoration: none !important;\n  color: inherit;\n}\n\n.sk-spinner {\n  color: white;\n  position: fixed;\n  top: 45%;\n  left: 50%;\n  margin-top: -9px;\n  margin-left: -27px;\n  width: 54px;\n}\n", ""]);
+exports.push([module.i, "html,\nbody,\n#main {\n  height: 100%;\n}\n\n#content {\n  height: 90%;\n}\n\n#main {\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n}\n\nbody,\np,\nh1,\nul {\n  margin: 0;\n}\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n  color: white;\n}\n\nul {\n  padding: 0;\n}\n\na {\n  text-decoration: none !important;\n  color: inherit;\n}\n\n.sk-spinner {\n  color: white;\n  position: fixed;\n  top: 45%;\n  left: 50%;\n  margin-top: -9px;\n  margin-left: -27px;\n  width: 54px;\n}\n\n.List-noItems {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.clamp-one {\n  display: -webkit-box;\n  -webkit-line-clamp: 1;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-three {\n  display: -webkit-box;\n  -webkit-line-clamp: 3;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n", ""]);
 
 // exports
 

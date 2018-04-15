@@ -18,7 +18,7 @@ const ComponentList = ({
       />
     ));
   } else if (showNoItemsMessage) {
-    return <p>No items found.</p>;
+    return <p className="List-noItems">No items found.</p>;
   } else {
     return null;
   }

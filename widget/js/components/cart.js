@@ -58,6 +58,10 @@ const CartCard = ({
 );
 
 const Cart = ({
+  onInputChange,
+  onClickApplyCoupon,
+  shouldShowCouponOverlay,
+  onClickCloseCouponOverlay,
   isLoading,
   items,
   shippingMethods,
@@ -76,11 +80,30 @@ const Cart = ({
   shipping,
   discount,
   taxes,
-  total
+  total,
+  couponCode
 }) => {
   if (items && items.length > 0) {
     return (
       <div className="Cart">
+        {shouldShowCouponOverlay && (
+          <Overlay
+            onClickClose={onClickCloseCouponOverlay}
+            isLoading={isLoading}
+            render={({ onClickClose }) => (
+              <div className="Overlay-content">
+                <label htmlFor="coupon-code">Enter your code:</label>
+                <input
+                  id="coupon-code"
+                  name="couponCode"
+                  className="List-noItems Cart-coupon form-control"
+                  onChange={onInputChange}
+                  value={couponCode}
+                />
+              </div>
+            )}
+          />
+        )}
         {shouldShowShippingMenu && (
           <Overlay
             onClickClose={onClickCloseShipping}
@@ -109,10 +132,10 @@ const Cart = ({
           />
         )}
         <CartList
-          items={items.map(({ sku, ...rest }) => ({
+          items={items.map(({ item_id, ...rest }) => ({
             ...rest,
-            sku,
-            uniqueKey: sku
+            item_id,
+            uniqueKey: item_id
           }))}
           renderedElement={CartCard}
           quantity={quantity}
@@ -123,7 +146,12 @@ const Cart = ({
         />
         <div className="Cart-bottom">
           <div className="Cart-bottom-left">
-            <button className="btn btn-secondary">Apply Coupon Code</button>
+            <button
+              className="Cart-coupon-button btn btn-info"
+              onClick={onClickApplyCoupon}
+            >
+              Apply Coupon Code
+            </button>
             <p className="Cart-amount">Subtotal ${subTotal}</p>
             <p className="Cart-amount">
               Shipping{' '}
@@ -153,7 +181,7 @@ const Cart = ({
       </div>
     );
   } else {
-    return <p>Your cart is empty.</p>;
+    return <p className="Cart-empty">Your cart is empty.</p>;
   }
 };
 

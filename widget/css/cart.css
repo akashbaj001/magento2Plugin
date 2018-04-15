@@ -55,3 +55,18 @@
   width: 90%;
   display: inline-block;
 }
+
+.Cart-empty {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Cart-coupon {
+  width: 50% !important;
+}
+
+.Cart-coupon-button {
+  margin-bottom: 10% !important;
+}

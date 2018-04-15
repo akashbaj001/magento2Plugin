@@ -47,3 +47,7 @@
   padding-left: 5%;
   padding-right: 5%;
 }
+
+.Info .Info-form * {
+  margin-bottom: 10px;
+}

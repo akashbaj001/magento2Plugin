@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getOrdersForCustomer } from '../services/orders-service';
-import { addToCart } from '../services/cart-service';
+import { getCustomer, addToCart } from '../services/cart-service';
 import History from '../components/history';
 import Spinner from 'react-spinkit';
 
@@ -10,9 +10,11 @@ class HistoryContainer extends Component {
   };
 
   componentDidMount() {
-    getOrdersForCustomer(34826) // TODO
-      .then(res => this.setState({ isHydrated: true, orders: JSON.parse(res) }))
-      .catch(err => console.log(err));
+    getCustomer().then(custRes =>
+      getOrdersForCustomer(JSON.parse(custRes).id).then(res =>
+        this.setState({ isHydrated: true, orders: JSON.parse(res) })
+      )
+    );
   }
 
   handleClickReorder = ({ target }) =>

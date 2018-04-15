@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getProduct, getAttributeById } from '../services/product-service';
-import { addToCart } from '../services/cart-service';
+import { getCart, addToCart } from '../services/cart-service';
 import Product from '../components/product';
 import Spinner from 'react-spinkit';
 
@@ -59,11 +59,22 @@ class ProductContainer extends Component {
     this.setState(({ quantity }) => ({ quantity: quantity + 1 }));
 
   handleClickAddToCart = ({ target }) =>
-    buildfire.auth.login(null, () =>
-      addToCart({ sku: target.name, qty: this.state.quantity })
-        .then()
-        .catch(err => console.log(err))
-    );
+    buildfire.auth.login(null, () => {
+      const cart = sessionStorage.getItem('cart');
+      cart
+        ? addToCart({
+            sku: target.name,
+            qty: this.state.quantity,
+            quoteID: cart.id
+          })
+        : getCart().then(res =>
+            addToCart({
+              sku: target.name,
+              qty: this.state.quantity,
+              quoteID: JSON.parse(res).id
+            })
+          );
+    });
 
   render() {
     return this.state.isHydrated ? (
