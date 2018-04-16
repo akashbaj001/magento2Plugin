@@ -32,7 +32,7 @@ const CartCard = ({
       )}
     />
     <div className="Cart-card-left">
-      <p className="Cart-card-name">
+      <p className="Cart-card-name clamp-one">
         <Link to={`${products}/${sku}`} className="text-primary">
           {name}
         </Link>
@@ -58,6 +58,10 @@ const CartCard = ({
 );
 
 const Cart = ({
+  onInputChange,
+  onClickApplyCoupon,
+  shouldShowCouponOverlay,
+  onClickCloseCouponOverlay,
   isLoading,
   items,
   shippingMethods,
@@ -76,11 +80,32 @@ const Cart = ({
   shipping,
   discount,
   taxes,
-  total
+  total,
+  couponCode
 }) => {
   if (items && items.length > 0) {
     return (
       <div className="Cart">
+        {shouldShowCouponOverlay && (
+          <Overlay
+            onClickClose={onClickCloseCouponOverlay}
+            isLoading={isLoading}
+            render={({ onClickClose }) => (
+              <div className="Overlay-content">
+                <label className="Cart-coupon-label" htmlFor="coupon-code">
+                  Enter your code:
+                </label>
+                <input
+                  id="coupon-code"
+                  name="couponCode"
+                  className="List-noItems Cart-coupon form-control"
+                  onChange={onInputChange}
+                  value={couponCode}
+                />
+              </div>
+            )}
+          />
+        )}
         {shouldShowShippingMenu && (
           <Overlay
             onClickClose={onClickCloseShipping}
@@ -109,10 +134,10 @@ const Cart = ({
           />
         )}
         <CartList
-          items={items.map(({ sku, ...rest }) => ({
+          items={items.map(({ item_id, ...rest }) => ({
             ...rest,
-            sku,
-            uniqueKey: sku
+            item_id,
+            uniqueKey: item_id
           }))}
           renderedElement={CartCard}
           quantity={quantity}
@@ -123,22 +148,39 @@ const Cart = ({
         />
         <div className="Cart-bottom">
           <div className="Cart-bottom-left">
-            <button className="btn btn-secondary">Apply Coupon Code</button>
-            <p className="Cart-amount">Subtotal ${subTotal}</p>
+            <button
+              className="Cart-coupon-button btn btn-info"
+              onClick={onClickApplyCoupon}
+            >
+              Apply Coupon Code
+            </button>
             <p className="Cart-amount">
-              Shipping{' '}
-              <sup
+              <span className="align-left">Subtotal</span>{' '}
+              <span className="align-right">${subTotal}</span>
+            </p>
+            <p className="Cart-amount">
+              <span className="align-left">Shipping</span>{' '}
+              <span
                 className="Cart-editShipping text-primary"
                 onClick={onClickChangeShipping}
               >
                 [edit]
-              </sup>{' '}
-              ${shipping}
+              </span>{' '}
+              <span className="align-right">${shipping}</span>
             </p>
-            <p>{selectedShippingMethod.method_title}</p>
-            <p className="Cart-amount">Discount ${discount}</p>
-            <p className="Cart-amount">Taxes ${taxes}</p>
-            <p className="Cart-total">Total ${total}</p>
+            <p className="Cart-amount">
+              <span className="align-left">Discount</span>{' '}
+              <span className="align-right">${discount}</span>
+            </p>
+            <p className="Cart-amount">
+              <span className="align-left">Taxes</span>{' '}
+              <span className="align-right">${taxes}</span>
+            </p>
+            <p className="Cart-total">
+              <span className="align-left">Total</span>{' '}
+              <span className="align-right">${total}</span>
+            </p>
+            {/* TODO see /carts/mine/collect-totals */}
           </div>
           <div className="Cart-bottom-right">
             <button
@@ -153,7 +195,7 @@ const Cart = ({
       </div>
     );
   } else {
-    return <p>Your cart is empty.</p>;
+    return <p className="Cart-empty">Your cart is empty.</p>;
   }
 };
 

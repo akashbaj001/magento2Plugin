@@ -53,9 +53,9 @@ const BrowseProductCard = ({
     <div className="Browse-card-right">
       <div className="Browse-card-right-top">
         <Link to={`${products}/${sku}`} className="text-primary">
-          <p className="Browse-card-name">{name}</p>
+          <p className="Browse-card-name clamp-one">{name}</p>
         </Link>
-        <p className="Browse-card-description">
+        <p className="Browse-card-description clamp-two">
           {
             custom_attributes.find(
               attribute => attribute.attribute_code === shortDescriptionAtName

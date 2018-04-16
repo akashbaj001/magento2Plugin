@@ -13,21 +13,25 @@ const TYPE_SHIPPING = 'shipping';
 class InfoContainer extends Component {
   state = {
     isHydrated: false,
-    selectedCountryID: 'US'
+    overlayType: 'billing',
+    billingCountry: 'United States',
+    shippingCountry: 'United States'
   };
 
   componentDidMount() {
-    getCustomer()
-      .then(res =>
-        getCountryList().then(unparsedCountries =>
-          this.setState({
-            isHydrated: true,
-            customer: JSON.parse(res),
-            countryList: JSON.parse(unparsedCountries)
-          })
+    buildfire.auth.login(null, () =>
+      getCustomer()
+        .then(res =>
+          getCountryList().then(unparsedCountries =>
+            this.setState({
+              isHydrated: true,
+              customer: JSON.parse(res),
+              countryList: JSON.parse(unparsedCountries)
+            })
+          )
         )
-      )
-      .catch(err => console.log(err));
+        .catch(err => console.log(err))
+    );
   }
 
   handleClickUpdate = ({ target: name }) =>
@@ -39,10 +43,51 @@ class InfoContainer extends Component {
   handleClickCloseOverlay = () =>
     this.setState({ shouldShowEditOverlay: false });
 
-  // TODO merge old customer model from GET with new customer info from form. The PUT will merge everything for you except addresses array
   handleClickSubmit = () =>
-    this.setState({ shouldShowEditOverlay: false }, () =>
-      updateCustomer(this.state.customer)
+    buildfire.auth.login(null, () =>
+      this.setState(
+        prevState => {
+          const customerToUpdate = { ...prevState.customer };
+          const addressIndex = customerToUpdate.addresses.findIndex(
+            address => ({ default_billing, default_shipping }) =>
+              this.state.overlayType == TYPE_BILLING
+                ? default_billing
+                : default_shipping
+          );
+          const addressToUpdate = customerToUpdate.addresses[addressIndex];
+          addressToUpdate.city = this.state[`${this.state.overlayType}City`];
+          addressToUpdate.firstname = this.state[
+            `${this.state.overlayType}FirstName`
+          ];
+          addressToUpdate.lastname = this.state[
+            `${this.state.overlayType}LastName`
+          ];
+          addressToUpdate.telephone = this.state[
+            `${this.state.overlayType}PhoneNumber`
+          ];
+          addressToUpdate.street = [
+            this.state[`${this.state.overlayType}StreetAddressOne`],
+            this.state[`${this.state.overlayType}StreetAddressTwo`]
+          ];
+          addressToUpdate.region = {};
+          addressToUpdate.region_id = 0;
+          addressToUpdate.postcode = this.state[`${this.state.overlayType}Zip`];
+          addressToUpdate.country_id = this.state.countryList.find(
+            ({ full_name_english }) =>
+              full_name_english ===
+              this.state[`${this.state.overlayType}Country`]
+          ).id;
+          addressToUpdate.customer_id = customerToUpdate.id;
+          addressToUpdate.default_billing = addressToUpdate.default_billing;
+          addressToUpdate.default_shipping = addressToUpdate.default_shipping;
+          customerToUpdate.addresses[addressIndex];
+          return {
+            shouldShowEditOverlay: false,
+            customer: customerToUpdate
+          };
+        },
+        () => updateCustomer(this.state.customer)
+      )
     );
 
   handleInputChange = ({ target: { name, value } }) =>
@@ -58,7 +103,7 @@ class InfoContainer extends Component {
           ({ default_shipping }) => default_shipping
         )}
         countryList={this.state.countryList}
-        selectedCountryID={this.state[`${this.state.overlayType}Country`]}
+        selectedCountryName={this.state[`${this.state.overlayType}Country`]}
         onClickUpdate={this.handleClickUpdate}
         shouldShowEditOverlay={this.state.shouldShowEditOverlay}
         onClickCloseOverlay={this.handleClickCloseOverlay}

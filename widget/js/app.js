@@ -40,6 +40,9 @@ class App extends Component {
   };
 
   componentWillMount() {
+    buildfire.datastore.onUpdate(({ data: { content } }) => {
+      this.setState({ logoImageURL: content.logoImageURL });
+    }, true);
     this.setState({
       logoImageURL: window.buildfireConfig.logoImageURL,
       isHydrated: true

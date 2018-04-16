@@ -13,6 +13,9 @@ class HomeContainer extends Component {
   };
 
   componentWillMount() {
+    buildfire.datastore.onUpdate(({ data: { content } }) => {
+      this.setState({ adBannerImageUrl: content.bannerImageUrl || null });
+    }, true);
     window.buildfire.notifications.localNotification.checkPermission(
       (err, data) =>
         data
@@ -22,39 +25,44 @@ class HomeContainer extends Component {
   }
 
   componentDidMount() {
-    buildfire.datastore.get('content', (err, dataStoreRes) =>
-      getCategories()
-        .then(res => {
-          const activeCategories = JSON.parse(res).children_data.filter(
-            ({ is_active }) => is_active
-          );
+    const data = JSON.parse(sessionStorage.getItem('home'));
+    data
+      ? this.setState(data)
+      : buildfire.datastore.get('content', (err, dataStoreRes) =>
+          getCategories()
+            .then(res => {
+              const activeCategories = JSON.parse(res).children_data.filter(
+                ({ is_active }) => is_active
+              );
 
-          Promise.all(
-            activeCategories.map(({ id }) => getCategoryDetails(id))
-          ).then(res => {
-            const categories = [];
-            res.map(unparsedCategory => {
-              const category = JSON.parse(unparsedCategory);
-              if (category.include_in_menu) {
-                categories.push(category);
-              }
-            });
+              Promise.all(
+                activeCategories.map(({ id }) => getCategoryDetails(id))
+              ).then(res => {
+                const categories = [];
+                res.map(unparsedCategory => {
+                  const category = JSON.parse(unparsedCategory);
+                  if (category.include_in_menu) {
+                    categories.push(category);
+                  }
+                });
 
-            this.setState({
-              isHydrated: true,
-              adBannerImageUrl:
-                dataStoreRes.data.content.bannerImageUrl || null,
-              categories: activeCategories
-                .map((category, index) => ({
-                  ...category,
-                  categoryDetails: categories[index]
-                }))
-                .filter(({ categoryDetails }) => categoryDetails != null)
-            });
-          });
-        })
-        .catch(err => console.log(err))
-    );
+                const loadData = {
+                  isHydrated: true,
+                  adBannerImageUrl:
+                    dataStoreRes.data.content.bannerImageUrl || null,
+                  categories: activeCategories
+                    .map((category, index) => ({
+                      ...category,
+                      categoryDetails: categories[index]
+                    }))
+                    .filter(({ categoryDetails }) => categoryDetails != null)
+                };
+                sessionStorage.setItem('home', JSON.stringify(loadData));
+                this.setState(loadData);
+              });
+            })
+            .catch(err => console.log(err))
+        );
   }
 
   render() {

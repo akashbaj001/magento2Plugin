@@ -48,9 +48,9 @@ const Product = ({
             product.custom_attributes.find(
               attribute => attribute.attribute_code === value
             ) && (
-              <div className="Product-section">
+              <div key={value} className="Product-section">
                 {name && <h2>{name}</h2>}
-                <p
+                <div
                   className="Product-section"
                   dangerouslySetInnerHTML={{
                     __html: product.custom_attributes.find(

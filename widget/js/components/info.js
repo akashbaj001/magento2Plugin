@@ -4,7 +4,7 @@ import '../../css/info.css';
 
 const Info = ({
   countryList,
-  selectedCountryID,
+  selectedCountryName,
   billingAddress,
   shippingAddress,
   onClickUpdate,
@@ -15,7 +15,6 @@ const Info = ({
   onInputChange,
   shippingFirstName,
   shippingLastName,
-  shippingCompany,
   shippingPhoneNumber,
   shippingStreetAddressOne,
   shippingStreetAddressTwo,
@@ -25,7 +24,6 @@ const Info = ({
   shippingCountry,
   billingFirstName,
   billingLastName,
-  billingCompany,
   billingPhoneNumber,
   billingStreetAddressOne,
   billingStreetAddressTwo,
@@ -54,13 +52,6 @@ const Info = ({
             <input
               id="last-name"
               name={`${overlayType}LastName`}
-              className="form-control"
-              onChange={onInputChange}
-            />
-            <label htmlFor="company">Company</label>
-            <input
-              id="company"
-              name={`${overlayType}Company`}
               className="form-control"
               onChange={onInputChange}
             />
@@ -99,11 +90,18 @@ const Info = ({
               className="form-control"
               onChange={onInputChange}
             >
-              {countryList
-                .find(({ id }) => id === selectedCountryID)
-                .available_regions.map(({ id, name }) => (
-                  <option id={id}>{name}</option>
-                ))}
+              {(() => {
+                const selectedCountry = countryList.find(
+                  ({ full_name_english }) =>
+                    full_name_english === selectedCountryName
+                );
+                const regions = selectedCountry.available_regions || [];
+                return regions.map(({ id, name }) => (
+                  <option id={id} key={id}>
+                    {name}
+                  </option>
+                ));
+              })()}
             </select>
             <label htmlFor="zip-postal">Zip/Postal Code</label>
             <input
@@ -117,10 +115,13 @@ const Info = ({
               id="country"
               name={`${overlayType}Country`}
               className="form-control"
+              value={selectedCountryName}
               onChange={onInputChange}
             >
               {countryList.map(({ id, full_name_english }) => (
-                <option id={id}>{full_name_english}</option>
+                <option key={id} id={full_name_english}>
+                  {full_name_english}
+                </option>
               ))}
             </select>
             <button className="btn btn-primary" onClick={onClickSubmit}>

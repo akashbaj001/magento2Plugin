@@ -14,7 +14,11 @@
       "enabled": false
     },
     "customTabs": [
-      { "title": "Integration Settings", "url": "/integration/index.html" }
+      { "title": "Integration Settings", "url": "/integration/index.html" },
+      {
+        "title": "Product Page Configuration",
+        "url": "/product-config/index.html"
+      }
     ]
   },
   "widget": {},

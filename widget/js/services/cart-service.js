@@ -9,7 +9,7 @@ export const getCart = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer b3cneb2bjlut4fnat1v6nce5wwkc95fm' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -19,24 +19,25 @@ export const getShippingMethods = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine/shipping-methods')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer b3cneb2bjlut4fnat1v6nce5wwkc95fm' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
-export const addToCart = ({ sku, qty }) =>
+export const addToCart = ({ sku, qty, quoteID }) =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/items')}`,
-      data: {
+      data: JSON.stringify({
         cartItem: {
-          quote_id: 203254, // TODO
-          sku: sku,
-          qty: qty
+          quote_id: quoteID,
+          sku,
+          qty
         }
-      },
+      }),
       method: 'POST',
+      contentType: 'application/json',
       dataType: 'json',
-      headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -46,7 +47,7 @@ export const removeFromCart = itemID =>
       url: `${apiBasePath}${encodeURIComponent(`carts/mine/items/${itemID}`)}`,
       method: 'DELETE',
       dataType: 'json',
-      headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -56,7 +57,7 @@ export const getBillingAddress = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine/billing-address')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer dc8kxgk9lhck2wg9i0ldwneqofyt4guo' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -66,7 +67,7 @@ export const getPaymentMethods = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine/payment-methods')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer dc8kxgk9lhck2wg9i0ldwneqofyt4guo' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -78,17 +79,19 @@ export const getShippingAddress = () =>
       )}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
-export const placeOrder = () =>
+export const placeOrder = ({ paymentMethod, shippingMethod }) =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/order')}`,
+      data: JSON.stringify({ paymentMethod, shippingMethod }),
       method: 'PUT',
       dataType: 'json',
-      headers: { Authorization: 'Bearer p9cl0098h2l941w6483pujmeons1pntw' }
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -98,7 +101,7 @@ export const getCustomer = () =>
       url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 6xjaj87m3mhm6r78tqptt3dkjbdfrdhh' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -106,11 +109,12 @@ export const updateCustomer = customer =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent(`customers/${customer.id}`)}`,
-      data: {
+      data: JSON.stringify({
         customer
-      },
+      }),
       method: 'PUT',
       dataType: 'json',
+      contentType: 'application/json',
       headers: {
         Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
       }

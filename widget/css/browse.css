@@ -1,10 +1,10 @@
 @media only screen and (max-width: 760px) {
   .Browse-title {
-    font-size: 1.5em;
+    font-size: 1.3em;
   }
 
   .Browse-card {
-    font-size: 1em;
+    font-size: 0.85em;
   }
 }
 
@@ -49,13 +49,13 @@
 }
 
 .Browse-title {
-  padding-bottom: 2%;
+  padding: 7% 0;
 }
 
 .Browse-card {
   display: flex;
   padding-bottom: 6%;
-  line-height: 1em;
+  line-height: 1.2em;
 }
 
 .Browse-card-image {

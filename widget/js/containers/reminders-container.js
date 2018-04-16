@@ -8,7 +8,8 @@ class RemindersContainer extends Component {
   };
 
   componentDidMount() {
-    buildfire.auth.getCurrentUser(
+    buildfire.auth.login(
+      null,
       (err, { userToken }) =>
         userToken
           ? buildfire.datastore.get(`reminders${userToken}`, (err, res) =>

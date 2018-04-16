@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   getCart,
   getShippingMethods,
-  placeOrder
+  placeOrder,
+  removeFromCart
 } from '../services/cart-service';
 import { getProduct } from '../services/product-service';
 import Cart from '../components/cart';
@@ -11,40 +12,45 @@ import Spinner from 'react-spinkit';
 class CartContainer extends Component {
   state = {
     isHydrated: false,
-    shouldShowShippingMenu: false
+    shouldShowShippingMenu: false,
+    shouldShowCouponOverlay: false,
+    couponCode: ''
   };
 
   componentDidMount() {
     // TODO if you press cancel login it still reroutes
-    buildfire.auth.login();
-    getCart()
-      .then(res => {
-        const parsedRes = JSON.parse(res);
+    buildfire.auth.login({}, () =>
+      getCart()
+        .then(res => {
+          const parsedRes = JSON.parse(res);
 
-        getShippingMethods().then(shippingMethods => {
-          Promise.all(parsedRes.items.map(({ sku }) => getProduct(sku))).then(
-            products =>
-              this.setState({
-                isHydrated: true,
-                items: parsedRes.items.map(item => ({
-                  ...item,
-                  productDetails: products
-                    .map(product => JSON.parse(product))
-                    .find(({ sku }) => sku === item.sku)
-                })),
-                shippingMethods: JSON.parse(shippingMethods).filter(
-                  ({ available }) => available
-                ),
-                selectedShippingMethod:
-                  (shippingMethods &&
-                    shippingMethods.length > 0 &&
-                    shippingMethods[0]) ||
-                  null
-              })
-          );
-        });
-      })
-      .catch(err => console.log(err));
+          getShippingMethods().then(shippingMethods => {
+            Promise.all(parsedRes.items.map(({ sku }) => getProduct(sku))).then(
+              products => {
+                const parsedShippingMethods = JSON.parse(shippingMethods);
+                this.setState({
+                  isHydrated: true,
+                  items: parsedRes.items.map(item => ({
+                    ...item,
+                    productDetails: products
+                      .map(product => JSON.parse(product))
+                      .find(({ sku }) => sku === item.sku)
+                  })),
+                  shippingMethods: parsedShippingMethods.filter(
+                    ({ available }) => available
+                  ),
+                  selectedShippingMethod:
+                    (parsedShippingMethods &&
+                      parsedShippingMethods.length > 0 &&
+                      parsedShippingMethods[0]) ||
+                    null
+                });
+              }
+            );
+          });
+        })
+        .catch(err => console.log(err))
+    );
   }
 
   handleChangeQuantity = ({ target }) =>
@@ -52,9 +58,10 @@ class CartContainer extends Component {
       if (isNaN(target.value)) {
         return {};
       }
-
       const newItems = [...items];
-      const itemIndex = newItems.findIndex(item => item.sku === target.name);
+      const itemIndex = newItems.findIndex(
+        item => item.item_id === parseInt(target.name, 10)
+      );
       if (target.value <= 1) {
         newItems[itemIndex].qty = 1;
       } else {
@@ -67,7 +74,7 @@ class CartContainer extends Component {
   handleQuantityDecrement = id =>
     this.setState(({ items }) => {
       const newItems = [...items];
-      const itemIndex = newItems.findIndex(item => item.sku === id);
+      const itemIndex = newItems.findIndex(item => item.item_id === id);
       const currQty = newItems[itemIndex].qty;
       newItems[itemIndex].qty = currQty <= 1 ? 1 : currQty - 1;
       return { items: newItems };
@@ -76,17 +83,24 @@ class CartContainer extends Component {
   handleQuantityIncrement = id =>
     this.setState(({ items }) => {
       const newItems = [...items];
-      const itemIndex = newItems.findIndex(item => item.sku === id);
+      const itemIndex = newItems.findIndex(item => item.item_id === id);
       newItems[itemIndex].qty += 1;
       return { items: newItems };
     });
 
-  handleClickRemove = id =>
-    this.setState(({ items }) => {
-      // TODO DELETE from cart through service, setState if successful
-      const newItems = [...items];
-      return { items: newItems.filter(item => item.sku != id) };
+  handleClickRemove = id => {
+    buildfire.auth.login({}, () => {
+      // Save current set of items in case removal request fails.
+      const oldItems = this.state.items;
+      this.setState(
+        ({ items }) => {
+          const newItems = [...items];
+          return { items: newItems.filter(item => item.item_id != id) };
+        },
+        () => removeFromCart(id).catch(() => this.setState({ items: oldItems }))
+      );
     });
+  };
 
   handleClickChangeShipping = () =>
     this.setState({ shouldShowShippingMenu: true });
@@ -101,37 +115,51 @@ class CartContainer extends Component {
       )
     });
 
-  handleClickCheckOut = () =>
-    placeOrder()
-      .then(res => {
-        console.log(res);
-        // TODO
-        // to get the two below custom attributes you have to do a GET to the product details for every product purchased
-        // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
-        // when adding to data store, include app_product_reminder_message
-        if (true) {
-          buildfire.datastore.insert(
-            {
-              reminders: [
-                {
-                  reminder:
-                    'Time to order new blades. Save 10% if you order in the next two days.',
-                  sku: '01007',
-                  date: ''
-                }
-              ]
-            },
-            'reminders',
-            false
-          );
-        }
-      })
-      .catch(err => console.log(err));
+  handleClickCloseCouponOverlay = () =>
+    this.setState({ shouldShowCouponOverlay: false });
+
+  handleClickApplyCoupon = () =>
+    this.setState({ shouldShowCouponOverlay: true });
+
+  handleClickCheckout = () =>
+    buildfire.auth.login(null, () =>
+      placeOrder()
+        .then(res => {
+          console.log(res);
+          // TODO
+          // to get the two below custom attributes you have to do a GET to the product details for every product purchased
+          // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
+          // when adding to data store, include app_product_reminder_message
+          if (true) {
+            buildfire.datastore.insert(
+              {
+                reminders: [
+                  {
+                    reminder:
+                      'Time to order new blades. Save 10% if you order in the next two days.',
+                    sku: '01007',
+                    date: ''
+                  }
+                ]
+              },
+              'reminders',
+              false
+            );
+          }
+        })
+        .catch(err => console.log(err))
+    );
+
+  handleInputChange = ({ target: { name, value } }) =>
+    this.setState({ [name]: value });
 
   getSubtotal = () =>
     this.state.items.reduce((acc, curr) => (acc += curr.price * curr.qty), 0);
 
-  getShipping = () => this.state.selectedShippingMethod.amount;
+  getShipping = () =>
+    this.state.selectedShippingMethod
+      ? this.state.selectedShippingMethod.amount
+      : {};
 
   getDiscount = () => 0; // TODO
 
@@ -147,6 +175,10 @@ class CartContainer extends Component {
     return this.state.isHydrated ? (
       <Cart
         items={this.state.items}
+        onInputChange={this.handleInputChange}
+        shouldShowCouponOverlay={this.state.shouldShowCouponOverlay}
+        onClickCloseCouponOverlay={this.handleClickCloseCouponOverlay}
+        couponCode={this.state.couponCode}
         shippingMethods={this.state.shippingMethods}
         selectedShippingMethod={this.state.selectedShippingMethod}
         onChangeQuantity={this.handleChangeQuantity}
@@ -156,7 +188,8 @@ class CartContainer extends Component {
         onClickChangeShipping={this.handleClickChangeShipping}
         onClickCloseShipping={this.handleClickCloseShipping}
         onClickShippingMethod={this.handleClickShippingMethod}
-        onClickCheckOut={this.handleClickCheckOut}
+        onClickCheckout={this.handleClickCheckout}
+        onClickApplyCoupon={this.handleClickApplyCoupon}
         shouldShowShippingMenu={this.state.shouldShowShippingMenu}
         subTotal={this.getSubtotal()}
         shipping={this.getShipping()}

@@ -16,11 +16,12 @@
 
 .Category {
   display: inline-flex;
-  padding-bottom: 5%;
+  padding-bottom: 20%;
 }
 
 .Category-image {
   max-width: 100%;
+  padding-bottom: 10px;
 }
 
 .Category-name {
