@@ -570,12 +570,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__content_form__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__product_config_form__ = __webpack_require__(15);
 
 
 
 
-const App = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__content_form__["default"], null);
+const App = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__product_config_form__["default"], null);
 
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(App, null), document.getElementById('content'));
 
@@ -980,7 +980,23 @@ class Form extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       buildfire.datastore.save({
         content: _extends({}, payload)
       }, 'content');
-    }, this.handleChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
+    }, this.handleClickAddSection = () => this.setState(prevState => ({
+      sections: [...(prevState.sections || []), { value: '', name: '' }]
+    })), this.handleClickRemoveSection = e => {
+      e.preventDefault();
+      const { target: { id } } = e;
+      this.setState(prevState => ({
+        sections: [...prevState.sections.slice(0, parseInt(id, 10)), ...prevState.sections.slice(parseInt(id, 10) + 1)]
+      }));
+    }, this.handleSectionChange = e => {
+      e.preventDefault();
+      const { target: { name, id, value } } = e;
+      this.setState(prevState => {
+        const sections = [...prevState.sections];
+        sections[id][name] = value;
+        return { sections };
+      });
+    }, _temp;
   }
 
   componentDidMount() {
@@ -996,120 +1012,91 @@ class Form extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('style', {
         dangerouslySetInnerHTML: {
           __html: `
-          .form-control {
-            width: 75%;
-            display: block;
-          }
-          .margin-bottom {
-            margin-bottom: 10px;
-          }
-          .display-block {
-            display: block;
-          }
+            input {
+              width: 75%;
+              display: block;
+            }
+            .margin-bottom {
+              margin-bottom: 10px;
+            }
+            .display-block {
+              display: block;
+            }
         `
         }
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'h2',
         null,
-        'Site Settings'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h3',
-        null,
-        'Domain'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'p',
-        null,
-        'This is the root domain of your application\'s Magento server.'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        className: 'form-control',
-        onChange: this.handleChange,
-        value: this.state.domain,
-        name: 'domain'
-      }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h2',
-        null,
-        'Custom Attribute Configuration'
+        'Product Page Layout Configuration'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'p',
         null,
-        'These settings control which custom attributes are used to display images and descriptions for categories.'
+        'The sections specified here will appear in the same order on the product page. The section heading will be displayed above each section. Each custom attribute specified here must contain the text or HTML that will be displayed for that section.'
       ),
+      (this.state.sections || []).map((section, id) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Section, {
+        key: id,
+        id: id,
+        value: this.state.sections[id].value,
+        name: this.state.sections[id].name,
+        onChange: this.handleSectionChange,
+        onClickRemove: this.handleClickRemoveSection
+      })),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h3',
-        null,
-        'Category Image Custom Attribute Name'
+        'button',
+        {
+          className: 'margin-bottom btn btn-success',
+          onClick: this.handleClickAddSection
+        },
+        'Add Section'
       ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'p',
-        null,
-        'If a category is top-level, the image file specified in this custom attribute is displayed as the banner for the category on the homepage and on its subcategory listing page. This image file must be under Magento\'s /pub/media/catalog/category/ directory on your domain.'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        className: 'form-control',
-        onChange: this.handleChange,
-        value: this.state.categoryImageAtName,
-        name: 'categoryImageAtName'
-      }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h3',
-        null,
-        'Category Thumbnail Custom Attribute Name'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'p',
-        null,
-        'If a category is not top-level, the image file specified in this custom attribute is displayed as its square image on the subcategory listing pages where it appears. This image file must be under Magento\'s /pub/media/catalog/category/ directory on your domain.'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        className: 'form-control',
-        onChange: this.handleChange,
-        value: this.state.categoryThumbnailAtName,
-        name: 'categoryThumbnailAtName'
-      }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h3',
-        null,
-        'Product Image Custom Attribute Name'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'p',
-        null,
-        'This is the product thumbnail that is displayed on product listing pages and in the cart. This image file must be under Magento\'s /pub/media/catalog/product/ directory on your domain. The file names specified as the value under this custom attribute must each begin with a /.'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        className: 'form-control',
-        onChange: this.handleChange,
-        value: this.state.productImageAtName,
-        name: 'productImageAtName'
-      }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'h3',
-        null,
-        'Short Product Description Custom Attribute Name'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'p',
-        null,
-        'This is the short description that is displayed for a product on product listing pages.'
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        className: 'form-control margin-bottom',
-        onChange: this.handleChange,
-        value: this.state.shortCategoryDescriptionAtName,
-        name: 'shortCategoryDescriptionAtName'
-      }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { className: 'display-block btn btn-primary', type: 'submit' })
     );
   }
 }
+
+const Section = ({ id, value, name, onChange, onClickRemove }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+  __WEBPACK_IMPORTED_MODULE_0_react__["Fragment"],
+  null,
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    'h5',
+    null,
+    'Section ',
+    id + 1
+  ),
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    'h6',
+    null,
+    'Section Heading'
+  ),
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+    className: 'form-control',
+    onChange: onChange,
+    value: name,
+    name: 'name',
+    id: id
+  }),
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    'h6',
+    null,
+    'Section Custom Attribute Name'
+  ),
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+    className: 'margin-bottom form-control',
+    onChange: onChange,
+    value: value,
+    name: 'value',
+    id: id
+  }),
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    'button',
+    { className: 'btn btn-danger', onClick: onClickRemove, id: id },
+    'Remove Section'
+  ),
+  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null)
+);
 
 /* harmony default export */ __webpack_exports__["default"] = (Form);
 

@@ -32,7 +32,7 @@ const CartCard = ({
       )}
     />
     <div className="Cart-card-left">
-      <p className="Cart-card-name">
+      <p className="Cart-card-name clamp-one">
         <Link to={`${products}/${sku}`} className="text-primary">
           {name}
         </Link>
@@ -92,7 +92,9 @@ const Cart = ({
             isLoading={isLoading}
             render={({ onClickClose }) => (
               <div className="Overlay-content">
-                <label htmlFor="coupon-code">Enter your code:</label>
+                <label className="Cart-coupon-label" htmlFor="coupon-code">
+                  Enter your code:
+                </label>
                 <input
                   id="coupon-code"
                   name="couponCode"
@@ -152,21 +154,33 @@ const Cart = ({
             >
               Apply Coupon Code
             </button>
-            <p className="Cart-amount">Subtotal ${subTotal}</p>
             <p className="Cart-amount">
-              Shipping{' '}
-              <sup
+              <span className="align-left">Subtotal</span>{' '}
+              <span className="align-right">${subTotal}</span>
+            </p>
+            <p className="Cart-amount">
+              <span className="align-left">Shipping</span>{' '}
+              <span
                 className="Cart-editShipping text-primary"
                 onClick={onClickChangeShipping}
               >
                 [edit]
-              </sup>{' '}
-              ${shipping}
+              </span>{' '}
+              <span className="align-right">${shipping}</span>
             </p>
-            <p>{selectedShippingMethod.method_title}</p>
-            <p className="Cart-amount">Discount ${discount}</p>
-            <p className="Cart-amount">Taxes ${taxes}</p>
-            <p className="Cart-total">Total ${total}</p>
+            <p className="Cart-amount">
+              <span className="align-left">Discount</span>{' '}
+              <span className="align-right">${discount}</span>
+            </p>
+            <p className="Cart-amount">
+              <span className="align-left">Taxes</span>{' '}
+              <span className="align-right">${taxes}</span>
+            </p>
+            <p className="Cart-total">
+              <span className="align-left">Total</span>{' '}
+              <span className="align-right">${total}</span>
+            </p>
+            {/* TODO see /carts/mine/collect-totals */}
           </div>
           <div className="Cart-bottom-right">
             <button

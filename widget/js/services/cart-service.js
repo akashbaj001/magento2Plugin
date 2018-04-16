@@ -9,7 +9,7 @@ export const getCart = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -19,7 +19,7 @@ export const getShippingMethods = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine/shipping-methods')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -37,7 +37,7 @@ export const addToCart = ({ sku, qty, quoteID }) =>
       method: 'POST',
       contentType: 'application/json',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -47,7 +47,7 @@ export const removeFromCart = itemID =>
       url: `${apiBasePath}${encodeURIComponent(`carts/mine/items/${itemID}`)}`,
       method: 'DELETE',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -57,7 +57,7 @@ export const getBillingAddress = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine/billing-address')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -67,7 +67,7 @@ export const getPaymentMethods = () =>
       url: `${apiBasePath}${encodeURIComponent('carts/mine/payment-methods')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -79,7 +79,7 @@ export const getShippingAddress = () =>
       )}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -91,7 +91,7 @@ export const placeOrder = ({ paymentMethod, shippingMethod }) =>
       method: 'PUT',
       dataType: 'json',
       contentType: 'application/json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 
@@ -101,7 +101,7 @@ export const getCustomer = () =>
       url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
     })
   );
 

@@ -1,6 +1,6 @@
 @media only screen and (max-width: 760px) {
   .Account {
-    font-size: 1.5em;
+    font-size: 1em;
   }
 }
 
@@ -19,7 +19,7 @@
 .Account {
   height: 100%;
   overflow: auto;
-  line-height: 1.5em;
+  line-height: 2em;
 }
 
 .Account > .Account-banner {
@@ -45,7 +45,6 @@
   list-style-type: none;
   height: 75%;
   margin-top: 5%;
-  padding: 0 4%;
 }
 
 .Account > .Account-list > .Account-list-item {
@@ -59,4 +58,17 @@
   width: 100%;
   margin-top: 5px;
   background: rgba(169, 169, 169, 0.5);
+}
+
+.Account > .Account-list > .Account-list-item a {
+  padding-left: 7%;
+}
+
+.Account > .Account-list > .Account-list-item .right-arrow {
+  margin-right: 10%;
+}
+
+.Account .right-arrow {
+  float: right;
+  margin-top: 0.75em;
 }

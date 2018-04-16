@@ -25,7 +25,7 @@ class HistoryContainer extends Component {
           addToCart({ sku, qty: qty_ordered })
         )
     )
-      .then(res => console.log(res))
+      .then(res => console.log(res)) // TODO add to cart, route to cart page
       .catch(err => console.log(err));
 
   render() {

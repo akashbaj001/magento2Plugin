@@ -1,11 +1,31 @@
 .Cart {
   padding: 4%;
   overflow: auto;
+  font-size: 0.9em;
+}
+
+.Cart .QuantityInput span {
+  margin-left: 8px;
+  margin-right: 8px;
+  width: 20px;
+  text-align: center;
+  border-radius: 100%;
+  padding: 0;
+  background: gray;
 }
 
 .Cart,
 .Cart-card-image {
   height: 100%;
+}
+
+.Cart-total {
+  padding-top: 10%;
+  font-size: 1.4em;
+}
+
+.Cart-checkout {
+  margin-left: 15%;
 }
 
 .Cart-card {
@@ -19,8 +39,19 @@
   padding-left: 4%;
 }
 
+.Cart-editShipping {
+  font-size: 0.8em;
+}
+
+.Cart-coupon-label {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
 .Cart-card-right {
-  width: 45%;
+  width: 55%;
 }
 
 .Cart-card-image {
@@ -65,6 +96,14 @@
 
 .Cart-coupon {
   width: 50% !important;
+}
+
+.Cart .align-left {
+  text-align: left;
+}
+
+.Cart .align-right {
+  float: right;
 }
 
 .Cart-coupon-button {

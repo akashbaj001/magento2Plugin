@@ -1763,7 +1763,7 @@ const getCart = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___defau
   url: `${apiBasePath}${encodeURIComponent('carts/mine')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["b"] = getCart;
 
@@ -1772,7 +1772,7 @@ const getShippingMethods = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jqu
   url: `${apiBasePath}${encodeURIComponent('carts/mine/shipping-methods')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["e"] = getShippingMethods;
 
@@ -1789,7 +1789,7 @@ const addToCart = ({ sku, qty, quoteID }) => Promise.resolve(__WEBPACK_IMPORTED_
   method: 'POST',
   contentType: 'application/json',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["a"] = addToCart;
 
@@ -1798,7 +1798,7 @@ const removeFromCart = itemID => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jqu
   url: `${apiBasePath}${encodeURIComponent(`carts/mine/items/${itemID}`)}`,
   method: 'DELETE',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["g"] = removeFromCart;
 
@@ -1807,7 +1807,7 @@ const getBillingAddress = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jque
   url: `${apiBasePath}${encodeURIComponent('carts/mine/billing-address')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* unused harmony export getBillingAddress */
 
@@ -1816,7 +1816,7 @@ const getPaymentMethods = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jque
   url: `${apiBasePath}${encodeURIComponent('carts/mine/payment-methods')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* unused harmony export getPaymentMethods */
 
@@ -1825,7 +1825,7 @@ const getShippingAddress = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jqu
   url: `${apiBasePath}${encodeURIComponent('customers/me/shippingAddress')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* unused harmony export getShippingAddress */
 
@@ -1836,7 +1836,7 @@ const placeOrder = ({ paymentMethod, shippingMethod }) => Promise.resolve(__WEBP
   method: 'PUT',
   dataType: 'json',
   contentType: 'application/json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["f"] = placeOrder;
 
@@ -1845,7 +1845,7 @@ const getCustomer = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___d
   url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
   method: 'GET',
   dataType: 'json',
-  headers: { Authorization: 'Bearer 27i7m3u3u9o106dvitx8enxf37ve168f' }
+  headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
 }));
 /* harmony export (immutable) */ __webpack_exports__["d"] = getCustomer;
 
@@ -36454,7 +36454,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".right-arrow,\n.left-arrow,\n.up-arrow,\n.down-arrow {\n  border: solid white;\n  border-width: 0 3px 3px 0;\n  display: inline-block;\n  padding: 3px;\n}\n\n.right-arrow {\n  transform: rotate(-45deg);\n  -webkit-transform: rotate(-45deg);\n}\n\n.left-arrow {\n  transform: rotate(135deg);\n  -webkit-transform: rotate(135deg);\n}\n\n.up-arrow {\n  transform: rotate(-135deg);\n  -webkit-transform: rotate(-135deg);\n}\n\n.down-arrow {\n  transform: rotate(45deg);\n  -webkit-transform: rotate(45deg);\n}\n", ""]);
+exports.push([module.i, ".right-arrow,\n.left-arrow,\n.up-arrow,\n.down-arrow {\n  border: solid white;\n  border-width: 0 2px 2px 0;\n  display: inline-block;\n  padding: 3px;\n}\n\n.right-arrow {\n  transform: rotate(-45deg);\n  -webkit-transform: rotate(-45deg);\n}\n\n.left-arrow {\n  transform: rotate(135deg);\n  -webkit-transform: rotate(135deg);\n}\n\n.up-arrow {\n  transform: rotate(-135deg);\n  -webkit-transform: rotate(-135deg);\n}\n\n.down-arrow {\n  transform: rotate(45deg);\n  -webkit-transform: rotate(45deg);\n}\n", ""]);
 
 // exports
 
@@ -36563,7 +36563,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Header {\n  top: 0;\n  width: 100%;\n  height: 10%;\n  position: sticky;\n  text-align: center;\n  border-bottom: solid rgba(169, 169, 169, 0.5) 1px;\n  flex-shrink: 0;\n}\n\n.Header .Header-logo {\n  height: 100%;\n  max-height: 100%;\n}\n\n.Header .arrow {\n  left: 6%;\n  top: 4%;\n  position: fixed;\n}\n", ""]);
+exports.push([module.i, ".Header {\n  top: 0;\n  width: 100%;\n  height: 10%;\n  position: sticky;\n  text-align: center;\n  border-bottom: solid rgba(169, 169, 169, 0.5) 1px;\n  flex-shrink: 0;\n}\n\n.Header .Header-logo {\n  height: 100%;\n  max-height: 100%;\n}\n\n.Header .arrow {\n  left: 6%;\n  top: 3%;\n  position: fixed;\n  border-width: 0 1.5px 1.5px 0;\n  padding: 6px;\n}\n", ""]);
 
 // exports
 
@@ -41080,7 +41080,7 @@ const BrowseProductCard = ({
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'p',
-        { className: 'Browse-card-description clamp-three' },
+        { className: 'Browse-card-description clamp-two' },
         custom_attributes.find(attribute => attribute.attribute_code === shortDescriptionAtName).value
       )
     ),
@@ -41117,7 +41117,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.5em;\n  }\n\n  .Browse-card {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.1em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  float: right;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.3em;\n  }\n\n  .Browse-card {\n    font-size: 0.85em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.2em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  float: right;\n}\n", ""]);
 
 // exports
 
@@ -41309,7 +41309,7 @@ const CartCard = ({
     { className: 'Cart-card-left' },
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'p',
-      { className: 'Cart-card-name' },
+      { className: 'Cart-card-name clamp-one' },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_6_react_router_dom__["b" /* Link */],
         { to: `${__WEBPACK_IMPORTED_MODULE_4__constants_routes__["i" /* products */]}/${sku}`, className: 'text-primary' },
@@ -41382,7 +41382,7 @@ const Cart = ({
           { className: 'Overlay-content' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
-            { htmlFor: 'coupon-code' },
+            { className: 'Cart-coupon-label', htmlFor: 'coupon-code' },
             'Enter your code:'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
@@ -41455,16 +41455,30 @@ const Cart = ({
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             { className: 'Cart-amount' },
-            'Subtotal $',
-            subTotal
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-left' },
+              'Subtotal'
+            ),
+            ' ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-right' },
+              '$',
+              subTotal
+            )
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             { className: 'Cart-amount' },
-            'Shipping',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-left' },
+              'Shipping'
+            ),
             ' ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-              'sup',
+              'span',
               {
                 className: 'Cart-editShipping text-primary',
                 onClick: onClickChangeShipping
@@ -41472,31 +41486,60 @@ const Cart = ({
               '[edit]'
             ),
             ' ',
-            '$',
-            shipping
-          ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'p',
-            null,
-            selectedShippingMethod.method_title
-          ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'p',
-            { className: 'Cart-amount' },
-            'Discount $',
-            discount
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-right' },
+              '$',
+              shipping
+            )
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             { className: 'Cart-amount' },
-            'Taxes $',
-            taxes
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-left' },
+              'Discount'
+            ),
+            ' ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-right' },
+              '$',
+              discount
+            )
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'p',
+            { className: 'Cart-amount' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-left' },
+              'Taxes'
+            ),
+            ' ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-right' },
+              '$',
+              taxes
+            )
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             { className: 'Cart-total' },
-            'Total $',
-            total
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-left' },
+              'Total'
+            ),
+            ' ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'span',
+              { className: 'align-right' },
+              '$',
+              total
+            )
           )
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41533,7 +41576,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-card-right {\n  width: 45%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: block;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 10% !important;\n}\n", ""]);
+exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 8px;\n  margin-right: 8px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: block;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 10% !important;\n}\n", ""]);
 
 // exports
 
@@ -41562,9 +41605,7 @@ class AccountContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
   }
 
   componentDidMount() {
-    //buildfire.auth.login(null, (err, { firstName }) =>
-    this.setState({ customerName: /*firstName ||*/'', isHydrated: true });
-    //);
+    buildfire.auth.login(null, (err, { firstName }) => this.setState({ customerName: firstName || '', isHydrated: true }));
   }
 
   render() {
@@ -41658,7 +41699,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Account {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Account {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Account {\n    font-size: 3em;\n  }\n}\n\n.Account {\n  height: 100%;\n  overflow: auto;\n  line-height: 1.5em;\n}\n\n.Account > .Account-banner {\n  text-align: center;\n  height: 25%;\n  background: rgba(255, 255, 255, 0.2);\n  display: table;\n  width: 100%;\n}\n\n.Account > .Account-banner > .Account-banner-content {\n  display: table-cell;\n  justify-content: center;\n  vertical-align: middle;\n}\n\n.Account > .Account-banner > .Account-banner-content > .Account-customerName {\n  display: block;\n  font-size: 2em;\n}\n\n.Account > .Account-list {\n  list-style-type: none;\n  height: 75%;\n  margin-top: 5%;\n  padding: 0 4%;\n}\n\n.Account > .Account-list > .Account-list-item {\n  height: 12%;\n}\n\n.Account > .Account-list > .Account-list-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  margin-top: 5px;\n  background: rgba(169, 169, 169, 0.5);\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Account {\n    font-size: 1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Account {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Account {\n    font-size: 3em;\n  }\n}\n\n.Account {\n  height: 100%;\n  overflow: auto;\n  line-height: 2em;\n}\n\n.Account > .Account-banner {\n  text-align: center;\n  height: 25%;\n  background: rgba(255, 255, 255, 0.2);\n  display: table;\n  width: 100%;\n}\n\n.Account > .Account-banner > .Account-banner-content {\n  display: table-cell;\n  justify-content: center;\n  vertical-align: middle;\n}\n\n.Account > .Account-banner > .Account-banner-content > .Account-customerName {\n  display: block;\n  font-size: 2em;\n}\n\n.Account > .Account-list {\n  list-style-type: none;\n  height: 75%;\n  margin-top: 5%;\n}\n\n.Account > .Account-list > .Account-list-item {\n  height: 12%;\n}\n\n.Account > .Account-list > .Account-list-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  margin-top: 5px;\n  background: rgba(169, 169, 169, 0.5);\n}\n\n.Account > .Account-list > .Account-list-item a {\n  padding-left: 7%;\n}\n\n.Account > .Account-list > .Account-list-item .right-arrow {\n  margin-right: 10%;\n}\n\n.Account .right-arrow {\n  float: right;\n  margin-top: 0.75em;\n}\n", ""]);
 
 // exports
 
@@ -41687,7 +41728,8 @@ class HistoryContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
 
     return _temp = super(...args), this.state = {
       isHydrated: false
-    }, this.handleClickReorder = ({ target }) => Promise.all(this.state.orders.items.find(({ quote_id }) => quote_id === parseInt(target.name, 10)).items.map(({ sku, qty_ordered }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({ sku, qty: qty_ordered }))).then(res => console.log(res)).catch(err => console.log(err)), _temp;
+    }, this.handleClickReorder = ({ target }) => Promise.all(this.state.orders.items.find(({ quote_id }) => quote_id === parseInt(target.name, 10)).items.map(({ sku, qty_ordered }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({ sku, qty: qty_ordered }))).then(res => console.log(res)) // TODO add to cart, route to cart page
+    .catch(err => console.log(err)), _temp;
   }
 
   componentDidMount() {
@@ -46742,7 +46784,7 @@ class RemindersContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"
   }
 
   componentDidMount() {
-    buildfire.auth.getCurrentUser((err, { userToken }) => userToken ? buildfire.datastore.get(`reminders${userToken}`, (err, res) => buildfire.notifications.localNotification.schedule({ title: '', text: '', at: new Date(), data: { sku: '' } }, (err, data) => buildfire.datastore.save(_extends({}, res.data, {
+    buildfire.auth.login(null, (err, { userToken }) => userToken ? buildfire.datastore.get(`reminders${userToken}`, (err, res) => buildfire.notifications.localNotification.schedule({ title: '', text: '', at: new Date(), data: { sku: '' } }, (err, data) => buildfire.datastore.save(_extends({}, res.data, {
       reminders: [...(res.data.reminders ? res.data.reminders : []), {
         reminder: 'Time to order new blades. Save 10% if you order in the next two days.',
         sku: '00156',
@@ -47881,7 +47923,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "html,\nbody,\n#main {\n  height: 100%;\n}\n\n#content {\n  height: 90%;\n}\n\n#main {\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n}\n\nbody,\np,\nh1,\nul {\n  margin: 0;\n}\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n  color: white;\n}\n\nul {\n  padding: 0;\n}\n\na {\n  text-decoration: none !important;\n  color: inherit;\n}\n\n.sk-spinner {\n  color: white;\n  position: fixed;\n  top: 45%;\n  left: 50%;\n  margin-top: -9px;\n  margin-left: -27px;\n  width: 54px;\n}\n\n.List-noItems {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.clamp-one {\n  display: -webkit-box;\n  -webkit-line-clamp: 1;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-three {\n  display: -webkit-box;\n  -webkit-line-clamp: 3;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n", ""]);
+exports.push([module.i, "html,\nbody,\n#main {\n  height: 100%;\n}\n\n#content {\n  height: 90%;\n}\n\n#main {\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n}\n\nbutton {\n  border-radius: 0 !important;\n}\n\nbody,\np,\nh1,\nul {\n  margin: 0;\n}\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n  color: white;\n}\n\nul {\n  padding: 0;\n}\n\na {\n  text-decoration: none !important;\n  color: inherit;\n}\n\n.sk-spinner {\n  color: white;\n  position: fixed;\n  top: 45%;\n  left: 50%;\n  margin-top: -9px;\n  margin-left: -27px;\n  width: 54px;\n}\n\n.List-noItems {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.clamp-one {\n  display: -webkit-box;\n  -webkit-line-clamp: 1;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-two {\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-three {\n  display: -webkit-box;\n  -webkit-line-clamp: 3;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n", ""]);
 
 // exports
 
