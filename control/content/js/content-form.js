@@ -59,65 +59,24 @@ class Form extends Component {
           onChange={this.handleChange}
           value={this.state.domain}
           name="domain"
+          placeholder="https://yourwebsite.com"
+          required
         />
-
-        <h2>Custom Attribute Configuration</h2>
+        <h2>Integration Token</h2>
         <hr />
         <p>
-          These settings control which custom attributes are used to display
-          images and descriptions for categories.
-        </p>
-        <h3>Category Image Custom Attribute Name</h3>
-        <p>
-          If a category is top-level, the image file specified in this custom
-          attribute is displayed as the banner for the category on the homepage
-          and on its subcategory listing page. This image file must be under
-          Magento's /pub/media/catalog/category/ directory on your domain.
+          This integration token is required in order to load certain
+          information for your store. You must generate an integration token
+          under your Magento admin dashboard by navigating to System >
+          Integrations and pressing "Add New Integration." Fill out the form and
+          press "Save," and paste the token it provides you with into this box.
         </p>
         <input
-          className="form-control"
+          className="margin-bottom form-control"
           onChange={this.handleChange}
-          value={this.state.categoryImageAtName}
-          name="categoryImageAtName"
-        />
-
-        <h3>Category Thumbnail Custom Attribute Name</h3>
-        <p>
-          If a category is not top-level, the image file specified in this
-          custom attribute is displayed as its square image on the subcategory
-          listing pages where it appears. This image file must be under
-          Magento's /pub/media/catalog/category/ directory on your domain.
-        </p>
-        <input
-          className="form-control"
-          onChange={this.handleChange}
-          value={this.state.categoryThumbnailAtName}
-          name="categoryThumbnailAtName"
-        />
-        <h3>Product Image Custom Attribute Name</h3>
-        <p>
-          This is the product thumbnail that is displayed on product listing
-          pages and in the cart. This image file must be under Magento's
-          /pub/media/catalog/product/ directory on your domain. The file names
-          specified as the value under this custom attribute must each begin
-          with a /.
-        </p>
-        <input
-          className="form-control"
-          onChange={this.handleChange}
-          value={this.state.productImageAtName}
-          name="productImageAtName"
-        />
-        <h3>Short Product Description Custom Attribute Name</h3>
-        <p>
-          This is the short description that is displayed for a product on
-          product listing pages.
-        </p>
-        <input
-          className="form-control margin-bottom"
-          onChange={this.handleChange}
-          value={this.state.shortCategoryDescriptionAtName}
-          name="shortCategoryDescriptionAtName"
+          value={this.state.integrationToken}
+          name="integrationToken"
+          required
         />
         <input className="display-block btn btn-primary" type="submit" />
       </form>

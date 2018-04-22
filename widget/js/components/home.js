@@ -30,14 +30,22 @@ const HomeCategoryCard = ({
 }) => (
   <div className="Home-card">
     <Link to={`${subcategories}/${id}`}>
-      <img
-        className="Home-card-image"
-        src={getCategoryMediaUrl(
-          custom_attributes.find(
-            ({ attribute_code }) => attribute_code === categoryImageAtName
-          ).value
-        )}
-      />
+      {categoryImageAtName &&
+      custom_attributes.find(
+        ({ attribute_code }) => attribute_code === categoryImageAtName
+      ).value ? (
+        <img
+          className="Home-card-image"
+          src={getCategoryMediaUrl(
+            custom_attributes.find(
+              ({ attribute_code }) => attribute_code === categoryImageAtName
+            ).value
+          )}
+        />
+      ) : (
+        <p />
+      )}
+      {/* TODO show name instead */}
     </Link>
   </div>
 );

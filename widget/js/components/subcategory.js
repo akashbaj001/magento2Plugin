@@ -12,14 +12,20 @@ const CategoryCard = ({
 }) => (
   <div className="Category">
     <Link to={`/category/${id}`} className="text-primary">
-      <img
-        className="Category-image"
-        src={getCategoryMediaUrl(
-          custom_attributes.find(
-            ({ attribute_code }) => attribute_code === categoryThumbnailAtName
-          ).value
+      {categoryThumbnailAtName &&
+        custom_attributes.find(
+          ({ attribute_code }) => attribute_code === categoryThumbnailAtName
+        ).value && (
+          <img
+            className="Category-image"
+            src={getCategoryMediaUrl(
+              custom_attributes.find(
+                ({ attribute_code }) =>
+                  attribute_code === categoryThumbnailAtName
+              ).value
+            )}
+          />
         )}
-      />
       <p className="Category-name">{name}</p>
     </Link>
   </div>
@@ -31,14 +37,19 @@ const Subcategory = ({
   categoryImageAtName
 }) => (
   <div className="CategoryList">
-    <img
-      className="CategoryList-banner"
-      src={getCategoryMediaUrl(
-        category.custom_attributes.find(
-          ({ attribute_code }) => attribute_code === categoryImageAtName
-        ).value
+    {categoryImageAtName &&
+      category.custom_attributes.find(
+        ({ attribute_code }) => attribute_code === categoryImageAtName
+      ).value && (
+        <img
+          className="CategoryList-banner"
+          src={getCategoryMediaUrl(
+            category.custom_attributes.find(
+              ({ attribute_code }) => attribute_code === categoryImageAtName
+            ).value
+          )}
+        />
       )}
-    />
     <div className="CategoryList-grid">
       <CategoryList
         items={category.childCategoryData.map(({ id, ...rest }) => ({

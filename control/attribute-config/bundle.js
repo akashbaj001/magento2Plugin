@@ -570,12 +570,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__integration_form__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__attribute_form__ = __webpack_require__(15);
 
 
 
 
-const App = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__integration_form__["default"], null);
+const App = () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__attribute_form__["default"], null);
 
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(App, null), document.getElementById('content'));
 
@@ -996,12 +996,15 @@ class Form extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('style', {
         dangerouslySetInnerHTML: {
           __html: `
-          input {
+          .form-control {
             width: 75%;
             display: block;
           }
           .margin-bottom {
             margin-bottom: 10px;
+          }
+          .display-block {
+            display: block;
           }
         `
         }
@@ -1009,21 +1012,79 @@ class Form extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'h2',
         null,
-        'Integration Token'
+        'Custom Attribute Configuration'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'p',
         null,
-        'This integration token is required in order to load certain information for your store. You must generate an integration token under your Magento admin dashboard by navigating to System > Integrations and pressing "Add New Integration." Fill out the form and press "Save," and paste the token it provides you with into this box.'
+        'These settings control which custom attributes are used to display images and descriptions for categories.'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'h3',
+        null,
+        'Category Image Custom Attribute Name'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'p',
+        null,
+        'If a category is top-level, the image file specified in this custom attribute is displayed as the banner for the category on the homepage and on its subcategory listing page. This image file must be under Magento\'s /pub/media/catalog/category/ directory on your domain.'
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-        className: 'margin-bottom form-control',
+        className: 'form-control',
         onChange: this.handleChange,
-        value: this.state.integrationToken,
-        name: 'integrationToken'
+        value: this.state.categoryImageAtName,
+        name: 'categoryImageAtName'
       }),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { className: 'btn btn-primary', type: 'submit' })
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'h3',
+        null,
+        'Category Thumbnail Custom Attribute Name'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'p',
+        null,
+        'If a category is not top-level, the image file specified in this custom attribute is displayed as its square image on the subcategory listing pages where it appears. This image file must be under Magento\'s /pub/media/catalog/category/ directory on your domain.'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+        className: 'form-control',
+        onChange: this.handleChange,
+        value: this.state.categoryThumbnailAtName,
+        name: 'categoryThumbnailAtName'
+      }),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'h3',
+        null,
+        'Product Image Custom Attribute Name'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'p',
+        null,
+        'This is the product thumbnail that is displayed on product listing pages and in the cart. This image file must be under Magento\'s /pub/media/catalog/product/ directory on your domain. The file names specified as the value under this custom attribute must each begin with a /.'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+        className: 'form-control',
+        onChange: this.handleChange,
+        value: this.state.productImageAtName,
+        name: 'productImageAtName'
+      }),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'h3',
+        null,
+        'Short Product Description Custom Attribute Name'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'p',
+        null,
+        'This is the short description that is displayed for a product on product listing pages.'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
+        className: 'form-control margin-bottom',
+        onChange: this.handleChange,
+        value: this.state.shortCategoryDescriptionAtName,
+        name: 'shortCategoryDescriptionAtName'
+      }),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { className: 'display-block btn btn-primary', type: 'submit' })
     );
   }
 }

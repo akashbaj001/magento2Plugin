@@ -59,21 +59,29 @@ class ProductContainer extends Component {
     this.setState(({ quantity }) => ({ quantity: quantity + 1 }));
 
   handleClickAddToCart = ({ target }) =>
-    buildfire.auth.login(null, () => {
-      const cart = sessionStorage.getItem('cart');
-      cart
-        ? addToCart({
-            sku: target.name,
-            qty: this.state.quantity,
-            quoteID: cart.id
-          })
-        : getCart().then(res =>
-            addToCart({
-              sku: target.name,
-              qty: this.state.quantity,
-              quoteID: JSON.parse(res).id
-            })
-          );
+    buildfire.auth.login(null, (err, customer) => {
+      if (customer) {
+        const cart = sessionStorage.getItem('cart');
+        cart
+          ? addToCart(
+              {
+                sku: target.name,
+                qty: this.state.quantity,
+                quoteID: cart.id
+              },
+              customer.SSO.accessToken
+            )
+          : getCart(customer.SSO.accessToken).then(res =>
+              addToCart(
+                {
+                  sku: target.name,
+                  qty: this.state.quantity,
+                  quoteID: JSON.parse(res).id
+                },
+                customer.SSO.accessToken
+              )
+            );
+      }
     });
 
   render() {

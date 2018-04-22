@@ -6,11 +6,21 @@ import Browse from '../components/browse';
 import Spinner from 'react-spinkit';
 
 class BrowseContainer extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.setState({ isHydrated: false }, this.fetchData);
+    }
+  }
+
   state = {
     isHydrated: false
   };
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = () => {
     const data = JSON.parse(
       sessionStorage.getItem(`browse${this.props.match.params.id}`)
     );
@@ -36,16 +46,28 @@ class BrowseContainer extends Component {
             );
           })
           .catch(err => console.log(err));
-  }
+  };
 
   handleClickAddToCart = ({ target }) =>
-    buildfire.auth.login(null, () => {
-      const cart = sessionStorage.getItem('cart');
-      cart
-        ? addToCart({ sku: target.name, qty: 1, quoteID: cart.id })
-        : getCart().then(res =>
-            addToCart({ sku: target.name, qty: 1, quoteID: JSON.parse(res).id })
-          );
+    buildfire.auth.login(null, (err, user) => {
+      if (user) {
+        const cart = sessionStorage.getItem('cart');
+        cart
+          ? addToCart(
+              { sku: target.name, qty: 1, quoteID: cart.id },
+              user.SSO.accessToken
+            )
+          : getCart(user.SSO.accessToken).then(res =>
+              addToCart(
+                {
+                  sku: target.name,
+                  qty: 1,
+                  quoteID: JSON.parse(res).id
+                },
+                user.SSO.accessToken
+              )
+            );
+      }
     });
 
   render() {

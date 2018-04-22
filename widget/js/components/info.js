@@ -145,7 +145,7 @@ const Info = ({
         <div className="Info-item-body-right">
           <button
             name="billing"
-            className="Info-item-update btn btn-primary"
+            className="Info-item-update btn btn-lg btn-primary"
             onClick={onClickUpdate}
           >
             Update
@@ -167,7 +167,7 @@ const Info = ({
         <div className="Info-item-body-right">
           <button
             name="shipping"
-            className="Info-item-update btn btn-primary"
+            className="Info-item-update btn btn-lg btn-primary"
             onClick={onClickUpdate}
           >
             Update

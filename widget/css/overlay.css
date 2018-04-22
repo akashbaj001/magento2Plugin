@@ -9,13 +9,18 @@
   background-color: rgba(0, 0, 0, 0.9);
 }
 
+.Overlay .Overlay-main {
+  height: 90%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 .Overlay .Overlay-close {
-  float: right;
-  margin-top: 6%;
-  margin-right: 9%;
-  background: none;
-  border: none;
-  font-size: 2.5em;
+  margin: 0 auto;
+  text-align: center;
+  transform: translate(-50%, 25%);
+  left: 50%;
+  position: fixed;
 }
 
 .Overlay .Overlay-content {

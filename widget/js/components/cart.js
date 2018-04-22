@@ -21,16 +21,22 @@ const CartCard = ({
   productDetails
 }) => (
   <div className="Cart-card">
-    <img
-      className="Cart-card-image"
-      src={getProductMediaUrl(
-        productDetails.custom_attributes.find(
-          attribute =>
-            attribute.attribute_code ===
-            window.buildfireConfig.productImageAtName
-        ).value
+    {window.buildfireConfig.productImageAtName &&
+      productDetails.custom_attributes.find(
+        attribute =>
+          attribute.attribute_code === window.buildfireConfig.productImageAtName
+      ).value && (
+        <img
+          className="Cart-card-image"
+          src={getProductMediaUrl(
+            productDetails.custom_attributes.find(
+              attribute =>
+                attribute.attribute_code ===
+                window.buildfireConfig.productImageAtName
+            ).value
+          )}
+        />
       )}
-    />
     <div className="Cart-card-left">
       <p className="Cart-card-name clamp-one">
         <Link to={`${products}/${sku}`} className="text-primary">
@@ -114,18 +120,30 @@ const Cart = ({
               <div className="Overlay-content">
                 {shippingMethods &&
                   shippingMethods.map(
-                    ({ method_title, amount, method_code }) => (
-                      <div
-                        key={method_code}
-                        className={
-                          method_code === selectedShippingMethod.method_code
-                            ? 'text-primary'
-                            : ''
-                        }
-                        onClick={() => onClickShippingMethod(method_code)}
-                      >
-                        <p>{method_title}</p>
-                        <p>${amount}</p>
+                    ({ method_title, amount, method_code }, index) => (
+                      <div key={method_code}>
+                        <input
+                          type="radio"
+                          style={{ marginRight: '10px' }}
+                          key={`radio${method_title}`}
+                          onChange={() => onClickShippingMethod(method_code)}
+                          id={method_code}
+                          value={method_code}
+                          checked={
+                            method_code === selectedShippingMethod.method_code
+                          }
+                        />
+                        <label
+                          className={
+                            method_code === selectedShippingMethod.method_code
+                              ? 'text-primary'
+                              : ''
+                          }
+                          htmlFor={method_code}
+                          key={`label${method_title}`}
+                        >
+                          {method_title} ${amount}
+                        </label>
                       </div>
                     )
                   )}
@@ -184,7 +202,7 @@ const Cart = ({
           </div>
           <div className="Cart-bottom-right">
             <button
-              className="Cart-checkout btn btn-primary"
+              className="Cart-checkout btn-lg btn-primary"
               onClick={onClickCheckout}
             >
               Check Out

@@ -92,6 +92,7 @@ class Form extends Component {
           />
         ))}
         <button
+          type="button"
           className="margin-bottom btn btn-success"
           onClick={this.handleClickAddSection}
         >
@@ -122,7 +123,12 @@ const Section = ({ id, value, name, onChange, onClickRemove }) => (
       name="value"
       id={id}
     />
-    <button className="btn btn-danger" onClick={onClickRemove} id={id}>
+    <button
+      type="button"
+      className="btn btn-danger"
+      onClick={onClickRemove}
+      id={id}
+    >
       Remove Section
     </button>
     <hr />

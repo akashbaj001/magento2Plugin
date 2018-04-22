@@ -1,5 +1,6 @@
 import React from 'react';
 import List from './component-list';
+import Arrow from './link-arrow';
 import {
   Accordion,
   AccordionItem,
@@ -29,14 +30,21 @@ const MONTHS = [
 const formatDate = date =>
   `${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
-const HistoryCard = ({ created_at, quote_id, items, onClickReorder }) => (
+const HistoryCard = ({
+  created_at,
+  increment_id,
+  items,
+  onClickReorder,
+  expandedKeys,
+  arrayIndex
+}) => (
   <AccordionItem className="History-card">
     <AccordionItemTitle className="History-card-title">
       <div className="History-card-title-left">
         <p className="History-card-title-date">
           {formatDate(new Date(created_at))}
         </p>
-        <p className="History-card-title-id">Order ID: {quote_id}</p>
+        <p className="History-card-title-id">Order ID: {increment_id}</p>
       </div>
       <div className="History-card-title-right">
         <p className="History-card-title-price">
@@ -46,6 +54,7 @@ const HistoryCard = ({ created_at, quote_id, items, onClickReorder }) => (
             0
           )}
         </p>
+        <Arrow direction={expandedKeys.includes(arrayIndex) ? 'up' : 'down'} />
       </div>
     </AccordionItemTitle>
     <AccordionItemBody className="History-card-body">
@@ -71,8 +80,8 @@ const HistoryCard = ({ created_at, quote_id, items, onClickReorder }) => (
         )}
       />
       <button
-        className="History-card-body-reorder btn btn-primary"
-        name={quote_id}
+        className="History-card-body-reorder btn btn-lg btn-primary"
+        name={increment_id}
         onClick={onClickReorder}
       >
         Reorder
@@ -81,28 +90,38 @@ const HistoryCard = ({ created_at, quote_id, items, onClickReorder }) => (
   </AccordionItem>
 );
 
-const History = ({ orders, onClickReorder }) => {
+const History = ({
+  orders,
+  onClickReorder,
+  onAccordionChange,
+  expandedKeys
+}) => {
   if (orders.items && orders.items.length > 0) {
     return (
       <div className="History">
         <h1 className="History-title">Order History</h1>
-        <Accordion className="History-accordion accordion" accordion={false}>
+        <Accordion
+          onChange={onAccordionChange}
+          className="History-accordion accordion"
+          accordion={false}
+        >
           <List
             items={orders.items
-              .map(({ quote_id, ...rest }) => ({
-                uniqueKey: quote_id,
-                quote_id,
+              .map(({ increment_id, ...rest }) => ({
+                uniqueKey: increment_id,
+                increment_id,
                 ...rest
               }))
-              .sort((a, b) => b.quote_id - a.quote_id)}
+              .sort((a, b) => b.increment_id - a.increment_id)}
             onClickReorder={onClickReorder}
+            expandedKeys={expandedKeys}
             renderedElement={HistoryCard}
           />
         </Accordion>
       </div>
     );
   } else {
-    return <p>No products found.</p>;
+    return <p className="List-noItems">No products found.</p>;
   }
 };
 

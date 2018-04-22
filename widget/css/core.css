@@ -77,3 +77,10 @@ a {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+::-webkit-scrollbar {
+  height: 16px;
+  overflow: visible;
+  width: 16px;
+  display: none;
+}

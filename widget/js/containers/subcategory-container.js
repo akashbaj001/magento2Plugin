@@ -4,11 +4,21 @@ import Subcategory from '../components/subcategory';
 import Spinner from 'react-spinkit';
 
 class SubcategoryContainer extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.setState({ isHydrated: false }, this.fetchData);
+    }
+  }
+
   state = {
     isHydrated: false
   };
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = () => {
     const data = JSON.parse(
       sessionStorage.getItem(`subcat${this.props.match.params.id}`)
     );
@@ -49,7 +59,7 @@ class SubcategoryContainer extends Component {
             });
           })
           .catch(err => console.log(err));
-  }
+  };
 
   render() {
     return this.state.isHydrated ? (

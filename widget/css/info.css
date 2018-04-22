@@ -2,11 +2,17 @@
   .Info {
     font-size: 1em;
   }
+  .Info h2 {
+    font-size: 1.5em;
+  }
 }
 
 @media only screen and (min-width: 760px) and (max-width: 1000px) {
   .Info {
     font-size: 2em;
+  }
+  .Info h2 {
+    font-size: 2.5em;
   }
 }
 
@@ -14,12 +20,20 @@
   .Info {
     font-size: 3em;
   }
+  .Info h2 {
+    font-size: 3.5em;
+  }
 }
 
 .Info {
   padding: 5%;
   overflow: auto;
   line-height: 1.25em;
+}
+
+.Info h2,
+.Info .Info-item-body {
+  margin-bottom: 10%;
 }
 
 .Info .Info-item:after {

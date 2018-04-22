@@ -22,6 +22,11 @@
   overflow: auto;
 }
 
+.History .History-card .arrow {
+  vertical-align: middle;
+  margin-left: 20%;
+}
+
 .History .History-title {
   font-size: 1.25em;
 }
@@ -30,12 +35,17 @@
   padding-top: 5%;
 }
 
-.History .History-card .History-card-title .History-card-title-price {
-  float: right;
+.History .History-card-title {
+  padding: 5% 0;
+}
+
+.History .History-card-title .History-card-title-right {
+  text-align: right;
 }
 
 .History .History-card-title .History-card-title-left,
 .History .History-card-title .History-card-title-right {
+  vertical-align: middle;
   display: inline-block;
   width: 50%;
 }
@@ -49,8 +59,13 @@
   float: right;
 }
 
+.History .History-card .History-card-title-price,
+.History .History-card .arrow {
+  display: inline-block;
+}
+
 .History .History-card .History-card-body .History-card-body-reorder {
-  margin-left: 75%;
+  margin-left: 67.5%;
   margin-top: 7.5%;
   margin-bottom: 15px;
 }

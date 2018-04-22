@@ -89,11 +89,16 @@
   display: inline-block;
 }
 
+.Browse-card-price {
+  text-align: left;
+}
+
 .Browse-card-price,
 .Browse-card-button {
+  width: 50%;
   vertical-align: middle;
 }
 
 .Browse-card-button {
-  float: right;
+  text-align: right;
 }

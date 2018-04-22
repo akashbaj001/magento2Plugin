@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Arrow from './link-arrow';
+import { reminders, history, info } from '../constants/routes';
 import '../../css/account.css';
 
 const Account = ({ customerName }) => (
@@ -13,17 +14,17 @@ const Account = ({ customerName }) => (
     </div>
     <ul className="Account-list">
       <li className="Account-list-item">
-        <Link to="/reminders">
+        <Link to={reminders}>
           Reminders <Arrow direction="right" />
         </Link>
       </li>
       <li className="Account-list-item">
-        <Link to="/history">
+        <Link to={history}>
           Order History <Arrow direction="right" />
         </Link>
       </li>
       <li className="Account-list-item">
-        <Link to="/info">
+        <Link to={info}>
           Billing/shipping <Arrow direction="right" />
         </Link>
       </li>
