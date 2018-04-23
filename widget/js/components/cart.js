@@ -164,26 +164,28 @@ const Cart = ({
           onQuantityIncrement={onQuantityIncrement}
           onClickRemove={onClickRemove}
         />
+        <button
+          className="Cart-coupon-button btn btn-info"
+          onClick={onClickApplyCoupon}
+        >
+          Apply Coupon Code
+        </button>
         <div className="Cart-bottom">
           <div className="Cart-bottom-left">
-            <button
-              className="Cart-coupon-button btn btn-info"
-              onClick={onClickApplyCoupon}
-            >
-              Apply Coupon Code
-            </button>
             <p className="Cart-amount">
               <span className="align-left">Subtotal</span>{' '}
               <span className="align-right">${subTotal}</span>
             </p>
             <p className="Cart-amount">
               <span className="align-left">Shipping</span>{' '}
-              <span
-                className="Cart-editShipping text-primary"
-                onClick={onClickChangeShipping}
-              >
-                [edit]
-              </span>{' '}
+              {shippingMethods && (
+                <span
+                  className="Cart-editShipping text-primary"
+                  onClick={onClickChangeShipping}
+                >
+                  [edit]
+                </span>
+              )}
               <span className="align-right">${shipping}</span>
             </p>
             <p className="Cart-amount">

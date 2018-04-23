@@ -12,13 +12,13 @@ class RemindersContainer extends Component {
       null,
       (err, customer) =>
         customer
-          ? buildfire.datastore.get(
+          ? buildfire.publicData.get(
               `reminders${customer.userToken}`,
               (err, res) =>
                 buildfire.notifications.localNotification.schedule(
                   { title: '', text: '', at: new Date(), data: { sku: '' } },
                   (err, data) =>
-                    buildfire.datastore.save(
+                    buildfire.publicData.save(
                       {
                         ...res.data,
                         reminders: [
@@ -34,7 +34,7 @@ class RemindersContainer extends Component {
                       },
                       `reminders${customer.userToken}`,
                       () =>
-                        buildfire.datastore.get(
+                        buildfire.publicData.get(
                           `reminders${customer.userToken}`,
                           (err, res) =>
                             this.setState({
@@ -67,7 +67,7 @@ class RemindersContainer extends Component {
                 areRemindersEnabled: !areRemindersEnabled
               }),
               () =>
-                buildfire.datastore.save(
+                buildfire.publicData.save(
                   {
                     reminders: [...this.state.reminders],
                     areRemindersEnabled: this.state.areRemindersEnabled
@@ -97,7 +97,7 @@ class RemindersContainer extends Component {
                 ]
               }),
               () =>
-                buildfire.datastore.save(
+                buildfire.publicData.save(
                   {
                     reminders: [
                       ...this.state.reminders.slice(0, parseInt(name, 10)),

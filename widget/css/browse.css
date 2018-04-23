@@ -56,27 +56,39 @@
   display: flex;
   padding-bottom: 6%;
   line-height: 1.2em;
+  height: 25%;
 }
 
 .Browse-card-image {
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .Browse-card-left {
   width: 30%;
+  height: 100%;
 }
 
 .Browse-card-right {
   width: 70%;
   padding-left: 5%;
+  height: 100%;
 }
 
 .Browse-card-right-top {
   padding-bottom: 5%;
+  height: 50%;
+}
+
+.Browse-card-right-bottom {
+  height: 50%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: flex-end;
 }
 
 .Browse-card-right-top,
-.Browse-card-right-bottom,
 .Browse-card-name,
 .Browse-card-description {
   display: block;
@@ -90,15 +102,28 @@
 }
 
 .Browse-card-price {
-  text-align: left;
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  vertical-align: middle;
+  align-items: center;
+  align-content: flex-start;
 }
 
-.Browse-card-price,
 .Browse-card-button {
   width: 50%;
+  display: flex;
+  justify-content: flex-end;
   vertical-align: middle;
+  align-items: flex-end;
+  align-content: flex-end;
 }
 
 .Browse-card-button {
   text-align: right;
+}
+
+.Browse-card-button,
+.Browse-card-price {
+  height: 100%;
 }

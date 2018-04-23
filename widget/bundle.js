@@ -41145,7 +41145,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.3em;\n  }\n\n  .Browse-card {\n    font-size: 0.85em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.2em;\n}\n\n.Browse-card-image {\n  width: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n}\n\n.Browse-card-right-top,\n.Browse-card-right-bottom,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price {\n  text-align: left;\n}\n\n.Browse-card-price,\n.Browse-card-button {\n  width: 50%;\n  vertical-align: middle;\n}\n\n.Browse-card-button {\n  text-align: right;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.3em;\n  }\n\n  .Browse-card {\n    font-size: 0.85em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.2em;\n  height: 25%;\n}\n\n.Browse-card-image {\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n  height: 100%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n  height: 100%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n  height: 50%;\n}\n\n.Browse-card-right-bottom {\n  height: 50%;\n  display: flex;\n  justify-content: flex-end;\n  align-items: flex-end;\n  align-content: flex-end;\n}\n\n.Browse-card-right-top,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price {\n  width: 50%;\n  display: flex;\n  justify-content: flex-start;\n  vertical-align: middle;\n  align-items: center;\n  align-content: flex-start;\n}\n\n.Browse-card-button {\n  width: 50%;\n  display: flex;\n  justify-content: flex-end;\n  vertical-align: middle;\n  align-items: flex-end;\n  align-content: flex-end;\n}\n\n.Browse-card-button {\n  text-align: right;\n}\n\n.Browse-card-button,\n.Browse-card-price {\n  height: 100%;\n}\n", ""]);
 
 // exports
 
@@ -41241,22 +41241,25 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentDidMount() {
-    buildfire.auth.login({}, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
+    buildfire.auth.login({}, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])(
+    /*customer.SSO.accessToken*/'ttp7iaiedgl5cnd4i1r04c16hed58xg3').then(res => {
       const parsedRes = JSON.parse(res);
 
-      Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
-        Promise.all(parsedRes.items.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku))).then(products => {
+      Promise.all(parsedRes.items.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku))).then(products => {
+        this.setState({
+          isHydrated: true,
+          items: parsedRes.items.map(item => _extends({}, item, {
+            productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
+          }))
+        });
+        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
           const parsedShippingMethods = JSON.parse(shippingMethods);
           this.setState({
-            isHydrated: true,
-            items: parsedRes.items.map(item => _extends({}, item, {
-              productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
-            })),
             shippingMethods: parsedShippingMethods.filter(({ available }) => available),
             selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
           });
-        });
-      }).catch(() => this.setState({ isHydrated: true })); // TODO check if it's the shipping method error;
+        }).catch(err => console.log(err) || this.setState({ isHydrated: true })); // TODO check if it's the shipping method error
+      });
     }) : this.goBack());
   } // TODO
 
@@ -41479,19 +41482,19 @@ const Cart = ({
         onClickRemove: onClickRemove
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'button',
+        {
+          className: 'Cart-coupon-button btn btn-info',
+          onClick: onClickApplyCoupon
+        },
+        'Apply Coupon Code'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'Cart-bottom' },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'Cart-bottom-left' },
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'button',
-            {
-              className: 'Cart-coupon-button btn btn-info',
-              onClick: onClickApplyCoupon
-            },
-            'Apply Coupon Code'
-          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'p',
             { className: 'Cart-amount' },
@@ -41517,7 +41520,7 @@ const Cart = ({
               'Shipping'
             ),
             ' ',
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            shippingMethods && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'span',
               {
                 className: 'Cart-editShipping text-primary',
@@ -41525,7 +41528,6 @@ const Cart = ({
               },
               '[edit]'
             ),
-            ' ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'span',
               { className: 'align-right' },
@@ -41616,7 +41618,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 8px;\n  margin-right: 8px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: block;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 10% !important;\n}\n", ""]);
+exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 5px;\n  margin-right: 5px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: flex;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 5% !important;\n}\n", ""]);
 
 // exports
 
@@ -46858,28 +46860,28 @@ class RemindersContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"
     // TODO also cancel all or reschedule all local notifications
     buildfire.auth.login(null, (err, customer) => customer ? this.setState(({ areRemindersEnabled }) => ({
       areRemindersEnabled: !areRemindersEnabled
-    }), () => buildfire.datastore.save({
+    }), () => buildfire.publicData.save({
       reminders: [...this.state.reminders],
       areRemindersEnabled: this.state.areRemindersEnabled
     }, `reminders${customer.userToken}`, (err, status) => err ? this.setState(prevState => ({
       areRemindersEnabled: !areRemindersEnabled
     })) : {})) : {}), this.handleClickRemoveReminder = name => buildfire.auth.login(null, (err, customer) => customer ? this.setState(({ reminders }) => ({
       reminders: [...reminders.slice(0, parseInt(name, 10)), ...reminders.slice(parseInt(name, 10) + 1)]
-    }), () => buildfire.datastore.save({
+    }), () => buildfire.publicData.save({
       reminders: [...this.state.reminders.slice(0, parseInt(name, 10)), ...this.state.reminders.slice(parseInt(name, 10) + 1)],
       areRemindersEnabled: this.state.areRemindersEnabled
     }, `reminders${customer.userToken}`, (err, status) => err ? this.setState({ reminders }) : window.buildfire.notifications.localNotification.cancel(reminders[parseInt(name, 10)].notificationId))) : {}), _temp;
   }
 
   componentDidMount() {
-    buildfire.auth.login(null, (err, customer) => customer ? buildfire.datastore.get(`reminders${customer.userToken}`, (err, res) => buildfire.notifications.localNotification.schedule({ title: '', text: '', at: new Date(), data: { sku: '' } }, (err, data) => buildfire.datastore.save(_extends({}, res.data, {
+    buildfire.auth.login(null, (err, customer) => customer ? buildfire.publicData.get(`reminders${customer.userToken}`, (err, res) => buildfire.notifications.localNotification.schedule({ title: '', text: '', at: new Date(), data: { sku: '' } }, (err, data) => buildfire.publicData.save(_extends({}, res.data, {
       reminders: [...(res.data.reminders ? res.data.reminders : []), {
         reminder: 'Time to order new blades. Save 10% if you order in the next two days.',
         sku: '00156',
         date: new Date().toString(),
         notificationId: data.id
       }]
-    }), `reminders${customer.userToken}`, () => buildfire.datastore.get(`reminders${customer.userToken}`, (err, res) => this.setState({
+    }), `reminders${customer.userToken}`, () => buildfire.publicData.get(`reminders${customer.userToken}`, (err, res) => this.setState({
       isHydrated: true,
       reminders: res.data.reminders.sort((a, b) => new Date(b.date) - new Date(a.date)),
       areRemindersEnabled: res.data.areRemindersEnabled

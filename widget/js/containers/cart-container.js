@@ -32,23 +32,27 @@ class CartContainer extends Component {
       {},
       (err, customer) =>
         customer
-          ? getCart(customer.SSO.accessToken).then(res => {
+          ? getCart(
+              /*customer.SSO.accessToken*/ 'ttp7iaiedgl5cnd4i1r04c16hed58xg3'
+            ).then(res => {
               const parsedRes = JSON.parse(res);
 
-              getShippingMethods(customer.SSO.accessToken)
-                .then(shippingMethods => {
-                  Promise.all(
-                    parsedRes.items.map(({ sku }) => getProduct(sku))
-                  ).then(products => {
+              Promise.all(
+                parsedRes.items.map(({ sku }) => getProduct(sku))
+              ).then(products => {
+                this.setState({
+                  isHydrated: true,
+                  items: parsedRes.items.map(item => ({
+                    ...item,
+                    productDetails: products
+                      .map(product => JSON.parse(product))
+                      .find(({ sku }) => sku === item.sku)
+                  }))
+                });
+                getShippingMethods(customer.SSO.accessToken)
+                  .then(shippingMethods => {
                     const parsedShippingMethods = JSON.parse(shippingMethods);
                     this.setState({
-                      isHydrated: true,
-                      items: parsedRes.items.map(item => ({
-                        ...item,
-                        productDetails: products
-                          .map(product => JSON.parse(product))
-                          .find(({ sku }) => sku === item.sku)
-                      })),
                       shippingMethods: parsedShippingMethods.filter(
                         ({ available }) => available
                       ),
@@ -58,9 +62,12 @@ class CartContainer extends Component {
                           parsedShippingMethods[0]) ||
                         null
                     });
-                  });
-                })
-                .catch(() => this.setState({ isHydrated: true })); // TODO check if it's the shipping method error;
+                  })
+                  .catch(
+                    err =>
+                      console.log(err) || this.setState({ isHydrated: true })
+                  ); // TODO check if it's the shipping method error
+              });
             })
           : this.goBack()
     );
