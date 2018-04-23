@@ -3,27 +3,27 @@ import config from '../config';
 
 const { apiBasePath } = config;
 
-export const getCart = () =>
+export const getCart = token =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const getShippingMethods = () =>
+export const getShippingMethods = token =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/shipping-methods')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const addToCart = ({ sku, qty, quoteID }) =>
+export const addToCart = ({ sku, qty, quoteID }, token) =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/items')}`,
@@ -37,41 +37,41 @@ export const addToCart = ({ sku, qty, quoteID }) =>
       method: 'POST',
       contentType: 'application/json',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const removeFromCart = itemID =>
+export const removeFromCart = (itemID, token) =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent(`carts/mine/items/${itemID}`)}`,
       method: 'DELETE',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const getBillingAddress = () =>
+export const getBillingAddress = token =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/billing-address')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const getPaymentMethods = () =>
+export const getPaymentMethods = token =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/payment-methods')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const getShippingAddress = () =>
+export const getShippingAddress = token =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent(
@@ -79,11 +79,11 @@ export const getShippingAddress = () =>
       )}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const placeOrder = ({ paymentMethod, shippingMethod }) =>
+export const placeOrder = ({ paymentMethod, shippingMethod }, token) =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('carts/mine/order')}`,
@@ -91,17 +91,17 @@ export const placeOrder = ({ paymentMethod, shippingMethod }) =>
       method: 'PUT',
       dataType: 'json',
       contentType: 'application/json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 
-export const getCustomer = () =>
+export const getCustomer = token =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent('customers/me')}`,
       method: 'GET',
       dataType: 'json',
-      headers: { Authorization: 'Bearer bwm9s2k5vhy6b4i3gtuiyv36i4hebsd3' }
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
 

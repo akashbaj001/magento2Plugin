@@ -78,11 +78,11 @@ class App extends Component {
                 <Route path={category} component={BrowseContainer} />
                 <Route path={subcategory} component={SubcategoryContainer} />
                 <Route path={cart} component={CartContainer} />
-                <Route path={account} component={AccountContainer} />
                 <Route path={history} component={HistoryContainer} />
-                <Route path={product} component={ProductContainer} />
                 <Route path={reminders} component={RemindersContainer} />
                 <Route path={info} component={InfoContainer} />
+                <Route path={account} component={AccountContainer} />
+                <Route path={product} component={ProductContainer} />
                 <Route component={NotFound} />
               </Switch>
               <Nav />

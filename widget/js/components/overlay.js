@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Spinner from 'react-spinkit';
 import '../../css/overlay.css';
 
@@ -7,16 +7,18 @@ const Overlay = ({ isLoading, render, onClickClose, ...rest }) => (
     {isLoading ? (
       <Spinner />
     ) : (
-      <div>
+      <Fragment>
+        <div className="Overlay-main">
+          {render({ isLoading, onClickClose, ...rest })}
+        </div>
         <button
           key="closeButton"
-          className="Overlay-close"
+          className="Overlay-close btn btn-primary"
           onClick={onClickClose}
         >
-          x
+          Close
         </button>
-        {render({ isLoading, onClickClose, ...rest })}
-      </div>
+      </Fragment>
     )}
   </nav>
 );

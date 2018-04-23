@@ -8,48 +8,61 @@ import {
 import { getProduct } from '../services/product-service';
 import Cart from '../components/cart';
 import Spinner from 'react-spinkit';
+import { home, root } from '../constants/routes';
+import { withRouter } from 'react-router-dom';
 
 class CartContainer extends Component {
   state = {
     isHydrated: false,
     shouldShowShippingMenu: false,
     shouldShowCouponOverlay: false,
-    couponCode: ''
+    couponCode: '',
+    shippingMethods: [],
+    items: []
   };
 
-  componentDidMount() {
-    // TODO if you press cancel login it still reroutes
-    buildfire.auth.login({}, () =>
-      getCart()
-        .then(res => {
-          const parsedRes = JSON.parse(res);
+  isHome = () =>
+    this.props.location.pathname === root ||
+    this.props.location.pathname === home;
 
-          getShippingMethods().then(shippingMethods => {
-            Promise.all(parsedRes.items.map(({ sku }) => getProduct(sku))).then(
-              products => {
-                const parsedShippingMethods = JSON.parse(shippingMethods);
-                this.setState({
-                  isHydrated: true,
-                  items: parsedRes.items.map(item => ({
-                    ...item,
-                    productDetails: products
-                      .map(product => JSON.parse(product))
-                      .find(({ sku }) => sku === item.sku)
-                  })),
-                  shippingMethods: parsedShippingMethods.filter(
-                    ({ available }) => available
-                  ),
-                  selectedShippingMethod:
-                    (parsedShippingMethods &&
-                      parsedShippingMethods.length > 0 &&
-                      parsedShippingMethods[0]) ||
-                    null
-                });
-              }
-            );
-          });
-        })
-        .catch(err => console.log(err))
+  goBack = () => !this.isHome() && this.props.history.goBack();
+
+  componentDidMount() {
+    buildfire.auth.login(
+      {},
+      (err, customer) =>
+        customer
+          ? getCart(customer.SSO.accessToken).then(res => {
+              const parsedRes = JSON.parse(res);
+
+              getShippingMethods(customer.SSO.accessToken)
+                .then(shippingMethods => {
+                  Promise.all(
+                    parsedRes.items.map(({ sku }) => getProduct(sku))
+                  ).then(products => {
+                    const parsedShippingMethods = JSON.parse(shippingMethods);
+                    this.setState({
+                      isHydrated: true,
+                      items: parsedRes.items.map(item => ({
+                        ...item,
+                        productDetails: products
+                          .map(product => JSON.parse(product))
+                          .find(({ sku }) => sku === item.sku)
+                      })),
+                      shippingMethods: parsedShippingMethods.filter(
+                        ({ available }) => available
+                      ),
+                      selectedShippingMethod:
+                        (parsedShippingMethods &&
+                          parsedShippingMethods.length > 0 &&
+                          parsedShippingMethods[0]) ||
+                        null
+                    });
+                  });
+                })
+                .catch(() => this.setState({ isHydrated: true })); // TODO check if it's the shipping method error;
+            })
+          : this.goBack()
     );
   }
 
@@ -89,16 +102,21 @@ class CartContainer extends Component {
     });
 
   handleClickRemove = id => {
-    buildfire.auth.login({}, () => {
-      // Save current set of items in case removal request fails.
-      const oldItems = this.state.items;
-      this.setState(
-        ({ items }) => {
-          const newItems = [...items];
-          return { items: newItems.filter(item => item.item_id != id) };
-        },
-        () => removeFromCart(id).catch(() => this.setState({ items: oldItems }))
-      );
+    buildfire.auth.login({}, (err, customer) => {
+      if (customer) {
+        // Save current set of items in case removal request fails.
+        const oldItems = this.state.items;
+        this.setState(
+          ({ items }) => {
+            const newItems = [...items];
+            return { items: newItems.filter(item => item.item_id != id) };
+          },
+          () =>
+            removeFromCart(id, customer.SSO.accessToken).catch(() =>
+              this.setState({ items: oldItems })
+            )
+        );
+      }
     });
   };
 
@@ -122,32 +140,36 @@ class CartContainer extends Component {
     this.setState({ shouldShowCouponOverlay: true });
 
   handleClickCheckout = () =>
-    buildfire.auth.login(null, () =>
-      placeOrder()
-        .then(res => {
-          console.log(res);
-          // TODO
-          // to get the two below custom attributes you have to do a GET to the product details for every product purchased
-          // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
-          // when adding to data store, include app_product_reminder_message
-          if (true) {
-            buildfire.datastore.insert(
-              {
-                reminders: [
-                  {
-                    reminder:
-                      'Time to order new blades. Save 10% if you order in the next two days.',
-                    sku: '01007',
-                    date: ''
-                  }
-                ]
-              },
-              'reminders',
-              false
-            );
-          }
-        })
-        .catch(err => console.log(err))
+    buildfire.auth.login(
+      null,
+      (err, customer) =>
+        customer
+          ? placeOrder({}, customer.SSO.accessToken)
+              .then(res => {
+                console.log(res);
+                // TODO
+                // to get the two below custom attributes you have to do a GET to the product details for every product purchased
+                // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
+                // when adding to data store, include app_product_reminder_message
+                if (true) {
+                  buildfire.datastore.insert(
+                    {
+                      reminders: [
+                        {
+                          reminder:
+                            'Time to order new blades. Save 10% if you order in the next two days.',
+                          sku: '01007',
+                          date: ''
+                        }
+                      ]
+                    },
+                    'reminders',
+                    false
+                  );
+                }
+              })
+              .catch(err => console.log(err))
+          : {}
     );
 
   handleInputChange = ({ target: { name, value } }) =>
@@ -159,7 +181,7 @@ class CartContainer extends Component {
   getShipping = () =>
     this.state.selectedShippingMethod
       ? this.state.selectedShippingMethod.amount
-      : {};
+      : 0;
 
   getDiscount = () => 0; // TODO
 
@@ -203,4 +225,4 @@ class CartContainer extends Component {
   }
 }
 
-export default CartContainer;
+export default withRouter(CartContainer);
