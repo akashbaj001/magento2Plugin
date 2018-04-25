@@ -52,6 +52,7 @@ class BrowseContainer extends Component {
     buildfire.auth.login(null, (err, customer) => {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
         if (cart) {
           addToCart(
             { sku: target.name, qty: 1, quoteID: cart.id },
@@ -60,7 +61,6 @@ class BrowseContainer extends Component {
         } else {
           getCart(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.removeItem('cart');
             addToCart(
               {
                 sku: target.name,

@@ -37999,6 +37999,7 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
     })), this.handleQuantityIncrement = () => this.setState(({ quantity }) => ({ quantity: quantity + 1 })), this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
         if (cart) {
           Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
             sku: target.name,
@@ -38008,7 +38009,6 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.removeItem('cart');
             Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
               sku: target.name,
               qty: this.state.quantity,
@@ -40981,12 +40981,12 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
         if (cart) {
           Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }, customer.SSO.accessToken);
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.removeItem('cart');
             Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({
               sku: target.name,
               qty: 1,
@@ -41264,8 +41264,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           Promise.all(cart.items.map(({ sku }) => {
             const productFromStorage = sessionStorage.getItem(`product${sku}`);
             console.log(productFromStorage);
-            return productFromStorage ? Promise.resolve(productFromStorage) // TODO cart isn't being properly emptied on ATC
-            : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
+            return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
           })).then(products => {
             products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
             console.log(products);

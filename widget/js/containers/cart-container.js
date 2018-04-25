@@ -39,7 +39,7 @@ class CartContainer extends Component {
               );
               console.log(productFromStorage);
               return productFromStorage
-                ? Promise.resolve(productFromStorage) // TODO cart isn't being properly emptied on ATC
+                ? Promise.resolve(productFromStorage)
                 : getProduct(sku);
             })
           ).then(products => {
