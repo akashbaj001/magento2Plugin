@@ -13,5 +13,5 @@ export const account = `${rootPath}account`;
 export const history = `${account}/history`;
 export const products = `${rootPath}product`;
 export const product = `${products}/:sku`;
-export const reminders = `${account}reminders`;
+export const reminders = `${account}/reminders`;
 export const info = `${account}/info`;

@@ -49,24 +49,28 @@ class BrowseContainer extends Component {
   };
 
   handleClickAddToCart = ({ target }) =>
-    buildfire.auth.login(null, (err, user) => {
-      if (user) {
-        const cart = sessionStorage.getItem('cart');
-        cart
-          ? addToCart(
-              { sku: target.name, qty: 1, quoteID: cart.id },
-              user.SSO.accessToken
-            )
-          : getCart(user.SSO.accessToken).then(res =>
-              addToCart(
-                {
-                  sku: target.name,
-                  qty: 1,
-                  quoteID: JSON.parse(res).id
-                },
-                user.SSO.accessToken
-              )
+    buildfire.auth.login(null, (err, customer) => {
+      if (customer) {
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
+        if (cart) {
+          addToCart(
+            { sku: target.name, qty: 1, quoteID: cart.id },
+            customer.SSO.accessToken
+          );
+        } else {
+          getCart(customer.SSO.accessToken).then(res => {
+            const parsedCart = JSON.parse(res);
+            sessionStorage.setItem('cart', null);
+            addToCart(
+              {
+                sku: target.name,
+                qty: 1,
+                quoteID: JSON.parse(res).id
+              },
+              customer.SSO.accessToken
             );
+          });
+        }
       }
     });
 

@@ -17,7 +17,7 @@ class ProductContainer extends Component {
       sessionStorage.getItem(`product${this.props.match.params.sku}`)
     );
     data
-      ? this.setState(data)
+      ? this.setState({ product: data, isHydrated: true })
       : getProduct(this.props.match.params.sku)
           .then(res =>
             getAttributeById(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData => {
@@ -30,7 +30,7 @@ class ProductContainer extends Component {
               };
               sessionStorage.setItem(
                 `product${this.props.match.params.sku}`,
-                JSON.stringify(loadData)
+                res
               );
               this.setState(loadData);
             })
@@ -61,26 +61,30 @@ class ProductContainer extends Component {
   handleClickAddToCart = ({ target }) =>
     buildfire.auth.login(null, (err, customer) => {
       if (customer) {
-        const cart = sessionStorage.getItem('cart');
-        cart
-          ? addToCart(
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
+        if (cart) {
+          addToCart(
+            {
+              sku: target.name,
+              qty: this.state.quantity,
+              quoteID: cart.id
+            },
+            customer.SSO.accessToken
+          );
+        } else {
+          getCart(customer.SSO.accessToken).then(res => {
+            const parsedCart = JSON.parse(res);
+            sessionStorage.setItem('cart', null);
+            addToCart(
               {
                 sku: target.name,
                 qty: this.state.quantity,
-                quoteID: cart.id
+                quoteID: parsedCart.id
               },
               customer.SSO.accessToken
-            )
-          : getCart(customer.SSO.accessToken).then(res =>
-              addToCart(
-                {
-                  sku: target.name,
-                  qty: this.state.quantity,
-                  quoteID: JSON.parse(res).id
-                },
-                customer.SSO.accessToken
-              )
             );
+          });
+        }
       }
     });
 
