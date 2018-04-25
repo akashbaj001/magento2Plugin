@@ -51,7 +51,7 @@ class BrowseContainer extends Component {
   handleClickAddToCart = ({ target }) =>
     buildfire.auth.login(null, (err, customer) => {
       if (customer) {
-        const cart = sessionStorage.getItem('cart');
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
           addToCart(
             { sku: target.name, qty: 1, quoteID: cart.id },

@@ -37998,7 +37998,7 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
       quantity: quantity <= 1 ? 1 : quantity - 1
     })), this.handleQuantityIncrement = () => this.setState(({ quantity }) => ({ quantity: quantity + 1 })), this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
-        const cart = sessionStorage.getItem('cart');
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
           Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
             sku: target.name,
@@ -40980,7 +40980,7 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       }).catch(err => console.log(err));
     }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
-        const cart = sessionStorage.getItem('cart');
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
           Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }, customer.SSO.accessToken);
         } else {
