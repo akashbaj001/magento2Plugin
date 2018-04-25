@@ -38008,7 +38008,7 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.setItem('cart', null);
+            sessionStorage.removeItem('cart');
             Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
               sku: target.name,
               qty: this.state.quantity,
@@ -40986,7 +40986,7 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.setItem('cart', null);
+            sessionStorage.removeItem('cart');
             Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({
               sku: target.name,
               qty: 1,
@@ -41233,7 +41233,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(({ items }) => {
             const newItems = [...items];
             return { items: newItems.filter(item => item.item_id != id) };
-          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => sessionStorage.setItem('cart', null)).catch(() => this.setState({ items: oldItems })));
+          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => sessionStorage.removeItem('cart')).catch(() => this.setState({ items: oldItems })));
         }
       });
     }, this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }), this.handleClickShippingMethod = methodCode => this.setState({
@@ -41263,7 +41263,9 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         if (cart) {
           Promise.all(cart.items.map(({ sku }) => {
             const productFromStorage = sessionStorage.getItem(`product${sku}`);
-            return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
+            console.log(productFromStorage);
+            return productFromStorage ? Promise.resolve(productFromStorage) // TODO cart isn't being properly emptied on ATC
+            : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
           })).then(products => {
             products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
             console.log(products);
@@ -41287,6 +41289,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             sessionStorage.setItem('cart', res);
             Promise.all(parsedRes.items.map(({ sku }) => {
               const productFromStorage = sessionStorage.getItem(`product${sku}`);
+              console.log(productFromStorage);
               return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
             })).then(products => {
               products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));

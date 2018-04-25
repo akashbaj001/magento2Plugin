@@ -74,7 +74,7 @@ class ProductContainer extends Component {
         } else {
           getCart(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.setItem('cart', null);
+            sessionStorage.removeItem('cart');
             addToCart(
               {
                 sku: target.name,

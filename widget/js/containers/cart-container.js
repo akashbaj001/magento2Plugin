@@ -37,8 +37,9 @@ class CartContainer extends Component {
               const productFromStorage = sessionStorage.getItem(
                 `product${sku}`
               );
+              console.log(productFromStorage);
               return productFromStorage
-                ? Promise.resolve(productFromStorage)
+                ? Promise.resolve(productFromStorage) // TODO cart isn't being properly emptied on ATC
                 : getProduct(sku);
             })
           ).then(products => {
@@ -85,6 +86,7 @@ class CartContainer extends Component {
                 const productFromStorage = sessionStorage.getItem(
                   `product${sku}`
                 );
+                console.log(productFromStorage);
                 return productFromStorage
                   ? Promise.resolve(productFromStorage)
                   : getProduct(sku);
@@ -178,7 +180,7 @@ class CartContainer extends Component {
           },
           () =>
             removeFromCart(id, customer.SSO.accessToken)
-              .then(() => sessionStorage.setItem('cart', null))
+              .then(() => sessionStorage.removeItem('cart'))
               .catch(() => this.setState({ items: oldItems }))
         );
       }
