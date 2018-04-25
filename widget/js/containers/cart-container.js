@@ -28,49 +28,107 @@ class CartContainer extends Component {
   goBack = () => !this.isHome() && this.props.history.goBack();
 
   componentDidMount() {
-    buildfire.auth.login(
-      {},
-      (err, customer) =>
-        customer
-          ? getCart(
-              /*customer.SSO.accessToken*/ 'ttp7iaiedgl5cnd4i1r04c16hed58xg3'
-            ).then(res => {
-              const parsedRes = JSON.parse(res);
-
-              Promise.all(
-                parsedRes.items.map(({ sku }) => getProduct(sku))
-              ).then(products => {
-                this.setState({
-                  isHydrated: true,
-                  items: parsedRes.items.map(item => ({
-                    ...item,
-                    productDetails: products
-                      .map(product => JSON.parse(product))
-                      .find(({ sku }) => sku === item.sku)
-                  }))
-                });
-                getShippingMethods(customer.SSO.accessToken)
-                  .then(shippingMethods => {
-                    const parsedShippingMethods = JSON.parse(shippingMethods);
-                    this.setState({
-                      shippingMethods: parsedShippingMethods.filter(
-                        ({ available }) => available
-                      ),
-                      selectedShippingMethod:
-                        (parsedShippingMethods &&
-                          parsedShippingMethods.length > 0 &&
-                          parsedShippingMethods[0]) ||
-                        null
-                    });
-                  })
-                  .catch(
-                    err =>
-                      console.log(err) || this.setState({ isHydrated: true })
-                  ); // TODO check if it's the shipping method error
-              });
+    buildfire.auth.login({}, (err, customer) => {
+      if (customer) {
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
+        if (cart) {
+          Promise.all(
+            cart.items.map(({ sku }) => {
+              const productFromStorage = sessionStorage.getItem(
+                `product${sku}`
+              );
+              return productFromStorage
+                ? Promise.resolve(productFromStorage)
+                : getProduct(sku);
             })
-          : this.goBack()
-    );
+          ).then(products => {
+            products.map(product =>
+              sessionStorage.setItem(
+                `product${product.sku}`,
+                JSON.stringify(product)
+              )
+            );
+            console.log(products);
+            this.setState({
+              isHydrated: true,
+              items: cart.items.map(item => ({
+                ...item,
+                productDetails: products
+                  .map(product => JSON.parse(product))
+                  .find(({ sku }) => sku === item.sku)
+              }))
+            });
+            getShippingMethods(customer.SSO.accessToken)
+              .then(shippingMethods => {
+                const parsedShippingMethods = JSON.parse(shippingMethods);
+                this.setState({
+                  shippingMethods: parsedShippingMethods.filter(
+                    ({ available }) => available
+                  ),
+                  selectedShippingMethod:
+                    (parsedShippingMethods &&
+                      parsedShippingMethods.length > 0 &&
+                      parsedShippingMethods[0]) ||
+                    null
+                });
+              })
+              .catch(
+                err => console.log(err) || this.setState({ isHydrated: true })
+              ); // TODO check if it's the shipping method error
+          });
+        } else {
+          getCart(customer.SSO.accessToken).then(res => {
+            const parsedRes = JSON.parse(res);
+            sessionStorage.setItem('cart', res);
+            Promise.all(
+              parsedRes.items.map(({ sku }) => {
+                const productFromStorage = sessionStorage.getItem(
+                  `product${sku}`
+                );
+                return productFromStorage
+                  ? Promise.resolve(productFromStorage)
+                  : getProduct(sku);
+              })
+            ).then(products => {
+              products.map(product =>
+                sessionStorage.setItem(
+                  `product${product.sku}`,
+                  JSON.stringify(product)
+                )
+              );
+              this.setState({
+                isHydrated: true,
+                items: parsedRes.items.map(item => ({
+                  ...item,
+                  productDetails: products
+                    .map(product => JSON.parse(product))
+                    .find(({ sku }) => sku === item.sku)
+                }))
+              });
+              getShippingMethods(customer.SSO.accessToken)
+                .then(shippingMethods => {
+                  const parsedShippingMethods = JSON.parse(shippingMethods);
+                  this.setState({
+                    shippingMethods: parsedShippingMethods.filter(
+                      ({ available }) => available
+                    ),
+                    selectedShippingMethod:
+                      (parsedShippingMethods &&
+                        parsedShippingMethods.length > 0 &&
+                        parsedShippingMethods[0]) ||
+                      null
+                  });
+                })
+                .catch(
+                  err => console.log(err) || this.setState({ isHydrated: true })
+                ); // TODO check if it's the shipping method error
+            });
+          });
+        }
+      } else {
+        this.goBack();
+      }
+    });
   }
 
   handleChangeQuantity = ({ target }) =>
@@ -119,9 +177,9 @@ class CartContainer extends Component {
             return { items: newItems.filter(item => item.item_id != id) };
           },
           () =>
-            removeFromCart(id, customer.SSO.accessToken).catch(() =>
-              this.setState({ items: oldItems })
-            )
+            removeFromCart(id, customer.SSO.accessToken)
+              .then(() => sessionStorage.setItem('cart', null))
+              .catch(() => this.setState({ items: oldItems }))
         );
       }
     });

@@ -1033,7 +1033,7 @@ const products = `${rootPath}product`;
 const product = `${products}/:sku`;
 /* harmony export (immutable) */ __webpack_exports__["h"] = product;
 
-const reminders = `${account}reminders`;
+const reminders = `${account}/reminders`;
 /* harmony export (immutable) */ __webpack_exports__["j"] = reminders;
 
 const info = `${account}/info`;
@@ -37999,29 +37999,37 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
     })), this.handleQuantityIncrement = () => this.setState(({ quantity }) => ({ quantity: quantity + 1 })), this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
         const cart = sessionStorage.getItem('cart');
-        cart ? Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
-          sku: target.name,
-          qty: this.state.quantity,
-          quoteID: cart.id
-        }, customer.SSO.accessToken) : Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
-          sku: target.name,
-          qty: this.state.quantity,
-          quoteID: JSON.parse(res).id
-        }, customer.SSO.accessToken));
+        if (cart) {
+          Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
+            sku: target.name,
+            qty: this.state.quantity,
+            quoteID: cart.id
+          }, customer.SSO.accessToken);
+        } else {
+          Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
+            const parsedCart = JSON.parse(res);
+            sessionStorage.setItem('cart', null);
+            Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
+              sku: target.name,
+              qty: this.state.quantity,
+              quoteID: parsedCart.id
+            }, customer.SSO.accessToken);
+          });
+        }
       }
     }), _temp;
   }
 
   componentDidMount() {
     const data = JSON.parse(sessionStorage.getItem(`product${this.props.match.params.sku}`));
-    data ? this.setState(data) : Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["b" /* getProduct */])(this.props.match.params.sku).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["a" /* getAttributeById */])(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData => {
+    data ? this.setState({ product: data, isHydrated: true }) : Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["b" /* getProduct */])(this.props.match.params.sku).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_product_service__["a" /* getAttributeById */])(FRAGRANCE_ATTRIBUTE_ID).then(fragranceData => {
       const loadData = {
         isHydrated: true,
         product: _extends({}, JSON.parse(res), {
           fragranceData: JSON.parse(fragranceData)
         })
       };
-      sessionStorage.setItem(`product${this.props.match.params.sku}`, JSON.stringify(loadData));
+      sessionStorage.setItem(`product${this.props.match.params.sku}`, res);
       this.setState(loadData);
     })).catch(err => console.log(err));
   }
@@ -40970,14 +40978,22 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(loadData);
         });
       }).catch(err => console.log(err));
-    }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, user) => {
-      if (user) {
+    }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
+      if (customer) {
         const cart = sessionStorage.getItem('cart');
-        cart ? Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }, user.SSO.accessToken) : Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["b" /* getCart */])(user.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({
-          sku: target.name,
-          qty: 1,
-          quoteID: JSON.parse(res).id
-        }, user.SSO.accessToken));
+        if (cart) {
+          Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }, customer.SSO.accessToken);
+        } else {
+          Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
+            const parsedCart = JSON.parse(res);
+            sessionStorage.setItem('cart', null);
+            Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({
+              sku: target.name,
+              qty: 1,
+              quoteID: JSON.parse(res).id
+            }, customer.SSO.accessToken);
+          });
+        }
       }
     }), _temp;
   }
@@ -41217,7 +41233,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(({ items }) => {
             const newItems = [...items];
             return { items: newItems.filter(item => item.item_id != id) };
-          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* removeFromCart */])(id, customer.SSO.accessToken).catch(() => this.setState({ items: oldItems })));
+          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => sessionStorage.setItem('cart', null)).catch(() => this.setState({ items: oldItems })));
         }
       });
     }, this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }), this.handleClickShippingMethod = methodCode => this.setState({
@@ -41241,26 +41257,59 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   }
 
   componentDidMount() {
-    buildfire.auth.login({}, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])(
-    /*customer.SSO.accessToken*/'ttp7iaiedgl5cnd4i1r04c16hed58xg3').then(res => {
-      const parsedRes = JSON.parse(res);
-
-      Promise.all(parsedRes.items.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku))).then(products => {
-        this.setState({
-          isHydrated: true,
-          items: parsedRes.items.map(item => _extends({}, item, {
-            productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
-          }))
-        });
-        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
-          const parsedShippingMethods = JSON.parse(shippingMethods);
-          this.setState({
-            shippingMethods: parsedShippingMethods.filter(({ available }) => available),
-            selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
+    buildfire.auth.login({}, (err, customer) => {
+      if (customer) {
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
+        if (cart) {
+          Promise.all(cart.items.map(({ sku }) => {
+            const productFromStorage = sessionStorage.getItem(`product${sku}`);
+            return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
+          })).then(products => {
+            products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
+            console.log(products);
+            this.setState({
+              isHydrated: true,
+              items: cart.items.map(item => _extends({}, item, {
+                productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
+              }))
+            });
+            Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
+              const parsedShippingMethods = JSON.parse(shippingMethods);
+              this.setState({
+                shippingMethods: parsedShippingMethods.filter(({ available }) => available),
+                selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
+              });
+            }).catch(err => console.log(err) || this.setState({ isHydrated: true })); // TODO check if it's the shipping method error
           });
-        }).catch(err => console.log(err) || this.setState({ isHydrated: true })); // TODO check if it's the shipping method error
-      });
-    }) : this.goBack());
+        } else {
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
+            const parsedRes = JSON.parse(res);
+            sessionStorage.setItem('cart', res);
+            Promise.all(parsedRes.items.map(({ sku }) => {
+              const productFromStorage = sessionStorage.getItem(`product${sku}`);
+              return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
+            })).then(products => {
+              products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
+              this.setState({
+                isHydrated: true,
+                items: parsedRes.items.map(item => _extends({}, item, {
+                  productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
+                }))
+              });
+              Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
+                const parsedShippingMethods = JSON.parse(shippingMethods);
+                this.setState({
+                  shippingMethods: parsedShippingMethods.filter(({ available }) => available),
+                  selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
+                });
+              }).catch(err => console.log(err) || this.setState({ isHydrated: true })); // TODO check if it's the shipping method error
+            });
+          });
+        }
+      } else {
+        this.goBack();
+      }
+    });
   } // TODO
 
   // TODO
@@ -47426,7 +47475,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Reminders {\n  padding: 4%;\n  height: 100%;\n  overflow: auto;\n}\n\n.Reminders .Reminders-header {\n  font-size: 1.5em;\n  padding-bottom: 5%;\n}\n\n.Reminders .Reminder:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n}\n\n.Reminder {\n  margin-bottom: 5%;\n}\n\n.Reminders .Reminders-toggle-wrapper {\n  padding-bottom: 5%;\n}\n\n.Reminders .Reminder-remove {\n  cursor: pointer;\n  color: #a93239;\n  float: right;\n}\n\n.Reminders .Reminder-right,\n.Reminders .Reminder-left {\n  display: inline-block;\n}\n\n.Reminders .Reminder-right {\n  width: 15%;\n}\n\n.Reminders .Reminder-left {\n  width: 80%;\n}\n\n.Reminders .Reminder-left,\n.Reminders .Reminder-right {\n  vertical-align: middle;\n}\n\n.Reminders #Reminders-toggle-label {\n  padding-right: 10px;\n}\n\n.Reminders .Reminders-toggle-wrapper .Reminders-toggle {\n  vertical-align: middle;\n}\n", ""]);
+exports.push([module.i, ".Reminders {\n  padding: 4%;\n  height: 100%;\n  overflow: auto;\n}\n\n.Reminders .Reminders-header {\n  font-size: 1.5em;\n  padding-bottom: 5%;\n}\n\n.Reminders .Reminder:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n}\n\n.Reminder {\n  margin-bottom: 5%;\n}\n\n.Reminders .Reminders-toggle-wrapper {\n  padding-bottom: 5%;\n}\n\n.Reminders .Reminder-remove {\n  cursor: pointer;\n  color: #a93239;\n  float: right;\n}\n\n.Reminders .Reminder-right,\n.Reminders .Reminder-left {\n  display: inline-block;\n}\n\n.Reminders .Reminder-right {\n  width: 15%;\n}\n\n.Reminders .Reminder-left {\n  width: 80%;\n  padding: 5% 0;\n}\n\n.Reminders .Reminder-left,\n.Reminders .Reminder-right {\n  vertical-align: middle;\n}\n\n.Reminders #Reminders-toggle-label {\n  padding-right: 10px;\n}\n\n.Reminders .Reminders-toggle-wrapper .Reminders-toggle {\n  vertical-align: middle;\n}\n", ""]);
 
 // exports
 
