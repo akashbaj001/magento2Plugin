@@ -37,7 +37,6 @@ class CartContainer extends Component {
               const productFromStorage = sessionStorage.getItem(
                 `product${sku}`
               );
-              console.log(productFromStorage);
               return productFromStorage
                 ? Promise.resolve(productFromStorage)
                 : getProduct(sku);
@@ -49,7 +48,6 @@ class CartContainer extends Component {
                 JSON.stringify(product)
               )
             );
-            console.log(products);
             this.setState({
               isHydrated: true,
               items: cart.items.map(item => ({
@@ -86,7 +84,6 @@ class CartContainer extends Component {
                 const productFromStorage = sessionStorage.getItem(
                   `product${sku}`
                 );
-                console.log(productFromStorage);
                 return productFromStorage
                   ? Promise.resolve(productFromStorage)
                   : getProduct(sku);

@@ -80,7 +80,7 @@ const BrowseProductCard = ({
         </div>
         <div className="Browse-card-button">
           <button
-            className="btn btn-primary"
+            className="Browse-atc btn btn-primary"
             name={sku}
             onClick={onClickAddToCart}
           >

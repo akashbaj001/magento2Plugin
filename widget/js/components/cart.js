@@ -96,7 +96,12 @@ const Cart = ({
           <Overlay
             onClickClose={onClickCloseCouponOverlay}
             isLoading={isLoading}
-            render={({ onClickClose }) => (
+            onSubmit={() => {
+              /* TODO */
+            }}
+            submitText="Apply Code"
+            showSubmit
+            render={() => (
               <div className="Overlay-content">
                 <label className="Cart-coupon-label" htmlFor="coupon-code">
                   Enter your code:
@@ -116,7 +121,7 @@ const Cart = ({
           <Overlay
             onClickClose={onClickCloseShipping}
             isLoading={isLoading}
-            render={({ onClickClose }) => (
+            render={() => (
               <div className="Overlay-content">
                 {shippingMethods &&
                   shippingMethods.map(

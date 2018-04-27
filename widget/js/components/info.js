@@ -36,9 +36,11 @@ const Info = ({
   <div className="Info">
     {shouldShowEditOverlay && (
       <Overlay
+        onSubmit={onClickSubmit}
         onClickClose={onClickCloseOverlay}
         isLoading={isLoading}
-        render={({ onCLickClose }) => (
+        showSubmit
+        render={() => (
           <div className="Info-form form-group">
             <h2>Contact Information</h2>
             <label htmlFor="first-name">First Name</label>
@@ -124,9 +126,6 @@ const Info = ({
                 </option>
               ))}
             </select>
-            <button className="btn btn-primary" onClick={onClickSubmit}>
-              Submit
-            </button>
           </div>
         )}
       />

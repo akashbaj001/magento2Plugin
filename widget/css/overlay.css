@@ -7,6 +7,7 @@
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.9);
+  overflow-y: hidden;
 }
 
 .Overlay .Overlay-main {
@@ -15,17 +16,23 @@
   overflow-y: scroll;
 }
 
-.Overlay .Overlay-close {
-  margin: 0 auto;
-  text-align: center;
-  transform: translate(-50%, 25%);
-  left: 50%;
-  position: fixed;
-}
-
 .Overlay .Overlay-content {
   padding-left: 15%;
-  padding-top: 12%;
+  padding-top: 5%;
+}
+
+.Overlay .Overlay-divider {
+  margin: 0 !important;
+  border: solid thin rgba(169, 169, 169, 0.5);
+}
+
+.Overlay .Overlay-controls {
+  overflow-y: hidden;
+  display: flex;
+  width: 100%;
+  height: 10%;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .Overlay .Overlay-content li {

@@ -6,6 +6,10 @@
   .Browse-card {
     font-size: 0.85em;
   }
+
+  .Browser-card-name {
+    font-size: 1.1em;
+  }
 }
 
 @media only screen and (min-width: 760px) and (max-width: 1000px) {
@@ -15,6 +19,10 @@
 
   .Browse-card {
     font-size: 1.5em;
+  }
+
+  .Browser-card-name {
+    font-size: 1.75em;
   }
 
   .Browse-card-button {
@@ -32,6 +40,10 @@
 
   .Browse-card {
     font-size: 3em;
+  }
+
+  .Browser-card-name {
+    font-size: 3.25em;
   }
 
   .Browse-card-button {
@@ -55,7 +67,7 @@
 .Browse-card {
   display: flex;
   padding-bottom: 6%;
-  line-height: 1.2em;
+  line-height: 1.4em;
   height: 25%;
 }
 
@@ -86,6 +98,10 @@
   justify-content: flex-end;
   align-items: flex-end;
   align-content: flex-end;
+}
+
+.Browse-card-name {
+  font-weight: bold;
 }
 
 .Browse-card-right-top,
@@ -126,4 +142,9 @@
 .Browse-card-button,
 .Browse-card-price {
   height: 100%;
+}
+
+.Browse,
+.Browse-atc {
+  width: 100%;
 }

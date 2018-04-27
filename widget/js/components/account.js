@@ -25,7 +25,7 @@ const Account = ({ customerName }) => (
       </li>
       <li className="Account-list-item">
         <Link to={info}>
-          Billing/shipping <Arrow direction="right" />
+          Billing/Shipping <Arrow direction="right" />
         </Link>
       </li>
     </ul>
