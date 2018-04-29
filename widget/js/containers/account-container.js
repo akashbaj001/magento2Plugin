@@ -19,12 +19,12 @@ class AccountContainer extends Component {
     buildfire.auth.login(
       null,
       (err, res) =>
-        /*res
-          ?*/ this.setState({
-          customerName: (res && res.firstName) || '',
-          isHydrated: true
-        })
-      //: this.goBack()
+        res
+          ? this.setState({
+              customerName: (res && res.firstName) || '',
+              isHydrated: true
+            })
+          : this.goBack()
     );
   }
 

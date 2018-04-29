@@ -9,6 +9,7 @@ const FRAGRANCE_ATTRIBUTE_ID = 157;
 class ProductContainer extends Component {
   state = {
     isHydrated: false,
+    showingCheck: false,
     quantity: 1
   };
 
@@ -61,6 +62,7 @@ class ProductContainer extends Component {
   handleClickAddToCart = ({ target }) =>
     buildfire.auth.login(null, (err, customer) => {
       if (customer) {
+        this.setState({ showingCheck: true });
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         sessionStorage.removeItem('cart');
         if (cart) {
@@ -71,6 +73,8 @@ class ProductContainer extends Component {
               quoteID: cart.id
             },
             customer.SSO.accessToken
+          ).then(() =>
+            setTimeout(() => this.setState({ showingCheck: false }), 3000)
           );
         } else {
           getCart(customer.SSO.accessToken).then(res => {
@@ -82,6 +86,8 @@ class ProductContainer extends Component {
                 quoteID: parsedCart.id
               },
               customer.SSO.accessToken
+            ).then(() =>
+              setTimeout(() => this.setState({ showingCheck: false }), 3000)
             );
           });
         }
@@ -98,6 +104,7 @@ class ProductContainer extends Component {
         onQuantityDecrement={this.handleQuantityDecrement}
         onQuantityIncrement={this.handleQuantityIncrement}
         onClickAddToCart={this.handleClickAddToCart}
+        showingCheck={this.state.showingCheck}
       />
     ) : (
       <Spinner color="gray" />

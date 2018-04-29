@@ -13,7 +13,8 @@ const Product = ({
   onChangeQuantity,
   onQuantityDecrement,
   onQuantityIncrement,
-  onClickAddToCart
+  onClickAddToCart,
+  showingCheck
 }) => (
   <div className="Product-wrapper">
     <div className="Product">
@@ -74,7 +75,7 @@ const Product = ({
           name={product.sku}
           onClick={onClickAddToCart}
         >
-          Add to Cart
+          {showingCheck ? <span>&#x2714;</span> : 'Add to Cart'}
         </button>
       </div>
     </div>

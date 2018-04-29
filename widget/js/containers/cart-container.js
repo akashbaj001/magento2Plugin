@@ -3,7 +3,8 @@ import {
   getCart,
   getShippingMethods,
   placeOrder,
-  removeFromCart
+  removeFromCart,
+  getTotals
 } from '../services/cart-service';
 import { getProduct } from '../services/product-service';
 import Cart from '../components/cart';
@@ -32,55 +33,9 @@ class CartContainer extends Component {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
-          Promise.all(
-            cart.items.map(({ sku }) => {
-              const productFromStorage = sessionStorage.getItem(
-                `product${sku}`
-              );
-              return productFromStorage
-                ? Promise.resolve(productFromStorage)
-                : getProduct(sku);
-            })
-          ).then(products => {
-            products.map(product =>
-              sessionStorage.setItem(
-                `product${product.sku}`,
-                JSON.stringify(product)
-              )
-            );
-            this.setState({
-              isHydrated: true,
-              items: cart.items.map(item => ({
-                ...item,
-                productDetails: products
-                  .map(product => JSON.parse(product))
-                  .find(({ sku }) => sku === item.sku)
-              }))
-            });
-            getShippingMethods(customer.SSO.accessToken)
-              .then(shippingMethods => {
-                const parsedShippingMethods = JSON.parse(shippingMethods);
-                this.setState({
-                  shippingMethods: parsedShippingMethods.filter(
-                    ({ available }) => available
-                  ),
-                  selectedShippingMethod:
-                    (parsedShippingMethods &&
-                      parsedShippingMethods.length > 0 &&
-                      parsedShippingMethods[0]) ||
-                    null
-                });
-              })
-              .catch(
-                err => console.log(err) || this.setState({ isHydrated: true })
-              ); // TODO check if it's the shipping method error
-          });
-        } else {
-          getCart(customer.SSO.accessToken).then(res => {
-            const parsedRes = JSON.parse(res);
-            sessionStorage.setItem('cart', res);
+          getTotals(customer.SSO.accessToken).then(unparsedTotals =>
             Promise.all(
-              parsedRes.items.map(({ sku }) => {
+              cart.items.map(({ sku }) => {
                 const productFromStorage = sessionStorage.getItem(
                   `product${sku}`
                 );
@@ -95,14 +50,20 @@ class CartContainer extends Component {
                   JSON.stringify(product)
                 )
               );
+              const totals = JSON.parse(unparsedTotals);
               this.setState({
                 isHydrated: true,
-                items: parsedRes.items.map(item => ({
+                items: cart.items.map(item => ({
                   ...item,
                   productDetails: products
                     .map(product => JSON.parse(product))
                     .find(({ sku }) => sku === item.sku)
-                }))
+                })),
+                discount: totals.discount_amount,
+                taxes: totals.tax_amount,
+                subTotal: totals.subtotal,
+                shipping: totals.shipping_amount,
+                total: totals.grand_total
               });
               getShippingMethods(customer.SSO.accessToken)
                 .then(shippingMethods => {
@@ -121,7 +82,64 @@ class CartContainer extends Component {
                 .catch(
                   err => console.log(err) || this.setState({ isHydrated: true })
                 ); // TODO check if it's the shipping method error
-            });
+            })
+          );
+        } else {
+          getCart(customer.SSO.accessToken).then(res => {
+            const parsedRes = JSON.parse(res);
+            sessionStorage.setItem('cart', res);
+            getTotals(customer.SSO.accessToken).then(unparsedTotals =>
+              Promise.all(
+                parsedRes.items.map(({ sku }) => {
+                  const productFromStorage = sessionStorage.getItem(
+                    `product${sku}`
+                  );
+                  return productFromStorage
+                    ? Promise.resolve(productFromStorage)
+                    : getProduct(sku);
+                })
+              ).then(products => {
+                products.map(product =>
+                  sessionStorage.setItem(
+                    `product${product.sku}`,
+                    JSON.stringify(product)
+                  )
+                );
+                const totals = JSON.parse(unparsedTotals);
+                this.setState({
+                  isHydrated: true,
+                  items: parsedRes.items.map(item => ({
+                    ...item,
+                    productDetails: products
+                      .map(product => JSON.parse(product))
+                      .find(({ sku }) => sku === item.sku)
+                  })),
+                  discount: totals.discount_amount,
+                  taxes: totals.tax_amount,
+                  subTotal: totals.subtotal,
+                  shipping: totals.shipping_amount,
+                  total: totals.grand_total
+                });
+                getShippingMethods(customer.SSO.accessToken)
+                  .then(shippingMethods => {
+                    const parsedShippingMethods = JSON.parse(shippingMethods);
+                    this.setState({
+                      shippingMethods: parsedShippingMethods.filter(
+                        ({ available }) => available
+                      ),
+                      selectedShippingMethod:
+                        (parsedShippingMethods &&
+                          parsedShippingMethods.length > 0 &&
+                          parsedShippingMethods[0]) ||
+                        null
+                    });
+                  })
+                  .catch(
+                    err =>
+                      console.log(err) || this.setState({ isHydrated: true })
+                  ); // TODO check if it's the shipping method error
+              })
+            );
           });
         }
       } else {
@@ -239,24 +257,6 @@ class CartContainer extends Component {
   handleInputChange = ({ target: { name, value } }) =>
     this.setState({ [name]: value });
 
-  getSubtotal = () =>
-    this.state.items.reduce((acc, curr) => (acc += curr.price * curr.qty), 0);
-
-  getShipping = () =>
-    this.state.selectedShippingMethod
-      ? this.state.selectedShippingMethod.amount
-      : 0;
-
-  getDiscount = () => 0; // TODO
-
-  getTaxes = () => 0; // TODO
-
-  getTotal = () =>
-    this.getSubtotal() +
-    this.getShipping() -
-    this.getDiscount() +
-    this.getTaxes();
-
   render() {
     return this.state.isHydrated ? (
       <Cart
@@ -277,11 +277,11 @@ class CartContainer extends Component {
         onClickCheckout={this.handleClickCheckout}
         onClickApplyCoupon={this.handleClickApplyCoupon}
         shouldShowShippingMenu={this.state.shouldShowShippingMenu}
-        subTotal={this.getSubtotal()}
-        shipping={this.getShipping()}
-        discount={this.getDiscount()}
-        taxes={this.getTaxes()}
-        total={this.getTotal()}
+        subTotal={this.state.subTotal}
+        shipping={this.state.shipping}
+        discount={this.state.discount}
+        taxes={this.state.taxes}
+        total={this.state.total}
       />
     ) : (
       <Spinner color="gray" />

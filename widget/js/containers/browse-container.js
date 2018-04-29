@@ -13,7 +13,8 @@ class BrowseContainer extends Component {
   }
 
   state = {
-    isHydrated: false
+    isHydrated: false,
+    productsWithCheck: []
   };
 
   componentDidMount() {
@@ -53,10 +54,23 @@ class BrowseContainer extends Component {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         sessionStorage.removeItem('cart');
+        this.setState(prevState => ({
+          productsWithCheck: [...prevState.productsWithCheck, target.name]
+        }));
         if (cart) {
           addToCart(
             { sku: target.name, qty: 1, quoteID: cart.id },
             customer.SSO.accessToken
+          ).then(() =>
+            setTimeout(
+              () =>
+                this.setState(prevState => ({
+                  productsWithCheck: prevState.productsWithCheck.filter(
+                    sku => sku !== target.name
+                  )
+                })),
+              3000
+            )
           );
         } else {
           getCart(customer.SSO.accessToken).then(res => {
@@ -68,6 +82,16 @@ class BrowseContainer extends Component {
                 quoteID: JSON.parse(res).id
               },
               customer.SSO.accessToken
+            ).then(() =>
+              setTimeout(
+                () =>
+                  this.setState(prevState => ({
+                    productsWithCheck: prevState.productsWithCheck.filter(
+                      sku => sku !== target.name
+                    )
+                  })),
+                3000
+              )
             );
           });
         }
@@ -84,6 +108,7 @@ class BrowseContainer extends Component {
           window.buildfireConfig.shortCategoryDescriptionAtName
         }
         onClickAddToCart={this.handleClickAddToCart}
+        productsWithCheck={this.state.productsWithCheck}
       />
     ) : (
       <Spinner color="gray" />
