@@ -3,7 +3,7 @@ import { getOrdersForCustomer } from '../services/orders-service';
 import { getCustomer, getCart, addToCart } from '../services/cart-service';
 import History from '../components/history';
 import Spinner from 'react-spinkit';
-import { home, root, cart } from '../constants/routes';
+import { home, root, cart as cartRoute } from '../constants/routes';
 import { withRouter } from 'react-router-dom';
 
 class HistoryContainer extends Component {
@@ -22,41 +22,56 @@ class HistoryContainer extends Component {
     buildfire.auth.login(
       null,
       (err, customer) =>
-        /*customer
-          ?*/ getCustomer(
-          /*customer.SSO.accessToken*/ 'u5rwuq1uvv0c73ktu2qnsmovyix2ee8p'
-        ).then(custRes =>
-          getOrdersForCustomer(JSON.parse(custRes).id).then(res =>
-            this.setState({ isHydrated: true, orders: JSON.parse(res) })
-          )
-        )
-      //: this.goBack()
+        customer
+          ? getCustomer(customer.SSO.accessToken).then(custRes =>
+              getOrdersForCustomer(JSON.parse(custRes).id).then(res =>
+                this.setState({ isHydrated: true, orders: JSON.parse(res) })
+              )
+            )
+          : this.goBack()
     );
   }
 
   handleClickReorder = ({ target }) =>
-    buildfire.auth.login(
-      null,
-      (err, customer) =>
-        customer
-          ? getCart(customer.SSO.accessToken).then(cartRes =>
-              Promise.all(
-                this.state.orders.items
-                  .find(({ increment_id }) => increment_id === target.name)
-                  .items.map(({ sku, qty_ordered }) =>
-                    addToCart(
-                      {
-                        sku,
-                        qty: qty_ordered,
-                        quoteID: JSON.parse(cartRes).id
-                      },
-                      customer.SSO.accessToken
-                    )
+    buildfire.auth.login(null, (err, customer) => {
+      if (customer) {
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
+        if (cart) {
+          Promise.all(
+            this.state.orders.items
+              .find(({ increment_id }) => increment_id === target.name)
+              .items.map(({ sku, qty_ordered }) =>
+                addToCart(
+                  {
+                    sku,
+                    qty: qty_ordered,
+                    quoteID: cart.id
+                  },
+                  customer.SSO.accessToken
+                )
+              )
+          ).then(res => this.props.history.push(cartRoute));
+        } else {
+          getCart(customer.SSO.accessToken).then(cartRes =>
+            Promise.all(
+              this.state.orders.items
+                .find(({ increment_id }) => increment_id === target.name)
+                .items.map(({ sku, qty_ordered }) =>
+                  addToCart(
+                    {
+                      sku,
+                      qty: qty_ordered,
+                      quoteID: JSON.parse(cartRes).id
+                    },
+                    customer.SSO.accessToken
                   )
-              ).then(res => this.props.history.push(cart))
-            )
-          : {}
-    );
+                )
+            ).then(res => this.props.history.push(cartRoute))
+          );
+        }
+      }
+    });
 
   handleAccordionChange = expandedKeys => this.setState({ expandedKeys });
 

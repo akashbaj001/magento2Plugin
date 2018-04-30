@@ -2,6 +2,9 @@ import React from 'react';
 import Overlay from './overlay';
 import '../../css/info.css';
 
+const TYPE_BILLING = 'billing';
+const TYPE_SHIPPING = 'shipping';
+
 const Info = ({
   countryList,
   selectedCountryName,
@@ -36,9 +39,11 @@ const Info = ({
   <div className="Info">
     {shouldShowEditOverlay && (
       <Overlay
+        onClickSubmit={onClickSubmit}
         onClickClose={onClickCloseOverlay}
         isLoading={isLoading}
-        render={({ onCLickClose }) => (
+        showSubmit
+        render={() => (
           <div className="Info-form form-group">
             <h2>Contact Information</h2>
             <label htmlFor="first-name">First Name</label>
@@ -46,6 +51,11 @@ const Info = ({
               id="first-name"
               name={`${overlayType}FirstName`}
               className="form-control"
+              value={
+                overlayType === TYPE_BILLING
+                  ? billingFirstName
+                  : shippingFirstName
+              }
               onChange={onInputChange}
             />
             <label htmlFor="last-name">Last Name</label>
@@ -53,6 +63,11 @@ const Info = ({
               id="last-name"
               name={`${overlayType}LastName`}
               className="form-control"
+              value={
+                overlayType === TYPE_BILLING
+                  ? billingLastName
+                  : shippingLastName
+              }
               onChange={onInputChange}
             />
             <label htmlFor="phone-number">Phone Number</label>
@@ -60,6 +75,11 @@ const Info = ({
               id="phone-number"
               name={`${overlayType}PhoneNumber`}
               className="form-control"
+              value={
+                overlayType === TYPE_BILLING
+                  ? billingPhoneNumber
+                  : shippingPhoneNumber
+              }
               onChange={onInputChange}
             />
             <h2>Address</h2>
@@ -68,12 +88,22 @@ const Info = ({
               id="street-address"
               name={`${overlayType}StreetAddressOne`}
               className="form-control"
+              value={
+                overlayType === TYPE_BILLING
+                  ? billingStreetAddressOne
+                  : shippingStreetAddressOne
+              }
               onChange={onInputChange}
             />
             <input
               id="street-address"
               name={`${overlayType}StreetAddressTwo`}
               className="form-control"
+              value={
+                overlayType === TYPE_BILLING
+                  ? billingStreetAddressTwo
+                  : shippingStreetAddressTwo
+              }
               onChange={onInputChange}
             />
             <label htmlFor="city">City</label>
@@ -81,6 +111,7 @@ const Info = ({
               id="city"
               name={`${overlayType}City`}
               className="form-control"
+              value={overlayType === TYPE_BILLING ? billingCity : shippingCity}
               onChange={onInputChange}
             />
             <label htmlFor="state-province">State/Province</label>
@@ -88,6 +119,11 @@ const Info = ({
               id="state-province"
               name={`${overlayType}StateProvince`}
               className="form-control"
+              value={
+                overlayType === TYPE_BILLING
+                  ? billingStateProvince
+                  : shippingStateProvince
+              }
               onChange={onInputChange}
             >
               {(() => {
@@ -108,6 +144,7 @@ const Info = ({
               id="zip-postal"
               name={`${overlayType}Zip`}
               className="form-control"
+              value={overlayType === TYPE_BILLING ? billingZip : shippingZip}
               onChange={onInputChange}
             />
             <label htmlFor="country">Country</label>
@@ -116,6 +153,9 @@ const Info = ({
               name={`${overlayType}Country`}
               className="form-control"
               value={selectedCountryName}
+              value={
+                overlayType === TYPE_BILLING ? billingCountry : shippingCountry
+              }
               onChange={onInputChange}
             >
               {countryList.map(({ id, full_name_english }) => (
@@ -124,9 +164,6 @@ const Info = ({
                 </option>
               ))}
             </select>
-            <button className="btn btn-primary" onClick={onClickSubmit}>
-              Submit
-            </button>
           </div>
         )}
       />

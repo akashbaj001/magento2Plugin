@@ -34,10 +34,39 @@ class InfoContainer extends Component {
           ? getCustomer(customer.SSO.accessToken)
               .then(res =>
                 getCountryList().then(unparsedCountries =>
-                  this.setState({
-                    isHydrated: true,
-                    customer: JSON.parse(res),
-                    countryList: JSON.parse(unparsedCountries)
+                  this.setState(() => {
+                    const customerRes = JSON.parse(res);
+                    const shipping = customerRes.addresses.find(
+                      ({ default_shipping }) => default_shipping
+                    );
+                    const billing = customerRes.addresses.find(
+                      ({ default_billing }) => default_billing
+                    );
+                    return {
+                      isHydrated: true,
+                      customer: customerRes,
+                      countryList: JSON.parse(unparsedCountries),
+                      billingFirstName: billing.firstname || '',
+                      billingLastName: billing.lastname || '',
+                      billingPhoneNumber: billing.telephone || '',
+                      billingStreetAddressOne: billing.street[0] || '',
+                      billingStreetAddressTwo: billing.street[1] || '',
+                      billingCity: billing.city || '',
+                      billingStateProvince: billing.region.region || '',
+                      billingZip: billing.postcode || '',
+                      billingCountry:
+                        billing.full_name_english || 'United States',
+                      shippingFirstName: shipping.firstname || '',
+                      shippingLastName: shipping.lastname || '',
+                      shippingPhoneNumber: shipping.telephone || '',
+                      shippingStreetAddressOne: shipping.street[0] || '',
+                      shippingStreetAddressTwo: shipping.street[1] || '',
+                      shippingCity: shipping.city || '',
+                      shippingStateProvince: shipping.region.region || '',
+                      shippingZip: shipping.postcode || '',
+                      shippingCountry:
+                        shipping.full_name_english || 'United States'
+                    };
                   })
                 )
               )
@@ -46,7 +75,7 @@ class InfoContainer extends Component {
     );
   }
 
-  handleClickUpdate = ({ target: name }) =>
+  handleClickUpdate = ({ target: { name } }) =>
     this.setState(() => ({
       shouldShowEditOverlay: true,
       overlayType: name === 'billing' ? TYPE_BILLING : TYPE_SHIPPING
@@ -62,15 +91,21 @@ class InfoContainer extends Component {
         customer
           ? this.setState(
               prevState => {
-                const customerToUpdate = { ...prevState.customer };
+                const customerToUpdate = JSON.parse(
+                  JSON.stringify(prevState.customer)
+                );
                 const addressIndex = customerToUpdate.addresses.findIndex(
                   address => ({ default_billing, default_shipping }) =>
                     this.state.overlayType == TYPE_BILLING
                       ? default_billing
                       : default_shipping
                 );
-                const addressToUpdate =
+                const addressToUpdateWithRegion =
                   customerToUpdate.addresses[addressIndex];
+                const {
+                  region,
+                  ...addressToUpdate
+                } = addressToUpdateWithRegion;
                 addressToUpdate.city = this.state[
                   `${this.state.overlayType}City`
                 ];
@@ -87,8 +122,24 @@ class InfoContainer extends Component {
                   this.state[`${this.state.overlayType}StreetAddressOne`],
                   this.state[`${this.state.overlayType}StreetAddressTwo`]
                 ];
-                addressToUpdate.region = {};
-                addressToUpdate.region_id = 0;
+                const selectedRegion = this.state.countryList
+                  .find(
+                    ({ full_name_english }) =>
+                      full_name_english ===
+                      this.state[`${this.state.overlayType}Country`]
+                  )
+                  .available_regions.find(
+                    region =>
+                      region.name ===
+                      this.state[`${this.state.overlayType}StateProvince`]
+                  );
+                const formattedRegion = {
+                  region_id: selectedRegion.id,
+                  region: selectedRegion.name,
+                  region_code: selectedRegion.code
+                };
+                addressToUpdate.region = formattedRegion;
+                addressToUpdate.region_id = selectedRegion.id;
                 addressToUpdate.postcode = this.state[
                   `${this.state.overlayType}Zip`
                 ];
@@ -102,7 +153,7 @@ class InfoContainer extends Component {
                   addressToUpdate.default_billing;
                 addressToUpdate.default_shipping =
                   addressToUpdate.default_shipping;
-                customerToUpdate.addresses[addressIndex];
+                customerToUpdate.addresses[addressIndex] = addressToUpdate;
                 return {
                   shouldShowEditOverlay: false,
                   customer: customerToUpdate
@@ -125,6 +176,24 @@ class InfoContainer extends Component {
         shippingAddress={this.state.customer.addresses.find(
           ({ default_shipping }) => default_shipping
         )}
+        billingFirstName={this.state.billingFirstName}
+        shippingFirstName={this.state.shippingFirstName}
+        billingLastName={this.state.billingLastName}
+        shippingLastName={this.state.shippingLastName}
+        billingPhoneNumber={this.state.billingPhoneNumber}
+        shippingPhoneNumber={this.state.shippingPhoneNumber}
+        billingStreetAddressOne={this.state.billingStreetAddressOne}
+        shippingStreetAddressOne={this.state.shippingStreetAddressOne}
+        billingStreetAddressTwo={this.state.billingStreetAddressTwo}
+        shippingStreetAddressTwo={this.state.shippingStreetAddressTwo}
+        billingCity={this.state.billingCity}
+        shippingCity={this.state.shippingCity}
+        billingStateProvince={this.state.billingStateProvince}
+        shippingStateProvince={this.state.shippingStateProvince}
+        billingZip={this.state.billingZip}
+        shippingZip={this.state.shippingZip}
+        billingCountry={this.state.billingCountry}
+        shippingCountry={this.state.shippingCountry}
         countryList={this.state.countryList}
         selectedCountryName={this.state[`${this.state.overlayType}Country`]}
         onClickUpdate={this.handleClickUpdate}

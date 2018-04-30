@@ -10,7 +10,8 @@ const Browse = ({
   categoryName,
   imageAttributeKey,
   onClickAddToCart,
-  shortDescriptionAtName
+  shortDescriptionAtName,
+  productsWithCheck
 }) => (
   <div className="Browse">
     <h1 className="Browse-title">{categoryName}</h1>
@@ -20,6 +21,7 @@ const Browse = ({
         sku,
         imageAttributeKey,
         shortDescriptionAtName,
+        showingCheck: productsWithCheck.includes(sku),
         uniqueKey: sku
       }))}
       onClickAddToCart={onClickAddToCart}
@@ -35,7 +37,8 @@ const BrowseProductCard = ({
   custom_attributes,
   onClickAddToCart,
   imageAttributeKey,
-  shortDescriptionAtName
+  shortDescriptionAtName,
+  showingCheck
 }) => (
   <div className="Browse-card">
     <div className="Browse-card-left">
@@ -80,11 +83,11 @@ const BrowseProductCard = ({
         </div>
         <div className="Browse-card-button">
           <button
-            className="btn btn-primary"
+            className="Browse-atc btn btn-primary"
             name={sku}
             onClick={onClickAddToCart}
           >
-            Add to Cart
+            {showingCheck ? <span>&#x2714;</span> : 'Add to Cart'}
           </button>
         </div>
       </div>

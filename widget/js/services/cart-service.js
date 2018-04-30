@@ -109,9 +109,7 @@ export const updateCustomer = customer =>
   Promise.resolve(
     $.ajax({
       url: `${apiBasePath}${encodeURIComponent(`customers/${customer.id}`)}`,
-      data: JSON.stringify({
-        customer
-      }),
+      data: JSON.stringify({ customer: { ...customer } }),
       method: 'PUT',
       dataType: 'json',
       contentType: 'application/json',
@@ -124,11 +122,23 @@ export const updateCustomer = customer =>
 export const getCountryList = () =>
   Promise.resolve(
     $.ajax({
-      url: `${apiBasePath}${encodeURIComponent(`directory/countries`)}`,
+      url: `${apiBasePath}${encodeURIComponent('directory/countries')}`,
       method: 'GET',
       dataType: 'json',
       headers: {
         Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
+      }
+    })
+  );
+
+export const getTotals = token =>
+  Promise.resolve(
+    $.ajax({
+      url: `${apiBasePath}${encodeURIComponent('carts/mine/totals')}`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        Authorization: `Bearer ${token}`
       }
     })
   );

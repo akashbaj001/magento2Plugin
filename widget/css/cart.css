@@ -19,6 +19,10 @@
   height: 100%;
 }
 
+.Cart-card-name {
+  font-weight: bold;
+}
+
 .Cart-total {
   padding-top: 10%;
   font-size: 1.4em;
@@ -35,7 +39,7 @@
 }
 
 .Cart-card-left {
-  width: 50%;
+  width: 35%;
   padding-left: 4%;
 }
 

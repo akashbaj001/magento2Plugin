@@ -1754,6 +1754,8 @@ var createPath = function createPath(location) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config__ = __webpack_require__(12);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 
 
 
@@ -1800,7 +1802,7 @@ const removeFromCart = (itemID, token) => Promise.resolve(__WEBPACK_IMPORTED_MOD
   dataType: 'json',
   headers: { Authorization: `Bearer ${token}` }
 }));
-/* harmony export (immutable) */ __webpack_exports__["g"] = removeFromCart;
+/* harmony export (immutable) */ __webpack_exports__["h"] = removeFromCart;
 
 
 const getBillingAddress = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -1838,7 +1840,7 @@ const placeOrder = ({ paymentMethod, shippingMethod }, token) => Promise.resolve
   contentType: 'application/json',
   headers: { Authorization: `Bearer ${token}` }
 }));
-/* harmony export (immutable) */ __webpack_exports__["f"] = placeOrder;
+/* harmony export (immutable) */ __webpack_exports__["g"] = placeOrder;
 
 
 const getCustomer = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -1852,9 +1854,7 @@ const getCustomer = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery_
 
 const updateCustomer = customer => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   url: `${apiBasePath}${encodeURIComponent(`customers/${customer.id}`)}`,
-  data: JSON.stringify({
-    customer
-  }),
+  data: JSON.stringify({ customer: _extends({}, customer) }),
   method: 'PUT',
   dataType: 'json',
   contentType: 'application/json',
@@ -1862,11 +1862,11 @@ const updateCustomer = customer => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_j
     Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
   }
 }));
-/* harmony export (immutable) */ __webpack_exports__["h"] = updateCustomer;
+/* harmony export (immutable) */ __webpack_exports__["i"] = updateCustomer;
 
 
 const getCountryList = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
-  url: `${apiBasePath}${encodeURIComponent(`directory/countries`)}`,
+  url: `${apiBasePath}${encodeURIComponent('directory/countries')}`,
   method: 'GET',
   dataType: 'json',
   headers: {
@@ -1874,6 +1874,17 @@ const getCountryList = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery_
   }
 }));
 /* harmony export (immutable) */ __webpack_exports__["c"] = getCountryList;
+
+
+const getTotals = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+  url: `${apiBasePath}${encodeURIComponent('carts/mine/totals')}`,
+  method: 'GET',
+  dataType: 'json',
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+}));
+/* harmony export (immutable) */ __webpack_exports__["f"] = getTotals;
 
 
 /***/ }),
@@ -12830,8 +12841,15 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 
 const Overlay = (_ref) => {
-  let { isLoading, render, onClickClose } = _ref,
-      rest = _objectWithoutProperties(_ref, ['isLoading', 'render', 'onClickClose']);
+  let {
+    isLoading,
+    render,
+    onClickClose,
+    showSubmit,
+    onClickSubmit,
+    submitText
+  } = _ref,
+      rest = _objectWithoutProperties(_ref, ['isLoading', 'render', 'onClickClose', 'showSubmit', 'onClickSubmit', 'submitText']);
 
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     'nav',
@@ -12842,23 +12860,34 @@ const Overlay = (_ref) => {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'Overlay-main' },
-        render(_extends({ isLoading, onClickClose }, rest))
+        render(_extends({ isLoading }, rest))
       ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', { className: 'Overlay-divider' }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'button',
-        {
-          key: 'closeButton',
-          className: 'Overlay-close btn btn-primary',
-          onClick: onClickClose
-        },
-        'Close'
+        'div',
+        { className: 'Overlay-controls' },
+        showSubmit && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'button',
+          { className: 'btn btn-primary', onClick: onClickSubmit },
+          submitText || 'Submit'
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'button',
+          {
+            key: 'closeButton',
+            className: 'Overlay-close btn btn-primary',
+            onClick: onClickClose
+          },
+          'Close'
+        )
       )
     )
   );
 };
 
 Overlay.defaultProps = {
-  isLoading: false
+  isLoading: false,
+  showSubmit: false
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (Overlay);
@@ -15481,6 +15510,10 @@ if(false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(38);
+__webpack_require__(213);
+__webpack_require__(214);
+__webpack_require__(215);
+__webpack_require__(216);
 __webpack_require__(38);
 (function webpackMissingModule() { throw new Error("Cannot find module \"/Users/tylercaldwell/dev/buildfire/sdk/plugins/magento-storefront/widget/js/components/\""); }());
 __webpack_require__(12);
@@ -36641,7 +36674,7 @@ class Nav extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
   render() {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'nav',
-      { id: 'pluginNav', className: 'Nav' },
+      { className: 'footerBackgroundColorTheme', className: 'Nav' },
       this.state.shouldShowOverlay && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__overlay__["a" /* default */], {
         onClickClose: this.handleClickClose,
         isLoading: !this.state.isHydrated,
@@ -37786,7 +37819,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Overlay {\n  z-index: 2;\n  overflow: scroll;\n  height: 100%;\n  width: 100%;\n  position: fixed;\n  top: 0;\n  left: 0;\n  background-color: rgba(0, 0, 0, 0.9);\n}\n\n.Overlay .Overlay-main {\n  height: 90%;\n  overflow-x: hidden;\n  overflow-y: scroll;\n}\n\n.Overlay .Overlay-close {\n  margin: 0 auto;\n  text-align: center;\n  transform: translate(-50%, 25%);\n  left: 50%;\n  position: fixed;\n}\n\n.Overlay .Overlay-content {\n  padding-left: 15%;\n  padding-top: 12%;\n}\n\n.Overlay .Overlay-content li {\n  list-style-type: none;\n}\n", ""]);
+exports.push([module.i, ".Overlay {\n  z-index: 2;\n  overflow: scroll;\n  height: 100%;\n  width: 100%;\n  position: fixed;\n  top: 0;\n  left: 0;\n  background-color: rgba(0, 0, 0, 0.9);\n  overflow-y: hidden;\n}\n\n.Overlay .Overlay-main {\n  height: 90%;\n  overflow-x: hidden;\n  overflow-y: scroll;\n}\n\n.Overlay .Overlay-content {\n  padding-left: 15%;\n  padding-top: 5%;\n}\n\n.Overlay .Overlay-divider {\n  margin: 0 !important;\n  border: solid thin rgba(169, 169, 169, 0.5);\n}\n\n.Overlay .Overlay-controls {\n  overflow-y: hidden;\n  display: flex;\n  width: 100%;\n  height: 10%;\n  align-items: center;\n  justify-content: space-evenly;\n}\n\n.Overlay .Overlay-content li {\n  list-style-type: none;\n}\n", ""]);
 
 // exports
 
@@ -37800,7 +37833,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Nav {\n    font-size: 1em;\n  }\n\n  .Overlay-content li {\n    font-size: 1.25em;\n  }\n\n  .Overlay h2 {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Nav {\n    font-size: 1.5em;\n  }\n\n  .Overlay-content li {\n    font-size: 1.5em;\n  }\n\n  .Overlay h2 {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Nav {\n    font-size: 2em;\n  }\n\n  .Overlay-content li {\n    font-size: 1.5em;\n  }\n\n  .Overlay h2 {\n    font-size: 2em;\n  }\n}\n\n.Overlay-content li {\n  line-height: 1em;\n}\n\n.Nav {\n  line-height: 1em;\n  background-color: #4a4a4a;\n  bottom: 0;\n  width: 100%;\n  height: 10%;\n  position: fixed;\n  flex-shrink: 0;\n  display: table;\n}\n\n.Nav > .Nav-list {\n  display: flex;\n  list-style-type: none;\n  display: table-cell;\n  vertical-align: middle;\n}\n\n.Nav > .Nav-list > .Nav-list-item {\n  display: inline-block;\n  -webkit-flex: 1; /* Safari 6.1+ */\n  -ms-flex: 1; /* IE 10 */\n  flex: 1;\n  text-align: center;\n  width: 25%;\n}\n\n.Nav > .Nav-list > .Nav-list-item > a {\n  color: #ffff;\n  text-decoration: none;\n}\n\n.Nav > .Nav-list > .Nav-list-item > .active {\n  color: #7f7f7f;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Nav {\n    font-size: 1em;\n  }\n\n  .Overlay-content li {\n    font-size: 1.25em;\n  }\n\n  .Overlay h2 {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Nav {\n    font-size: 1.5em;\n  }\n\n  .Overlay-content li {\n    font-size: 1.5em;\n  }\n\n  .Overlay h2 {\n    font-size: 2em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Nav {\n    font-size: 2em;\n  }\n\n  .Overlay-content li {\n    font-size: 1.5em;\n  }\n\n  .Overlay h2 {\n    font-size: 2em;\n  }\n}\n\n.Overlay-content li {\n  line-height: 1.4em;\n}\n\n.Nav {\n  line-height: 1em;\n  background-color: #4a4a4a;\n  bottom: 0;\n  width: 100%;\n  height: 10%;\n  position: fixed;\n  flex-shrink: 0;\n  display: table;\n}\n\n.Nav > .Nav-list {\n  display: flex;\n  list-style-type: none;\n  display: table-cell;\n  vertical-align: middle;\n}\n\n.Nav > .Nav-list > .Nav-list-item {\n  display: inline-block;\n  -webkit-flex: 1; /* Safari 6.1+ */\n  -ms-flex: 1; /* IE 10 */\n  flex: 1;\n  text-align: center;\n  width: 25%;\n}\n\n.Nav > .Nav-list > .Nav-list-item > a {\n  color: #ffff;\n  text-decoration: none;\n}\n\n.Nav > .Nav-list > .Nav-list-item > .active {\n  color: #7f7f7f;\n}\n", ""]);
 
 // exports
 
@@ -37983,6 +38016,7 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
 
     return _temp = super(...args), this.state = {
       isHydrated: false,
+      showingCheck: false,
       quantity: 1
     }, this.handleChangeQuantity = ({ target }) => {
       if (isNaN(target.value)) {
@@ -37998,22 +38032,23 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
       quantity: quantity <= 1 ? 1 : quantity - 1
     })), this.handleQuantityIncrement = () => this.setState(({ quantity }) => ({ quantity: quantity + 1 })), this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
+        this.setState({ showingCheck: true });
         const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
         if (cart) {
           Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
             sku: target.name,
             qty: this.state.quantity,
             quoteID: cart.id
-          }, customer.SSO.accessToken);
+          }, customer.SSO.accessToken).then(() => setTimeout(() => this.setState({ showingCheck: false }), 3000));
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.setItem('cart', null);
             Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
               sku: target.name,
               qty: this.state.quantity,
               quoteID: parsedCart.id
-            }, customer.SSO.accessToken);
+            }, customer.SSO.accessToken).then(() => setTimeout(() => this.setState({ showingCheck: false }), 3000));
           });
         }
       }
@@ -38042,7 +38077,8 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
       onChangeQuantity: this.handleChangeQuantity,
       onQuantityDecrement: this.handleQuantityDecrement,
       onQuantityIncrement: this.handleQuantityIncrement,
-      onClickAddToCart: this.handleClickAddToCart
+      onClickAddToCart: this.handleClickAddToCart,
+      showingCheck: this.state.showingCheck
     }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_spinkit___default.a, { color: 'gray' });
   }
 }
@@ -38081,7 +38117,8 @@ const Product = ({
   onChangeQuantity,
   onQuantityDecrement,
   onQuantityIncrement,
-  onClickAddToCart
+  onClickAddToCart,
+  showingCheck
 }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
   'div',
   { className: 'Product-wrapper' },
@@ -38150,7 +38187,11 @@ const Product = ({
           name: product.sku,
           onClick: onClickAddToCart
         },
-        'Add to Cart'
+        showingCheck ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'span',
+          null,
+          '\u2714'
+        ) : 'Add to Cart'
       )
     )
   )
@@ -40964,7 +41005,8 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     var _temp;
 
     return _temp = super(...args), this.state = {
-      isHydrated: false
+      isHydrated: false,
+      productsWithCheck: []
     }, this.fetchData = () => {
       const data = JSON.parse(sessionStorage.getItem(`browse${this.props.match.params.id}`));
       data ? this.setState(data) : Object(__WEBPACK_IMPORTED_MODULE_1__services_category_service__["b" /* getCategoryDetails */])(this.props.match.params.id).then(category => {
@@ -40981,17 +41023,24 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     }, this.handleClickAddToCart = ({ target }) => buildfire.auth.login(null, (err, customer) => {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
+        this.setState(prevState => ({
+          productsWithCheck: [...prevState.productsWithCheck, target.name]
+        }));
         if (cart) {
-          Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }, customer.SSO.accessToken);
+          Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({ sku: target.name, qty: 1, quoteID: cart.id }, customer.SSO.accessToken).then(() => setTimeout(() => this.setState(prevState => ({
+            productsWithCheck: prevState.productsWithCheck.filter(sku => sku !== target.name)
+          })), 3000));
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedCart = JSON.parse(res);
-            sessionStorage.setItem('cart', null);
             Object(__WEBPACK_IMPORTED_MODULE_3__services_cart_service__["a" /* addToCart */])({
               sku: target.name,
               qty: 1,
               quoteID: JSON.parse(res).id
-            }, customer.SSO.accessToken);
+            }, customer.SSO.accessToken).then(() => setTimeout(() => this.setState(prevState => ({
+              productsWithCheck: prevState.productsWithCheck.filter(sku => sku !== target.name)
+            })), 3000));
           });
         }
       }
@@ -41014,7 +41063,8 @@ class BrowseContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       categoryName: this.state.category.name,
       imageAttributeKey: window.buildfireConfig.productImageAtName,
       shortDescriptionAtName: window.buildfireConfig.shortCategoryDescriptionAtName,
-      onClickAddToCart: this.handleClickAddToCart
+      onClickAddToCart: this.handleClickAddToCart,
+      productsWithCheck: this.state.productsWithCheck
     }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_react_spinkit___default.a, { color: 'gray' });
   }
 }
@@ -41050,7 +41100,8 @@ const Browse = ({
   categoryName,
   imageAttributeKey,
   onClickAddToCart,
-  shortDescriptionAtName
+  shortDescriptionAtName,
+  productsWithCheck
 }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
   'div',
   { className: 'Browse' },
@@ -41068,6 +41119,7 @@ const Browse = ({
         sku,
         imageAttributeKey,
         shortDescriptionAtName,
+        showingCheck: productsWithCheck.includes(sku),
         uniqueKey: sku
       });
     }),
@@ -41083,7 +41135,8 @@ const BrowseProductCard = ({
   custom_attributes,
   onClickAddToCart,
   imageAttributeKey,
-  shortDescriptionAtName
+  shortDescriptionAtName,
+  showingCheck
 }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
   'div',
   { className: 'Browse-card' },
@@ -41139,11 +41192,15 @@ const BrowseProductCard = ({
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'button',
           {
-            className: 'btn btn-primary',
+            className: 'Browse-atc btn btn-primary',
             name: sku,
             onClick: onClickAddToCart
           },
-          'Add to Cart'
+          showingCheck ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'span',
+            null,
+            '\u2714'
+          ) : 'Add to Cart'
         )
       )
     )
@@ -41161,7 +41218,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.3em;\n  }\n\n  .Browse-card {\n    font-size: 0.85em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.2em;\n  height: 25%;\n}\n\n.Browse-card-image {\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n  height: 100%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n  height: 100%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n  height: 50%;\n}\n\n.Browse-card-right-bottom {\n  height: 50%;\n  display: flex;\n  justify-content: flex-end;\n  align-items: flex-end;\n  align-content: flex-end;\n}\n\n.Browse-card-right-top,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price {\n  width: 50%;\n  display: flex;\n  justify-content: flex-start;\n  vertical-align: middle;\n  align-items: center;\n  align-content: flex-start;\n}\n\n.Browse-card-button {\n  width: 50%;\n  display: flex;\n  justify-content: flex-end;\n  vertical-align: middle;\n  align-items: flex-end;\n  align-content: flex-end;\n}\n\n.Browse-card-button {\n  text-align: right;\n}\n\n.Browse-card-button,\n.Browse-card-price {\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Browse-title {\n    font-size: 1.3em;\n  }\n\n  .Browse-card {\n    font-size: 0.85em;\n  }\n\n  .Browser-card-name {\n    font-size: 1.1em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Browse-title {\n    font-size: 3em;\n  }\n\n  .Browse-card {\n    font-size: 1.5em;\n  }\n\n  .Browser-card-name {\n    font-size: 1.75em;\n  }\n\n  .Browse-card-button {\n    padding: 20px 30px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Browse-title {\n    font-size: 4.5em;\n  }\n\n  .Browse-card {\n    font-size: 3em;\n  }\n\n  .Browser-card-name {\n    font-size: 3.25em;\n  }\n\n  .Browse-card-button {\n    padding: 30px 48px !important;\n    font-size: 25px !important;\n    line-height: 1.333333 !important;\n    border-radius: 6px !important;\n  }\n}\n\n.Browse {\n  height: 100%;\n  padding: 0 4%;\n  overflow: auto;\n}\n\n.Browse-title {\n  padding: 7% 0;\n}\n\n.Browse-card {\n  display: flex;\n  padding-bottom: 6%;\n  line-height: 1.4em;\n  height: 25%;\n}\n\n.Browse-card-image {\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.Browse-card-left {\n  width: 30%;\n  height: 100%;\n}\n\n.Browse-card-right {\n  width: 70%;\n  padding-left: 5%;\n  height: 100%;\n}\n\n.Browse-card-right-top {\n  padding-bottom: 5%;\n  height: 50%;\n}\n\n.Browse-card-right-bottom {\n  height: 50%;\n  display: flex;\n  justify-content: flex-end;\n  align-items: flex-end;\n  align-content: flex-end;\n}\n\n.Browse-card-name {\n  font-weight: bold;\n}\n\n.Browse-card-right-top,\n.Browse-card-name,\n.Browse-card-description {\n  display: block;\n}\n\n.Browse-card-left,\n.Browse-card-right,\n.Browse-card-price,\n.Browse-card-button {\n  display: inline-block;\n}\n\n.Browse-card-price {\n  width: 50%;\n  display: flex;\n  justify-content: flex-start;\n  vertical-align: middle;\n  align-items: center;\n  align-content: flex-start;\n}\n\n.Browse-card-button {\n  width: 50%;\n  display: flex;\n  justify-content: flex-end;\n  vertical-align: middle;\n  align-items: flex-end;\n  align-content: flex-end;\n}\n\n.Browse-card-button {\n  text-align: right;\n}\n\n.Browse-card-button,\n.Browse-card-price {\n  height: 100%;\n}\n\n.Browse,\n.Browse-atc {\n  width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -41233,12 +41290,12 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(({ items }) => {
             const newItems = [...items];
             return { items: newItems.filter(item => item.item_id != id) };
-          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => sessionStorage.setItem('cart', null)).catch(() => this.setState({ items: oldItems })));
+          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["h" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => sessionStorage.removeItem('cart')).catch(() => this.setState({ items: oldItems })));
         }
       });
     }, this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }), this.handleClickShippingMethod = methodCode => this.setState({
       selectedShippingMethod: this.state.shippingMethods.find(({ method_code }) => methodCode === method_code)
-    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickCheckout = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["f" /* placeOrder */])({}, customer.SSO.accessToken).then(res => {
+    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickCheckout = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* placeOrder */])({}, customer.SSO.accessToken).then(res => {
       console.log(res);
       // TODO
       // to get the two below custom attributes you have to do a GET to the product details for every product purchased
@@ -41253,7 +41310,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           }]
         }, 'reminders', false);
       }
-    }).catch(err => console.log(err)) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), this.getSubtotal = () => this.state.items.reduce((acc, curr) => acc += curr.price * curr.qty, 0), this.getShipping = () => this.state.selectedShippingMethod ? this.state.selectedShippingMethod.amount : 0, this.getDiscount = () => 0, this.getTaxes = () => 0, this.getTotal = () => this.getSubtotal() + this.getShipping() - this.getDiscount() + this.getTaxes(), _temp;
+    }).catch(err => console.log(err)) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
   }
 
   componentDidMount() {
@@ -41261,17 +41318,22 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
-          Promise.all(cart.items.map(({ sku }) => {
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["f" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
             const productFromStorage = sessionStorage.getItem(`product${sku}`);
             return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
           })).then(products => {
             products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
-            console.log(products);
+            const totals = JSON.parse(unparsedTotals);
             this.setState({
               isHydrated: true,
               items: cart.items.map(item => _extends({}, item, {
                 productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
-              }))
+              })),
+              discount: totals.discount_amount,
+              taxes: totals.tax_amount,
+              subTotal: totals.subtotal,
+              shipping: totals.shipping_amount,
+              total: totals.grand_total
             });
             Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
               const parsedShippingMethods = JSON.parse(shippingMethods);
@@ -41280,21 +41342,27 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
               });
             }).catch(err => console.log(err) || this.setState({ isHydrated: true })); // TODO check if it's the shipping method error
-          });
+          }));
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedRes = JSON.parse(res);
             sessionStorage.setItem('cart', res);
-            Promise.all(parsedRes.items.map(({ sku }) => {
+            Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["f" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(parsedRes.items.map(({ sku }) => {
               const productFromStorage = sessionStorage.getItem(`product${sku}`);
               return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
             })).then(products => {
               products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
+              const totals = JSON.parse(unparsedTotals);
               this.setState({
                 isHydrated: true,
                 items: parsedRes.items.map(item => _extends({}, item, {
                   productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
-                }))
+                })),
+                discount: totals.discount_amount,
+                taxes: totals.tax_amount,
+                subTotal: totals.subtotal,
+                shipping: totals.shipping_amount,
+                total: totals.grand_total
               });
               Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getShippingMethods */])(customer.SSO.accessToken).then(shippingMethods => {
                 const parsedShippingMethods = JSON.parse(shippingMethods);
@@ -41303,16 +41371,14 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                   selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
                 });
               }).catch(err => console.log(err) || this.setState({ isHydrated: true })); // TODO check if it's the shipping method error
-            });
+            }));
           });
         }
       } else {
         this.goBack();
       }
     });
-  } // TODO
-
-  // TODO
+  }
 
   render() {
     return this.state.isHydrated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__components_cart__["a" /* default */], {
@@ -41333,11 +41399,11 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       onClickCheckout: this.handleClickCheckout,
       onClickApplyCoupon: this.handleClickApplyCoupon,
       shouldShowShippingMenu: this.state.shouldShowShippingMenu,
-      subTotal: this.getSubtotal(),
-      shipping: this.getShipping(),
-      discount: this.getDiscount(),
-      taxes: this.getTaxes(),
-      total: this.getTotal()
+      subTotal: this.state.subTotal,
+      shipping: this.state.shipping,
+      discount: this.state.discount,
+      taxes: this.state.taxes,
+      total: this.state.total
     }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_spinkit___default.a, { color: 'gray' });
   }
 }
@@ -41464,7 +41530,12 @@ const Cart = ({
       shouldShowCouponOverlay && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__overlay__["a" /* default */], {
         onClickClose: onClickCloseCouponOverlay,
         isLoading: isLoading,
-        render: ({ onClickClose }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        onSubmit: () => {
+          /* TODO */
+        },
+        submitText: 'Apply Code',
+        showSubmit: true,
+        render: () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'Overlay-content' },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41484,7 +41555,7 @@ const Cart = ({
       shouldShowShippingMenu && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__overlay__["a" /* default */], {
         onClickClose: onClickCloseShipping,
         isLoading: isLoading,
-        render: ({ onClickClose }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        render: () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { className: 'Overlay-content' },
           shippingMethods && shippingMethods.map(({ method_title, amount, method_code }, index) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41667,7 +41738,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 5px;\n  margin-right: 5px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 50%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: flex;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 5% !important;\n}\n", ""]);
+exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 5px;\n  margin-right: 5px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-card-name {\n  font-weight: bold;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 35%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-bottom {\n  display: flex;\n  width: 100%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 5% !important;\n}\n", ""]);
 
 // exports
 
@@ -41700,14 +41771,10 @@ class AccountContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
   }
 
   componentDidMount() {
-    buildfire.auth.login(null, (err, res) =>
-    /*res
-      ?*/this.setState({
+    buildfire.auth.login(null, (err, res) => res ? this.setState({
       customerName: res && res.firstName || '',
       isHydrated: true
-    })
-    //: this.goBack()
-    );
+    }) : this.goBack());
   }
 
   render() {
@@ -41785,7 +41852,7 @@ const Account = ({ customerName }) => __WEBPACK_IMPORTED_MODULE_0_react___defaul
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_1_react_router_dom__["b" /* Link */],
         { to: __WEBPACK_IMPORTED_MODULE_3__constants_routes__["g" /* info */] },
-        'Billing/shipping ',
+        'Billing/Shipping ',
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__link_arrow__["a" /* default */], { direction: 'right' })
       )
     )
@@ -41837,20 +41904,29 @@ class HistoryContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
     return _temp = super(...args), this.state = {
       isHydrated: false,
       expandedKeys: []
-    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.handleClickReorder = ({ target }) => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(cartRes => Promise.all(this.state.orders.items.find(({ increment_id }) => increment_id === target.name).items.map(({ sku, qty_ordered }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
-      sku,
-      qty: qty_ordered,
-      quoteID: JSON.parse(cartRes).id
-    }, customer.SSO.accessToken))).then(res => this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["b" /* cart */]))) : {}), this.handleAccordionChange = expandedKeys => this.setState({ expandedKeys }), _temp;
+    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.handleClickReorder = ({ target }) => buildfire.auth.login(null, (err, customer) => {
+      if (customer) {
+        const cart = JSON.parse(sessionStorage.getItem('cart'));
+        sessionStorage.removeItem('cart');
+        if (cart) {
+          Promise.all(this.state.orders.items.find(({ increment_id }) => increment_id === target.name).items.map(({ sku, qty_ordered }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
+            sku,
+            qty: qty_ordered,
+            quoteID: cart.id
+          }, customer.SSO.accessToken))).then(res => this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["b" /* cart */]));
+        } else {
+          Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["b" /* getCart */])(customer.SSO.accessToken).then(cartRes => Promise.all(this.state.orders.items.find(({ increment_id }) => increment_id === target.name).items.map(({ sku, qty_ordered }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["a" /* addToCart */])({
+            sku,
+            qty: qty_ordered,
+            quoteID: JSON.parse(cartRes).id
+          }, customer.SSO.accessToken))).then(res => this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["b" /* cart */])));
+        }
+      }
+    }), this.handleAccordionChange = expandedKeys => this.setState({ expandedKeys }), _temp;
   }
 
   componentDidMount() {
-    buildfire.auth.login(null, (err, customer) =>
-    /*customer
-      ?*/Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["d" /* getCustomer */])(
-    /*customer.SSO.accessToken*/'u5rwuq1uvv0c73ktu2qnsmovyix2ee8p').then(custRes => Object(__WEBPACK_IMPORTED_MODULE_1__services_orders_service__["a" /* getOrdersForCustomer */])(JSON.parse(custRes).id).then(res => this.setState({ isHydrated: true, orders: JSON.parse(res) })))
-    //: this.goBack()
-    );
+    buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_2__services_cart_service__["d" /* getCustomer */])(customer.SSO.accessToken).then(custRes => Object(__WEBPACK_IMPORTED_MODULE_1__services_orders_service__["a" /* getOrdersForCustomer */])(JSON.parse(custRes).id).then(res => this.setState({ isHydrated: true, orders: JSON.parse(res) }))) : this.goBack());
   }
 
   render() {
@@ -47493,7 +47569,7 @@ exports.push([module.i, ".Reminders {\n  padding: 4%;\n  height: 100%;\n  overfl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_react_spinkit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_react_spinkit__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__constants_routes__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_react_router_dom__ = __webpack_require__(5);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 
 
@@ -47514,38 +47590,71 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       overlayType: 'billing',
       billingCountry: 'United States',
       shippingCountry: 'United States'
-    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_4__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_4__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.handleClickUpdate = ({ target: name }) => this.setState(() => ({
+    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_4__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_4__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.handleClickUpdate = ({ target: { name } }) => this.setState(() => ({
       shouldShowEditOverlay: true,
       overlayType: name === 'billing' ? TYPE_BILLING : TYPE_SHIPPING
     })), this.handleClickCloseOverlay = () => this.setState({ shouldShowEditOverlay: false }), this.handleClickSubmit = () => buildfire.auth.login(null, (err, customer) => customer ? this.setState(prevState => {
-      const customerToUpdate = _extends({}, prevState.customer);
+      const customerToUpdate = JSON.parse(JSON.stringify(prevState.customer));
       const addressIndex = customerToUpdate.addresses.findIndex(address => ({ default_billing, default_shipping }) => this.state.overlayType == TYPE_BILLING ? default_billing : default_shipping);
-      const addressToUpdate = customerToUpdate.addresses[addressIndex];
+      const addressToUpdateWithRegion = customerToUpdate.addresses[addressIndex];
+      const {
+        region
+      } = addressToUpdateWithRegion,
+            addressToUpdate = _objectWithoutProperties(addressToUpdateWithRegion, ['region']);
       addressToUpdate.city = this.state[`${this.state.overlayType}City`];
       addressToUpdate.firstname = this.state[`${this.state.overlayType}FirstName`];
       addressToUpdate.lastname = this.state[`${this.state.overlayType}LastName`];
       addressToUpdate.telephone = this.state[`${this.state.overlayType}PhoneNumber`];
       addressToUpdate.street = [this.state[`${this.state.overlayType}StreetAddressOne`], this.state[`${this.state.overlayType}StreetAddressTwo`]];
-      addressToUpdate.region = {};
-      addressToUpdate.region_id = 0;
+      const selectedRegion = this.state.countryList.find(({ full_name_english }) => full_name_english === this.state[`${this.state.overlayType}Country`]).available_regions.find(region => region.name === this.state[`${this.state.overlayType}StateProvince`]);
+      const formattedRegion = {
+        region_id: selectedRegion.id,
+        region: selectedRegion.name,
+        region_code: selectedRegion.code
+      };
+      addressToUpdate.region = formattedRegion;
+      addressToUpdate.region_id = selectedRegion.id;
       addressToUpdate.postcode = this.state[`${this.state.overlayType}Zip`];
       addressToUpdate.country_id = this.state.countryList.find(({ full_name_english }) => full_name_english === this.state[`${this.state.overlayType}Country`]).id;
       addressToUpdate.customer_id = customerToUpdate.id;
       addressToUpdate.default_billing = addressToUpdate.default_billing;
       addressToUpdate.default_shipping = addressToUpdate.default_shipping;
-      customerToUpdate.addresses[addressIndex];
+      customerToUpdate.addresses[addressIndex] = addressToUpdate;
       return {
         shouldShowEditOverlay: false,
         customer: customerToUpdate
       };
-    }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["h" /* updateCustomer */])(this.state.customer)) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
+    }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* updateCustomer */])(this.state.customer)) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
   }
 
   componentDidMount() {
-    buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getCustomer */])(customer.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* getCountryList */])().then(unparsedCountries => this.setState({
-      isHydrated: true,
-      customer: JSON.parse(res),
-      countryList: JSON.parse(unparsedCountries)
+    buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getCustomer */])(customer.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* getCountryList */])().then(unparsedCountries => this.setState(() => {
+      const customerRes = JSON.parse(res);
+      const shipping = customerRes.addresses.find(({ default_shipping }) => default_shipping);
+      const billing = customerRes.addresses.find(({ default_billing }) => default_billing);
+      return {
+        isHydrated: true,
+        customer: customerRes,
+        countryList: JSON.parse(unparsedCountries),
+        billingFirstName: billing.firstname || '',
+        billingLastName: billing.lastname || '',
+        billingPhoneNumber: billing.telephone || '',
+        billingStreetAddressOne: billing.street[0] || '',
+        billingStreetAddressTwo: billing.street[1] || '',
+        billingCity: billing.city || '',
+        billingStateProvince: billing.region.region || '',
+        billingZip: billing.postcode || '',
+        billingCountry: billing.full_name_english || 'United States',
+        shippingFirstName: shipping.firstname || '',
+        shippingLastName: shipping.lastname || '',
+        shippingPhoneNumber: shipping.telephone || '',
+        shippingStreetAddressOne: shipping.street[0] || '',
+        shippingStreetAddressTwo: shipping.street[1] || '',
+        shippingCity: shipping.city || '',
+        shippingStateProvince: shipping.region.region || '',
+        shippingZip: shipping.postcode || '',
+        shippingCountry: shipping.full_name_english || 'United States'
+      };
     }))).catch(err => console.log(err)) : this.goBack());
   }
 
@@ -47553,6 +47662,24 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     return this.state.isHydrated ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_info__["a" /* default */], {
       billingAddress: this.state.customer.addresses.find(({ default_billing }) => default_billing),
       shippingAddress: this.state.customer.addresses.find(({ default_shipping }) => default_shipping),
+      billingFirstName: this.state.billingFirstName,
+      shippingFirstName: this.state.shippingFirstName,
+      billingLastName: this.state.billingLastName,
+      shippingLastName: this.state.shippingLastName,
+      billingPhoneNumber: this.state.billingPhoneNumber,
+      shippingPhoneNumber: this.state.shippingPhoneNumber,
+      billingStreetAddressOne: this.state.billingStreetAddressOne,
+      shippingStreetAddressOne: this.state.shippingStreetAddressOne,
+      billingStreetAddressTwo: this.state.billingStreetAddressTwo,
+      shippingStreetAddressTwo: this.state.shippingStreetAddressTwo,
+      billingCity: this.state.billingCity,
+      shippingCity: this.state.shippingCity,
+      billingStateProvince: this.state.billingStateProvince,
+      shippingStateProvince: this.state.shippingStateProvince,
+      billingZip: this.state.billingZip,
+      shippingZip: this.state.shippingZip,
+      billingCountry: this.state.billingCountry,
+      shippingCountry: this.state.shippingCountry,
       countryList: this.state.countryList,
       selectedCountryName: this.state[`${this.state.overlayType}Country`],
       onClickUpdate: this.handleClickUpdate,
@@ -47581,6 +47708,9 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
 
 
+
+const TYPE_BILLING = 'billing';
+const TYPE_SHIPPING = 'shipping';
 
 const Info = ({
   countryList,
@@ -47616,9 +47746,11 @@ const Info = ({
   'div',
   { className: 'Info' },
   shouldShowEditOverlay && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__overlay__["a" /* default */], {
+    onClickSubmit: onClickSubmit,
     onClickClose: onClickCloseOverlay,
     isLoading: isLoading,
-    render: ({ onCLickClose }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    showSubmit: true,
+    render: () => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       { className: 'Info-form form-group' },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47635,6 +47767,7 @@ const Info = ({
         id: 'first-name',
         name: `${overlayType}FirstName`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingFirstName : shippingFirstName,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47646,6 +47779,7 @@ const Info = ({
         id: 'last-name',
         name: `${overlayType}LastName`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingLastName : shippingLastName,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47657,6 +47791,7 @@ const Info = ({
         id: 'phone-number',
         name: `${overlayType}PhoneNumber`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingPhoneNumber : shippingPhoneNumber,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47673,12 +47808,14 @@ const Info = ({
         id: 'street-address',
         name: `${overlayType}StreetAddressOne`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingStreetAddressOne : shippingStreetAddressOne,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
         id: 'street-address',
         name: `${overlayType}StreetAddressTwo`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingStreetAddressTwo : shippingStreetAddressTwo,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47690,6 +47827,7 @@ const Info = ({
         id: 'city',
         name: `${overlayType}City`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingCity : shippingCity,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47703,6 +47841,7 @@ const Info = ({
           id: 'state-province',
           name: `${overlayType}StateProvince`,
           className: 'form-control',
+          value: overlayType === TYPE_BILLING ? billingStateProvince : shippingStateProvince,
           onChange: onInputChange
         },
         (() => {
@@ -47724,6 +47863,7 @@ const Info = ({
         id: 'zip-postal',
         name: `${overlayType}Zip`,
         className: 'form-control',
+        value: overlayType === TYPE_BILLING ? billingZip : shippingZip,
         onChange: onInputChange
       }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47738,6 +47878,7 @@ const Info = ({
           name: `${overlayType}Country`,
           className: 'form-control',
           value: selectedCountryName,
+          value: overlayType === TYPE_BILLING ? billingCountry : shippingCountry,
           onChange: onInputChange
         },
         countryList.map(({ id, full_name_english }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47745,11 +47886,6 @@ const Info = ({
           { key: id, id: full_name_english },
           full_name_english
         ))
-      ),
-      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'button',
-        { className: 'btn btn-primary', onClick: onClickSubmit },
-        'Submit'
       )
     )
   }),
@@ -47864,7 +48000,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Info {\n    font-size: 1em;\n  }\n  .Info h2 {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Info {\n    font-size: 2em;\n  }\n  .Info h2 {\n    font-size: 2.5em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Info {\n    font-size: 3em;\n  }\n  .Info h2 {\n    font-size: 3.5em;\n  }\n}\n\n.Info {\n  padding: 5%;\n  overflow: auto;\n  line-height: 1.25em;\n}\n\n.Info h2,\n.Info .Info-item-body {\n  margin-bottom: 10%;\n}\n\n.Info .Info-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n  margin-top: 3.5%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-left,\n.Info .Info-item .Info-item-body .Info-item-body-right {\n  display: inline-block;\n  vertical-align: middle;\n  width: 50%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-right .Info-item-update {\n  float: right;\n}\n\n.Info .Info-form {\n  padding-top: 15%;\n  padding-left: 5%;\n  padding-right: 5%;\n}\n\n.Info .Info-form * {\n  margin-bottom: 10px;\n}\n", ""]);
+exports.push([module.i, "@media only screen and (max-width: 760px) {\n  .Info {\n    font-size: 1em;\n  }\n  .Info h2 {\n    font-size: 1.5em;\n  }\n}\n\n@media only screen and (min-width: 760px) and (max-width: 1000px) {\n  .Info {\n    font-size: 2em;\n  }\n  .Info h2 {\n    font-size: 2.5em;\n  }\n}\n\n@media only screen and (min-width: 1000px) {\n  .Info {\n    font-size: 3em;\n  }\n  .Info h2 {\n    font-size: 3.5em;\n  }\n}\n\n.Info {\n  padding: 5%;\n  overflow: auto;\n  line-height: 1.25em;\n}\n\n.Info h2,\n.Info .Info-item-body {\n  margin-bottom: 10%;\n}\n\n.Info .Info-item:after {\n  content: '';\n  display: block;\n  height: 1px;\n  width: 100%;\n  background: rgba(169, 169, 169, 0.5);\n  margin-top: 3.5%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-left,\n.Info .Info-item .Info-item-body .Info-item-body-right {\n  display: inline-block;\n  vertical-align: middle;\n  width: 50%;\n}\n\n.Info .Info-item .Info-item-body .Info-item-body-right .Info-item-update {\n  float: right;\n}\n\n.Info .Info-form {\n  padding-top: 5%;\n  padding-left: 5%;\n  padding-right: 5%;\n}\n\n.Info .Info-form * {\n  margin-bottom: 10px;\n}\n", ""]);
 
 // exports
 
@@ -48074,10 +48210,594 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "html,\nbody,\n#main {\n  height: 100%;\n}\n\n#content {\n  height: 90%;\n}\n\n#main {\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n}\n\nbutton {\n  border-radius: 0 !important;\n}\n\nbody,\np,\nh1,\nul {\n  margin: 0;\n}\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n  color: white;\n}\n\nul {\n  padding: 0;\n}\n\na {\n  text-decoration: none !important;\n  color: inherit;\n}\n\n.sk-spinner {\n  color: white;\n  position: fixed;\n  top: 45%;\n  left: 50%;\n  margin-top: -9px;\n  margin-left: -27px;\n  width: 54px;\n}\n\n.List-noItems {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.clamp-one {\n  display: -webkit-box;\n  -webkit-line-clamp: 1;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-two {\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-three {\n  display: -webkit-box;\n  -webkit-line-clamp: 3;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n::-webkit-scrollbar {\n  height: 16px;\n  overflow: visible;\n  width: 16px;\n  display: none;\n}\n", ""]);
+exports.push([module.i, "html,\nbody,\n#main {\n  height: 100%;\n}\n\n#content {\n  height: 90%;\n}\n\n#main {\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n}\n\nbutton {\n  border-radius: 0 !important;\n}\n\nbody,\np,\nh1,\nul {\n  margin: 0;\n}\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n  color: white;\n}\n\nul {\n  padding: 0;\n}\n\na {\n  text-decoration: none !important;\n  color: inherit;\n}\n\n.sk-spinner {\n  color: white;\n  position: fixed;\n  top: 45%;\n  left: 50%;\n  margin-top: -9px;\n  margin-left: -27px;\n  width: 54px;\n}\n\n.List-noItems {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.clamp-one {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.clamp-two {\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n.clamp-three {\n  display: -webkit-box;\n  -webkit-line-clamp: 3;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n\n::-webkit-scrollbar {\n  height: 16px;\n  overflow: visible;\n  width: 16px;\n  display: none;\n}\n", ""]);
 
 // exports
 
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports) {
+
+function Packet(e, t, i) {
+  this.id = e || new Date().toISOString() + Math.random(), this.cmd = t, this.data = i, this.instanceId = null;
+}function CustomEvent(e, t) {
+  t = t || { bubbles: !1, cancelable: !1, detail: void 0 };var i = document.createEvent("CustomEvent");return i.initCustomEvent(e, t.bubbles, t.cancelable, t.detail), i;
+}var buildfire = { isFileServer: function (e) {
+    return -1 !== e.indexOf("s3.amazonaws.com");
+  }, isWeb: function () {
+    return 0 == window.location.protocol.indexOf("http");
+  }, logger: { attachRemoteLogger: function (e) {
+      if (document.getElementById("BuildFireAppDebuggerScript")) alert("debugger already attached");else if (e || (e = prompt("Enter is a unique tag to send your logs to")), e) {
+        var t = document.querySelector("head"),
+            i = document.createElement("script");i.src = "http://debug.buildfire.com/target/target-script-min.js#" + e, i.id = "BuildFireAppDebuggerScript", t.appendChild(i);
+      }
+    } }, _callbacks: {}, parseQueryString: function () {
+    for (var e = window.location.search.substring(1).split("&"), t = new Object(), i = 0; i < e.length; i++) {
+      var n = e[i].split("=");t[decodeURIComponent(n[0])] = decodeURIComponent(n[1]);
+    }return t;
+  }, options: {}, parseMetaOptions: function () {
+    var e = {},
+        t = document.head.querySelector("meta[name=buildfire]");return t && t.content && t.content.split(",").forEach(function (t) {
+      var i = t.split("=");e[i[0]] = !(i.length > 1) || i[1];
+    }), e;
+  }, eventManager: { events: {}, add: function (e, t, i) {
+      if ("function" != typeof t) throw "Invalid event handler";i || this.clear(e), this.events[e] ? this.events[e].push(t) : this.events[e] = [t];var n = this.events[e];return { clear: function () {
+          for (var e = 0; e < n.length; e++) n[e] === t && n.splice(e, 1);
+        } };
+    }, clear: function (e) {
+      this.events[e] = [];
+    }, trigger: function (e, t) {
+      if (this.events[e]) for (var i = 0; i < this.events[e].length; i++) try {
+        this.events[e][i](t);
+      } catch (e) {
+        console.error(e);
+      }
+    } }, _context: null, get context() {
+    return console.warn("buildfire.context is obsolete and will be removed soon"), buildfire._context;
+  }, set context(e) {
+    buildfire._context = e;
+  }, init: function () {
+    window.removeEventListener("message", buildfire._postMessageHandler, !1), window.addEventListener("message", buildfire._postMessageHandler, !1), buildfire.options = buildfire.parseMetaOptions(), buildfire.appearance.insertHTMLAttributes(), buildfire.options.disableTheme || buildfire.appearance.attachCSSFiles();
+  }, _whitelistedCommands: ["datastore.triggerOnUpdate", "datastore.triggerOnRefresh", "userData.triggerOnUpdate", "userData.triggerOnRefresh", "publicData.triggerOnUpdate", "publicData.triggerOnRefresh", "messaging.onReceivedMessage", "history.triggerOnPop", "navigation.onBackButtonClick", "services.media.audioPlayer.triggerOnEvent", "auth.triggerOnLogin", "auth.triggerOnLogout", "logger.attachRemoteLogger", "appearance.triggerOnUpdate", "device.triggerOnAppBackgrounded", "device.triggerOnAppResumed", "notifications.localNotification.onClick", "geo.onPositionChange", "navigation.triggerOnAppLauncherActive", "navigation.triggerOnAppLauncherInactive"], _postMessageHandler: function (e) {
+    if (e.source !== window) {
+      var t;if ((t = "object" == typeof e.data ? e.data : JSON.parse(e.data)).id && buildfire._callbacks[t.id]) buildfire._callbacks[t.id](t.error, t.data), delete buildfire._callbacks[t.id];else if (buildfire._whitelistedCommands.indexOf(t.cmd) + 1) {
+        for (var i = t.cmd.split("."), n = buildfire, a = buildfire, r = 0; r < i.length; r++) {
+          if (r > 0 && (a = n), !n[i[r]]) return;n = n[i[r]];
+        }n.apply(a, [t.data]);
+      } else console.warn(window.location.href + " unhandled packet", t);
+    } else console.log(" >>>> IGNORE MESSAGE <<<< ");
+  }, _sendPacket: function (e, t) {
+    "function" != typeof t && (t = function (e, t) {});var i = e.cmd,
+        n = 0,
+        a = 0 == i.indexOf("datastore") && 0 != i.indexOf("datastore.insert") && 0 != i.indexOf("datastore.bulkInsert") && 0 != i.indexOf("datastore.disableRefresh") && 0 != i.indexOf("datastore.searchAndUpdate") && 0 != i.indexOf("datastore.update"),
+        r = 0 == i.indexOf("getContext");if (a || r) var o = setTimeout(function () {
+      n < 5 && (console.error("calling " + e.cmd + " again. total overall resend attempts " + n), buildfire._sendPacket(e, function (e, i) {
+        n--, t(e, i);
+      }), n++);
+    }, 3e3);buildfire._callbacks[e.id] = function (e, i) {
+      clearTimeout(o), t(e, i);
+    }, e.fid = buildfire.fid, buildfire._parentPost(e, t);
+  }, _parentPost: function (e) {
+    function t(e) {
+      e && delete e.$$hashKey;for (var i in e) {
+        var n = e[i];"object" == typeof n && (e[i] = t(n));
+      }return e;
+    }parent && e && (e.data && "undefined" != typeof angular && (e.data = t(e.data)), parent.postMessage(e, "*"));
+  }, getContext: function (e) {
+    if (buildfire._context) e(null, buildfire._context);else {
+      var t = new Packet(null, "getContext");buildfire._sendPacket(t, function (t, i) {
+        i && (buildfire._context = i), e && e(t, i);
+      });
+    }
+  }, navigation: { navigateTo: function (e) {
+      if (e.pluginTypeId && !e.pluginId && (e.pluginId = e.pluginTypeId), e.pluginId && e.instanceId && e.folderName) {
+        var t = new Packet(null, "navigation.navigateTo", { pluginId: e.pluginId, instanceId: e.instanceId, title: e.title, folderName: e.folderName, queryString: e.queryString });buildfire._sendPacket(t);
+      } else console.error("invalid navigation request ", e);
+    }, navigateHome: function () {
+      var e = new Packet(null, "navigation.navigateHome");buildfire._sendPacket(e);
+    }, scrollTop: function (e) {
+      var t = new Packet(null, "navigation.scrollTop");buildfire._sendPacket(t, e);
+    }, openWindow: function (e, t, i) {
+      t || (t = "_blank"), i || (i = function () {
+        console.info("openWindow:: completed");
+      });var n = new Packet(null, "actionItems.execute", { action: "linkToWeb", url: e, openIn: t }, i);buildfire._sendPacket(n);
+    }, _goBackOne: function () {
+      buildfire._sendPacket(new Packet(null, "navigation.navigateBack"));
+    }, onBackButtonClick: function () {
+      buildfire.navigation._goBackOne();
+    }, restoreBackButtonClick: function () {
+      buildfire.navigation.onBackButtonClick = function () {
+        buildfire.navigation._goBackOne();
+      };
+    }, goBack: function () {
+      buildfire.navigation.onBackButtonClick();
+    }, makeSafeLinks: function (e) {
+      var t = this;"object" != typeof e && (e = document.getElementById(e));for (var i = e.querySelectorAll("a[href^=http], a[href^=https],a[href^=www]"), n = 0; n < i.length; n++) i[n].setAttribute("inAppBrowser", !0), i[n].addEventListener("click", function (e) {
+        e.preventDefault(), t.openWindow(this.href, this.target, null);
+      }, !1);
+    }, navigateEmulator: function () {
+      buildfire._sendPacket(new Packet(null, "navigation.navigateEmulator"));
+    }, onAppLauncherActive: function (e, t) {
+      return buildfire.eventManager.add("appLauncherActive", e, t);
+    }, onAppLauncherInactive: function (e, t) {
+      return buildfire.eventManager.add("appLauncherInactive", e, t);
+    }, triggerOnAppLauncherActive: function (e) {
+      return buildfire.eventManager.trigger("appLauncherActive", e);
+    }, triggerOnAppLauncherInactive: function (e) {
+      return buildfire.eventManager.trigger("appLauncherInactive", e);
+    } }, getFrameType: function () {
+    var e = { LAUNCHER_PLUGIN: "launcherPluginv", CONTROL_FRAME: "controlIFrame" },
+        t = { LAUNCHER_PLUGIN: "LAUNCHER_PLUGIN", CONTROL_FRAME: "CONTROL_FRAME", UNKNOWN: "UNKNOWN" },
+        i = buildfire.fid;return i == e.LAUNCHER_PLUGIN ? t.LAUNCHER_PLUGIN : i == e.CONTROL_FRAME ? t.CONTROL_FRAME : t.UNKNOWN;
+  }, appearance: { ready: function () {
+      var e = new Packet(null, "appearance.ready");buildfire._sendPacket(e);
+    }, _forceCSSRender: function () {
+      if (window.location.href.indexOf("widget") > 0) {
+        var e = document.getElementsByTagName("html")[0],
+            t = document.createElement("style");t.type = "text/css", t.innerHTML = "body{position:relative !important; z-index:1 !important;} .plugin-slide{position:relative !important;} .plugin-slide, .plugin-slide img{transform: translateZ(0) !important;", e.appendChild(t);
+      }
+    }, insertHTMLAttributes: function () {
+      var e = document.getElementsByTagName("html")[0];window.location.href.indexOf("widget") > 0 ? (e.setAttribute("buildfire", "widget"), e.setAttribute("type", "app")) : e.setAttribute("buildfire", "control");navigator.appVersion;var t,
+          i,
+          n,
+          a = navigator.userAgent,
+          r = navigator.appName,
+          o = "" + parseFloat(navigator.appVersion),
+          d = parseInt(navigator.appVersion, 10),
+          u = "Unknown OS";-1 != (i = a.indexOf("Opera")) ? (r = "Opera", o = a.substring(i + 6), -1 != (i = a.indexOf("Version")) && (o = a.substring(i + 8))) : -1 != (i = a.indexOf("MSIE")) ? (r = "Microsoft Internet Explorer", o = a.substring(i + 5)) : -1 != (i = a.indexOf("Chrome")) ? (r = "Chrome", o = a.substring(i + 7)) : -1 != (i = a.indexOf("Safari")) ? (r = "Safari", o = a.substring(i + 7), -1 != (i = a.indexOf("Version")) && (o = a.substring(i + 8))) : -1 != (i = a.indexOf("Firefox")) ? (r = "Firefox", o = a.substring(i + 8)) : (t = a.lastIndexOf(" ") + 1) < (i = a.lastIndexOf("/")) && (r = a.substring(t, i), o = a.substring(i + 1), r.toLowerCase() == r.toUpperCase() && (r = navigator.appName)), -1 != (n = o.indexOf(";")) && (o = o.substring(0, n)), -1 != (n = o.indexOf(" ")) && (o = o.substring(0, n)), d = parseInt("" + o, 10), isNaN(d) && (o = "" + parseFloat(navigator.appVersion), d = parseInt(navigator.appVersion, 10)), -1 != navigator.appVersion.indexOf("Win") && (u = "Windows"), -1 != navigator.appVersion.indexOf("Mac") && (u = "MacOS"), -1 != navigator.appVersion.indexOf("X11") && (u = "UNIX"), -1 != navigator.appVersion.indexOf("Linux") && (u = "Linux"), e.setAttribute("os", u), e.setAttribute("browser", r), e.setAttribute("majorVersion", d), e.setAttribute("fullVersion", o);
+    }, getCSSFiles: function (e) {
+      var t = new Packet(null, "appearance.getCSSFiles");buildfire._sendPacket(t, e);
+    }, attachCSSFiles: function () {
+      var e = [],
+          t = "";!(!buildfire.options || !buildfire.options.disableBootstrap) && buildfire.options.disableBootstrap || e.push("styles/bootstrap.css"), window.location.pathname.indexOf("/control/") >= 0 ? e.push("styles/siteStyle.css") && e.push("styles/pluginScreen.css") : !(!buildfire.options || !buildfire.options.disableAppStyles) && buildfire.options.disableAppStyles || e.push("styles/appStyle.css");for (var i = document.getElementsByTagName("script"), n = 0; n < i.length; n++) {
+        var a = i[n].src;if (a.indexOf("buildfire.js") > 0) {
+          t = a.replace("/scripts/buildfire.js", "");break;
+        }if (a.indexOf("buildfire.min.js") > 0) {
+          t = a.replace("/scripts/buildfire.min.js", "");break;
+        }if (a.match(/(\/scripts\/_bundle\S+.js)/gi)) {
+          t = a.replace(/(\/scripts\/_bundle\S+.js)/gi, "");break;
+        }
+      }"/" != t[t.length - 1] && (t += "/");for (n = 0; n < e.length; n++) document.write('<link rel="stylesheet" href="' + t + e[n] + '"/>');
+    }, disableFastClickOnLoad: !1, attachFastClick: function () {
+      for (var e, t = document.getElementsByTagName("script"), i = 0; i < t.length; i++) if (t[i].src.indexOf("buildfire.js") > 0) e = t[i].src.replace("buildfire.js", "fastclick.js");else if (t[i].src.indexOf("fastclick.js") > 0) return void console.warn("fastclick already attached");if (e) {
+        var n = document.createElement("script");n.src = e, n.type = "text/javascript", n.onload = function () {
+          console.info("fastclick.js loaded"), "undefined" == typeof FastClick ? console.error("fastclick undefined") : FastClick.attach(document.body);
+        }, document.body.appendChild(n);
+      } else console.warn("fastclick.js requires a buildfire.js reference.");
+    }, applyFastClick: function (e) {
+      e || (e = document.body), "undefined" == typeof FastClick ? console.error("fastclick undefined") : FastClick.attach(e);
+    }, attachAppThemeCSSFiles: function (e, t, i) {
+      this._attachAppThemeCSSFiles(i + "/api/app/styles/appTheme.css?appId=" + e + "&liveMode=" + t + "&v=" + buildfire.appearance.CSSBusterCounter);
+    }, attachLocalAppThemeCSSFiles: function (e) {
+      this._attachAppThemeCSSFiles("../../../../app/scripts/offline/appTheme" + e + ".css");
+    }, _attachAppThemeCSSFiles: function (e) {
+      var t = document.createElement("link");buildfire.appearance.CSSBusterCounter = 0, t.setAttribute("rel", "stylesheet"), t.setAttribute("type", "text/css"), t.setAttribute("id", "appThemeCSS"), t.setAttribute("href", e), document.getElementsByTagName("head")[0].appendChild(t);
+    }, _resizedTo: 0, autosizeContainer: function () {
+      var e;try {
+        e = Math.max(document.documentElement.clientHeight, document.body.scrollHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.documentElement.offsetHeight);
+      } catch (e) {}if (e && buildfire.appearance._resizedTo != e && !(e < 100)) {
+        var t = new Packet(null, "appearance.autosizeContainer", { height: e });buildfire._sendPacket(t), buildfire.appearance._resizedTo = e;
+      }
+    }, setHeaderVisibility: function (e) {
+      var t = new Packet(null, "appearance.setHeaderVisibility", e);buildfire._sendPacket(t);
+    }, triggerOnUpdate: function () {
+      var e = document.getElementById("appThemeCSS");e && (e.href = e.href.replace("&v=" + buildfire.appearance.CSSBusterCounter, "&v=" + ++buildfire.appearance.CSSBusterCounter));
+    }, titlebar: { show: function () {
+        var e = new Packet(null, "appearance.titlebar.show");buildfire._sendPacket(e);
+      }, hide: function () {
+        var e = new Packet(null, "appearance.titlebar.hide");buildfire._sendPacket(e);
+      } } }, analytics: { trackAction: function (e, t) {
+      var i = new Packet(null, "analytics.trackActionCommand", { value: e, metadata: t });buildfire._sendPacket(i);
+    }, trackView: function (e, t) {
+      var i = new Packet(null, "analytics.trackViewCommand", { value: e, metadata: t });buildfire._sendPacket(i);
+    } }, datastore: { get: function (e, t) {
+      var i = typeof e;"undefined" == i ? e = "" : "function" == i && void 0 === t && (t = e, e = "");var n = new Packet(null, "datastore.get", { tag: e });buildfire._sendPacket(n, t);
+    }, getWithDynamicData: function (e, t) {
+      var i = typeof e;"undefined" == i ? e = "" : "function" == i && void 0 === t && (t = e, e = "");var n = new Packet(null, "datastore.get", { tag: e, withDynamicData: !0 });buildfire._sendPacket(n, t);
+    }, getById: function (e, t, i) {
+      "function" == typeof e && void 0 === i && (i = e, e = "");var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "datastore.get", { tag: t, id: e });buildfire._sendPacket(a, i);
+    }, save: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "datastore.save", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+        t && buildfire.datastore.triggerOnUpdate(t), i && i(e, t);
+      });
+    }, insert: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = !1 : "function" == a && void 0 === n && (n = i, i = !1);var r = typeof t;"undefined" == r ? t = "" : "function" == r && void 0 === n && (n = t, t = "");var o = new Packet(null, "datastore.insert", { tag: t, obj: e, checkDuplicate: i });buildfire._sendPacket(o, function (e, t) {
+        t && buildfire.datastore.triggerOnUpdate(t), n(e, t);
+      });
+    }, bulkInsert: function (e, t, i) {
+      if (e.constructor === Array) {
+        var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "datastore.bulkInsert", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+          t && buildfire.datastore.triggerOnUpdate(t), i(e, t);
+        });
+      } else i({ code: "error", message: "the data should be an array" }, null);
+    }, update: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = "" : "function" == a && void 0 === n && (n = i, i = "");var r = new Packet(null, "datastore.update", { tag: i, id: e, obj: t });buildfire._sendPacket(r, function (e, t) {
+        t && buildfire.datastore.triggerOnUpdate(t), n && n(e, t);
+      });
+    }, searchAndUpdate: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = "" : "function" == a && void 0 === n && (n = i, i = "");var r = new Packet(null, "datastore.searchAndUpdate", { tag: i, search: e, obj: t });buildfire._sendPacket(r, function (e, t) {
+        t && buildfire.datastore.triggerOnUpdate(t), n && n(e, t);
+      });
+    }, delete: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "datastore.delete", { tag: t, id: e });buildfire._sendPacket(a, function (e, t) {
+        t && buildfire.datastore.triggerOnUpdate(t), i && i(e, t);
+      });
+    }, search: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = ""), void 0 === e && (e = { filter: {} }), e.filter || (e.filter = {});var a = new Packet(null, "datastore.search", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+        i(e, t);
+      });
+    }, onUpdate: function (e, t) {
+      return buildfire.eventManager.add("datastoreOnUpdate", e, t);
+    }, triggerOnUpdate: function (e) {
+      buildfire.eventManager.trigger("datastoreOnUpdate", e);
+    }, onRefresh: function (e, t) {
+      return buildfire.eventManager.add("datastoreOnRefresh", e, t);
+    }, triggerOnRefresh: function (e) {
+      buildfire.eventManager.trigger("datastoreOnRefresh", e);
+    }, disableRefresh: function () {
+      var e = new Packet(null, "datastore.disableRefresh");buildfire._sendPacket(e);
+    } }, userData: { get: function (e, t) {
+      var i = typeof e;"undefined" == i ? e = "" : "function" == i && void 0 === t && (t = e, e = "");var n = new Packet(null, "userData.get", { tag: e });buildfire._sendPacket(n, t);
+    }, getById: function (e, t, i) {
+      "function" == typeof e && void 0 === i && (i = e, e = "");var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "userData.get", { tag: t, id: e });buildfire._sendPacket(a, i);
+    }, save: function (e, t, i, n) {
+      var a = typeof t;"undefined" == a ? t = "" : "function" == a && void 0 === n && (n = t, t = "");var r = typeof i;"undefined" == r ? i = "" : "function" == r && void 0 === n && (n = i, i = "");var o = new Packet(null, "userData.save", { tag: t, userToken: i, obj: e });buildfire._sendPacket(o, function (e, t) {
+        t && buildfire.userData.triggerOnUpdate(t), n && n(e, t);
+      });
+    }, insert: function (e, t, i, n, a) {
+      var r = typeof i;"undefined" == r ? i = "" : "function" == r && void 0 === a && (a = i, i = "");var o = typeof n;"undefined" == o ? n = !1 : "function" == o && void 0 === a && (a = n, n = !1), "undefined" == (r = typeof i) ? i = "" : "function" == r && void 0 === a && (a = i, i = "");var d = typeof t;"undefined" == d ? t = "" : "function" == d && void 0 === a && (a = t, t = "");var u = new Packet(null, "userData.insert", { tag: t, userToken: i, obj: e, checkDuplicate: n });buildfire._sendPacket(u, function (e, t) {
+        t && buildfire.userData.triggerOnUpdate(t), a(e, t);
+      });
+    }, bulkInsert: function (e, t, i, n) {
+      if (e.constructor === Array) {
+        var a = typeof i;"undefined" == a ? i = "" : "function" == a && void 0 === n && (n = i, i = "");var r = typeof t;"undefined" == r ? t = "" : "function" == r && void 0 === n && (n = t, t = "");var o = new Packet(null, "userData.bulkInsert", { tag: t, userToken: i, obj: e });buildfire._sendPacket(o, function (e, t) {
+          t && buildfire.userData.triggerOnUpdate(t), n(e, t);
+        });
+      } else n({ code: "error", message: "the data should be an array" }, null);
+    }, update: function (e, t, i, n, a) {
+      var r = typeof n;"undefined" == r ? n = "" : "function" == r && void 0 === a && (a = n, n = "");var o = typeof i;"undefined" == o ? i = "" : "function" == o && void 0 === a && (a = i, i = "");var d = new Packet(null, "userData.update", { tag: i, userToken: n, id: e, obj: t });buildfire._sendPacket(d, function (e, t) {
+        t && buildfire.userData.triggerOnUpdate(t), a && a(e, t);
+      });
+    }, searchAndUpdate: function (e, t, i, n, a) {
+      var r = typeof n;"undefined" == r ? n = "" : "function" == r && void 0 === a && (a = n, n = "");var o = typeof i;"undefined" == o ? i = "" : "function" == o && void 0 === a && (a = i, i = "");var d = new Packet(null, "userData.searchAndUpdate", { tag: i, userToken: n, search: e, obj: t });buildfire._sendPacket(d, function (e, t) {
+        t && buildfire.userData.triggerOnUpdate(t), a && a(e, t);
+      });
+    }, delete: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = "" : "function" == a && void 0 === n && (n = i, i = "");var r = typeof t;"undefined" == r ? t = "" : "function" == r && void 0 === n && (n = t, t = "");var o = new Packet(null, "userData.delete", { tag: t, userToken: i, id: e });buildfire._sendPacket(o, function (e, t) {
+        t && buildfire.userData.triggerOnUpdate(t), n && n(e, t);
+      });
+    }, search: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = ""), void 0 === e && (e = { filter: {} }), e.filter || (e.filter = {});var a = new Packet(null, "userData.search", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+        i(e, t);
+      });
+    }, onUpdate: function (e, t) {
+      return buildfire.eventManager.add("userDataOnUpdate", e, t);
+    }, triggerOnUpdate: function (e) {
+      buildfire.eventManager.trigger("userDataOnUpdate", e);
+    }, onRefresh: function (e, t) {
+      return buildfire.eventManager.add("userDataOnRefresh", e, t);
+    }, triggerOnRefresh: function (e) {
+      buildfire.eventManager.trigger("userDataOnRefresh", e);
+    }, disableRefresh: function () {
+      var e = new Packet(null, "userData.disableRefresh");buildfire._sendPacket(e);
+    } }, publicData: { get: function (e, t) {
+      var i = typeof e;"undefined" == i ? e = "" : "function" == i && void 0 === t && (t = e, e = "");var n = new Packet(null, "publicData.get", { tag: e });buildfire._sendPacket(n, t);
+    }, getById: function (e, t, i) {
+      "function" == typeof e && void 0 === i && (i = e, e = "");var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "publicData.get", { tag: t, id: e });buildfire._sendPacket(a, i);
+    }, save: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "publicData.save", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+        t && buildfire.publicData.triggerOnUpdate(t), i && i(e, t);
+      });
+    }, insert: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = !1 : "function" == a && void 0 === n && (n = i, i = !1);var r = typeof t;"undefined" == r ? t = "" : "function" == r && void 0 === n && (n = t, t = "");var o = new Packet(null, "publicData.insert", { tag: t, obj: e, checkDuplicate: i });buildfire._sendPacket(o, function (e, t) {
+        t && buildfire.publicData.triggerOnUpdate(t), n(e, t);
+      });
+    }, bulkInsert: function (e, t, i) {
+      if (e.constructor === Array) {
+        var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "publicData.bulkInsert", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+          t && buildfire.publicData.triggerOnUpdate(t), i(e, t);
+        });
+      } else i({ code: "error", message: "the data should be an array" }, null);
+    }, update: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = "" : "function" == a && void 0 === n && (n = i, i = "");var r = new Packet(null, "publicData.update", { tag: i, id: e, obj: t });buildfire._sendPacket(r, function (e, t) {
+        t && buildfire.publicData.triggerOnUpdate(t), n && n(e, t);
+      });
+    }, searchAndUpdate: function (e, t, i, n) {
+      var a = typeof i;"undefined" == a ? i = "" : "function" == a && void 0 === n && (n = i, i = "");var r = new Packet(null, "publicData.searchAndUpdate", { tag: i, search: e, obj: t });buildfire._sendPacket(r, function (e, t) {
+        t && buildfire.publicData.triggerOnUpdate(t), n && n(e, t);
+      });
+    }, delete: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = "");var a = new Packet(null, "publicData.delete", { tag: t, id: e });buildfire._sendPacket(a, function (e, t) {
+        t && buildfire.publicData.triggerOnUpdate(t), i && i(e, t);
+      });
+    }, search: function (e, t, i) {
+      var n = typeof t;"undefined" == n ? t = "" : "function" == n && void 0 === i && (i = t, t = ""), void 0 === e && (e = { filter: {} }), e.filter || (e.filter = {});var a = new Packet(null, "publicData.search", { tag: t, obj: e });buildfire._sendPacket(a, function (e, t) {
+        i(e, t);
+      });
+    }, onUpdate: function (e, t) {
+      return buildfire.eventManager.add("publicDataOnUpdate", e, t);
+    }, triggerOnUpdate: function (e) {
+      buildfire.eventManager.trigger("publicDataOnUpdate", e);
+    }, onRefresh: function (e, t) {
+      return buildfire.eventManager.add("publicDataOnRefresh", e, t);
+    }, triggerOnRefresh: function (e) {
+      buildfire.eventManager.trigger("publicDataOnRefresh", e);
+    }, disableRefresh: function () {
+      var e = new Packet(null, "publicData.disableRefresh");buildfire._sendPacket(e);
+    } }, imageLib: { showDialog: function (e, t) {
+      var i = new Packet(null, "imageLib.showDialog", e);buildfire._sendPacket(i, t);
+    }, isProdImageServer: function (e) {
+      return 0 == e.indexOf("http://imageserver.prod.s3.amazonaws.com") || 0 == e.indexOf("https://imageserver.prod.s3.amazonaws.com");
+    }, resizeImage: function (e, t) {
+      if ((i = t.disablePixelRation ? 1 : window.devicePixelRatio) < 1) var i = 1;if (t) {
+        if ("object" != typeof t) throw "options not an object";
+      } else t = { width: window.innerWidth };"full" == t.width && (t.width = window.innerWidth), "full" == t.height && (t.height = window.innerHeight);var n;return buildfire.imageLib.isProdImageServer(e) ? n = "http://buildfire.imgix.net" + (e = e.replace(/^https:\/\//i, "http://")).substring(40) : e.indexOf("Kaleo.DevBucket/") > 0 && (n = "http://bflegacy.imgix.net/" + e.split("Kaleo.DevBucket/")[1]), n = ("https:" == window.location.protocol ? "https:" : "http:") + "//czi3m2qn.cloudimg.io/s/", t.width && !t.height ? n + "width/" + Math.floor(t.width * i) + "/" + e : !t.width && t.height ? n + "height/" + Math.floor(t.height * i) + "/" + e : t.width && t.height ? n + "resizenp/" + Math.floor(t.width * i) + "x" + Math.floor(t.height * i) + "/" + e : e;
+    }, cropImage: function (e, t) {
+      if (buildfire.imageLib.isProdImageServer(e) && (e = e.replace(/^https:\/\//i, "http://")), t || (t = {}), "object" != typeof t) throw "options not an object";if (t.width || t.height || (t = { width: "full", height: "full" }), "full" == t.width && (t.width = window.innerWidth), "full" == t.height && (t.height = window.innerHeight), !t.width || !t.height) return console.warn("cropImage doenst have width or height please fix. returning original url"), e + "?h=" + t.height + "&w=" + t.width;var i,
+          n = window.devicePixelRatio;return t && t.disablePixelRatio && (n = t.disablePixelRatio), i = ("https:" == window.location.protocol ? "https:" : "http:") + "//czi3m2qn.cloudimg.io/s/crop/", i = i + Math.floor(t.width * n) + "x" + Math.floor(t.height * n) + "/" + e;
+    }, local: { _parser: document.createElement("a"), localImageLibPath: window.location.href.split("pluginTemplate/")[0] + "imageLib/", parseFileFromUrl: function (e) {
+        buildfire.imageLib.local._parser.href = e;var t = buildfire.imageLib.local._parser.pathname.split("/");return 0 == t.length ? null : t[t.length - 1];
+      }, toLocalPath: function (e) {
+        return buildfire.isFileServer(e) ? this.localImageLibPath + this.parseFileFromUrl(e) : null;
+      }, resizeImage: function (e, t, i) {
+        if (t) {
+          if ("object" != typeof t) throw "options not an object";
+        } else t = { width: window.innerWidth };"full" == t.width && (t.width = window.innerWidth), "full" == t.height && (t.height = window.innerHeight);var n = buildfire.imageLib.local.toLocalPath(e);if (n) {
+          var a = new Image();a.src = n, a.onload = function () {
+            t.width && !t.height ? t.height = a.height * t.width / a.width : !t.width && t.height && (t.width = a.width * t.height / a.width);var e = document.createElement("canvas"),
+                n = e.getContext("2d");e.width = t.width, e.height = t.height, n.drawImage(a, 0, 0, t.width, t.height), i(null, e.toDataURL());
+          }, a.onerror = function () {
+            i(null, buildfire.imageLib.resizeImage(e, t));
+          };
+        } else i(null, buildfire.imageLib.resizeImage(e, t));
+      }, cropImage: function (e, t, i) {
+        if (window.navigator.onLine) i(null, buildfire.imageLib.cropImage(e, t));else {
+          var n = t.disablePixelRatio ? 1 : window.devicePixelRatio;if (t) {
+            if ("object" != typeof t) throw "options not an object";
+          } else t = { width: window.innerWidth };"full" == t.width && (t.width = window.innerWidth), "full" == t.height && (t.height = window.innerHeight);var a = buildfire.imageLib.local.toLocalPath(e);if (a) {
+            var r = new Image();r.src = a, r.onload = function () {
+              var e = document.createElement("canvas"),
+                  a = e.getContext("2d"),
+                  o = { width: 0, height: 0 },
+                  d = { x: 0, y: 0 };t.width !== t.height ? t.width > t.height ? (o.width = t.width, o.height = r.height * t.width / r.width, d.y = (t.height - o.height) / 2) : (o.width = r.width * t.height / r.height, o.height = t.height, d.x = (t.width - o.width) / 2) : r.width < r.height ? (o.width = t.width, o.height = r.height * t.width / r.width, d.y = (t.height - o.height) / 2) : (o.width = r.width * t.height / r.height, o.height = t.height, d.x = (t.width - o.width) / 2), o.width *= n, o.height *= n, t.width *= n, t.height *= n, e.width = t.width, e.height = t.height, a.drawImage(r, d.x, d.y, o.width, o.height), i(null, e.toDataURL());
+            }, r.onerror = function () {
+              i(null, buildfire.imageLib.cropImage(e, t));
+            };
+          } else i(null, buildfire.imageLib.cropImage(e, t));
+        }
+      } } }, notifications: { alert: function (e, t) {
+      var i = new Packet(null, "notificationsAPI.alert", e);buildfire._sendPacket(i, t);
+    }, confirm: function (e, t) {
+      var i = new Packet(null, "notificationsAPI.confirm", e);buildfire._sendPacket(i, t);
+    }, prompt: function (e, t) {
+      var i = new Packet(null, "notificationsAPI.prompt", e);buildfire._sendPacket(i, t);
+    }, beep: function (e, t) {
+      var i = new Packet(null, "notificationsAPI.beep", e);buildfire._sendPacket(i, t);
+    }, vibrate: function (e, t) {
+      var i = new Packet(null, "notificationsAPI.vibrate", e);buildfire._sendPacket(i, t);
+    } }, actionItems: { showDialog: function (e, t, i) {
+      var n = new Packet(null, "actionItems.showDialog", { actionItem: e, options: t });buildfire._sendPacket(n, i);
+    }, execute: function (e, t, i) {
+      var n = new Packet(null, "actionItems.execute", e);buildfire._sendPacket(n, i);
+    }, list: function (e, t, i) {
+      var n = new Packet(null, "actionItems.list", { actionItems: e, options: t });buildfire._sendPacket(n, i);
+    }, create: function (e, t, i) {
+      return { action: e, iconUrl: t, title: i };
+    } }, history: { push: function (e, t, i) {
+      var n = new Packet(null, "history.push", { label: e, options: t, source: "plugin" });buildfire._sendPacket(n, i);
+    }, onPop: function (e, t) {
+      return buildfire.eventManager.add("historyOnPop", e, t);
+    }, triggerOnPop: function (e) {
+      buildfire.eventManager.trigger("historyOnPop", e);
+    }, pop: function (e) {
+      var t = new Packet(null, "history.pop");buildfire._sendPacket(t, e);
+    }, get: function (e, t) {
+      var i = new Packet(null, "history.get", e);buildfire._sendPacket(i, t);
+    } }, messaging: { sendMessageToControl: function (e) {
+      var t = new Packet(null, "messaging.triggerOnNewControlMessage", e);buildfire._sendPacket(t);
+    }, sendMessageToWidget: function (e) {
+      var t = new Packet(null, "messaging.triggerOnNewWidgetMessage", e);buildfire._sendPacket(t);
+    }, onReceivedMessage: function (e) {
+      console.info("onReceivedMessage ignored", window.location);
+    } }, pluginInstance: { showDialog: function (e, t) {
+      var i = new Packet(null, "pluginInstances.showDialog", { options: e });buildfire._sendPacket(i, t);
+    }, get: function (e, t) {
+      var i = new Packet(null, "pluginInstances.get", e);buildfire._sendPacket(i, t);
+    }, search: function (e, t) {
+      var i = new Packet(null, "pluginInstances.search", e);buildfire._sendPacket(i, t);
+    }, showCreatePluginInstancesDialog: function (e, t) {
+      "function" != typeof e || t ? e && (e.skipPluginInstances = !0) : (t = e, e = { skipPluginInstances: !0 }), buildfire.pluginInstance.showDialog(e, t);
+    } }, deeplink: { getData: function (e) {
+      var t = buildfire.parseQueryString();e(t.dld ? JSON.parse(t.dld) : null);
+    }, template: { get: function (e) {
+        var t = new Packet(null, "deepLink.getTemplate", {});buildfire._sendPacket(t, e);
+      } }, setData: function (e, t, i) {
+      var n = new Packet(null, "deepLink.setData", { data: e, options: t });buildfire._sendPacket(n, i);
+    }, createLink: function (e) {
+      console.log("this method is obsolete you have to call deeplink.template.get instead and it will return back the full deep link");var t = "app" + buildfire._context.appId + "://plugin";return e ? t + "?dld=" + JSON.stringify(e) : t;
+    } }, spinner: { show: function () {
+      buildfire._sendPacket(new Packet(null, "spinner.show"));
+    }, hide: function () {
+      buildfire._sendPacket(new Packet(null, "spinner.hide"));
+    } }, auth: { login: function (e, t) {
+      var i = new Packet(null, "auth.login", e);buildfire._sendPacket(i, t);
+    }, logout: function () {
+      var e = new Packet(null, "auth.logout");buildfire._sendPacket(e);
+    }, getCurrentUser: function (e) {
+      var t = new Packet(null, "auth.getCurrentUser");buildfire._sendPacket(t, e);
+    }, onLogin: function (e, t) {
+      return buildfire.eventManager.add("authOnLogin", e, t);
+    }, triggerOnLogin: function (e) {
+      buildfire.eventManager.trigger("authOnLogin", e);
+    }, onLogout: function (e, t) {
+      return buildfire.eventManager.add("authOnLogout", e, t);
+    }, triggerOnLogout: function (e) {
+      return buildfire.eventManager.trigger("authOnLogout", e);
+    }, openProfile: function (e) {
+      var t = new Packet(null, "auth.openProfile", e);buildfire._sendPacket(t);
+    }, getUserProfile: function (e, t) {
+      var i = new Packet(null, "auth.getUserProfile", e);buildfire._sendPacket(i, t);
+    }, getUsersByEmail: function (e, t) {
+      var i = new Packet(null, "auth.getUsersByEmail", e);buildfire._sendPacket(i, t);
+    } }, device: { calendar: { addEvent: function (e, t) {
+        buildfire._sendPacket(new Packet(null, "device.calendar.addEvent", e), t);
+      } }, share: function (e, t) {
+      buildfire._sendPacket(new Packet(null, "device.share", e), t);
+    }, onAppBackgrounded: function (e, t) {
+      return buildfire.eventManager.add("deviceAppBackgrounded", e, t);
+    }, onAppResumed: function (e, t) {
+      return buildfire.eventManager.add("deviceAppResumed", e, t);
+    }, triggerOnAppBackgrounded: function (e) {
+      return buildfire.eventManager.trigger("deviceAppBackgrounded", e);
+    }, triggerOnAppResumed: function (e) {
+      return buildfire.eventManager.trigger("deviceAppResumed", e);
+    } }, geo: { getCurrentPosition: function (e, t) {
+      buildfire._sendPacket(new Packet(null, "geo.getCurrentPosition", e), t);
+    }, watchPosition: function (e, t) {
+      buildfire._sendPacket(new Packet(null, "geo.watchPosition", e)), this.onPositionChange = t;
+    }, onPositionChange: function (e, t) {}, clearWatch: function (e, t) {
+      buildfire._sendPacket(new Packet(null, "geo.clearWatch", e), t);
+    } }, localStorage: { setItem: function (e, t, i) {
+      i || (i = function () {}), "object" == typeof t && (t = JSON.stringify(t)), buildfire._sendPacket(new Packet(null, "localStorage.setItem", { key: e, value: t }), i);
+    }, getItem: function (e, t) {
+      if (!t) throw "missing callback on buildfire.localStorage.getItem";buildfire._sendPacket(new Packet(null, "localStorage.getItem", e), t);
+    }, removeItem: function (e, t) {
+      if (!t) throw "missing callback on buildfire.localStorage.removeItem";buildfire._sendPacket(new Packet(null, "localStorage.removeItem", e), t);
+    } } };buildfire.init(), document.addEventListener("DOMContentLoaded", function (e) {
+  buildfire.options.disableSelect || (document.getElementsByTagName("body")[0].className += " noSelect"), buildfire.getContext(function (e, t) {
+    e ? console.error(e) : (t && t.debugTag && buildfire.logger.attachRemoteLogger(t.debugTag), window.location.pathname.indexOf("/widget/") > 0 && (!(!buildfire.options || !buildfire.options.disableTheme) && buildfire.options.disableTheme || (buildfire.isWeb() ? buildfire.appearance.attachAppThemeCSSFiles(t.appId, t.liveMode, t.endPoints.appHost) : buildfire.appearance.attachLocalAppThemeCSSFiles(t.appId))));
+  }), !window.location.href.indexOf("/widget/") || buildfire.appearance.disableFastClickOnLoad || buildfire.options.disableFastClick || buildfire.appearance.attachFastClick(), buildfire.options.disableExternalLinkOverride || (document.onclick = function (e) {
+    var t = (e = e || window.event).target || e.srcElement,
+        i = t.getAttribute("href"),
+        n = t.getAttribute("inAppBrowser");if ("A" == t.tagName && null != i && "" != i && null == n) {
+      var a = new RegExp("^(http:/|https:/|http://|https://|www.)[a-z0-9]");if ("A" == t.tagName && a.test(i)) {
+        e.preventDefault();var r = t.getAttribute("inAppBrowser") || "_blank";buildfire.navigation.openWindow(i, r, null);
+      }
+    }
+  }), setTimeout(function () {
+    buildfire.options.disableTheme || buildfire.appearance._forceCSSRender();
+  }, 1750);
+}), buildfire.fid = buildfire.parseQueryString().fid, document.addEventListener("resize", function (e) {
+  buildfire.appearance.autosizeContainer();
+}), window.onerror = function (e, t, i, n, a) {
+  console.error("Error: " + e, " Script: " + t, " Line: " + i, " Column: " + n, " StackTrace: " + a);
+}, "function" != typeof CustomEvent && (CustomEvent.prototype = window.Event.prototype, window.CustomEvent = CustomEvent);
+//# sourceMappingURL=buildfire.min.js.map
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports) {
+
+buildfire.datastore.onUpdate(({ data: { content } }) => {
+  window.buildfireConfig = content;
+  document.body.style.backgroundImage = `url(${content.backgroundImageURL})`;
+}, true);
+
+buildfire.datastore.get('content', (err, res) => {
+  document.body.style.backgroundImage = `url(${res.data.content.backgroundImageURL})`;
+  window.buildfireConfig = res.data.content;
+  document.body.style.backgroundImage = `url(${res.data.content.backgroundImageURL})`;
+
+  const bundle = document.createElement('script');
+  bundle.setAttribute('src', 'bundle.js');
+
+  document.head.appendChild(bundle);
+});
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports) {
+
+if (typeof buildfire == 'undefined') throw 'please add buildfire.js first to use BuildFire services';
+
+//https://github.com/BuildFire/sdk/wiki/Buildfire-Local-Notifications-API
+buildfire.notifications.localNotification = {
+  //--- options properties ---
+  //title: string
+  //text: string
+  //data: object (optional), data that you want to persist for when the notification is clicked or triggered.
+  //returnToPluginInstanceId string (optional)
+  send: function (options, callback) {
+    var packetId = null;
+    var command = 'localNotifications.schedule';
+
+    var packet = new Packet(packetId, command, options);
+    buildfire._sendPacket(packet, callback);
+  },
+  //--- options properties ---
+  //title: string
+  //text: string
+  //at: Date, representing the time to send the notification.
+  //data: object (optional), data that you want to persist for when the notification is clicked or triggered.
+  //returnToPluginInstanceId string (optional)
+  schedule: function (options, callback) {
+    var packetId = null;
+    var command = 'localNotifications.schedule';
+
+    var packet = new Packet(packetId, command, options);
+    buildfire._sendPacket(packet, callback);
+  },
+  checkPermission: function (callback) {
+    var packetId = null;
+    var command = 'localNotifications.checkPermission';
+
+    var packet = new Packet(packetId, command);
+    buildfire._sendPacket(packet, callback);
+  },
+  requestPermission: function (callback) {
+    var packetId = null;
+    var command = 'localNotifications.requestPermission';
+
+    var packet = new Packet(packetId, command);
+    buildfire._sendPacket(packet, callback);
+  },
+  cancel: function (id, callback) {
+    var packetId = null;
+    var command = 'localNotifications.cancel';
+
+    var packet = new Packet(packetId, command, id);
+    buildfire._sendPacket(packet, callback);
+  },
+  onClick: function (options) {
+    console.warn('Unhandled local notification on click event.');
+  }
+};
+
+/***/ }),
+/* 216 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__dirname) {module.exports = {
+  entry: './js/app.js',
+  output: { path: __dirname, filename: 'bundle.js' },
+  module: {
+    loaders: [{
+      test: /.js?$/,
+      loader: 'babel-loader',
+      exclude: /node_modules/,
+      query: {
+        presets: ['es2017', 'react'],
+        plugins: ['transform-object-rest-spread', 'transform-class-properties']
+      }
+    }, {
+      test: /\.css$/,
+      loader: 'style-loader'
+    }, {
+      test: /\.css$/,
+      loader: 'css-loader'
+    }, {
+      test: /\.(gif|png|jpe?g|svg)$/i,
+      use: ['file-loader', {
+        loader: 'image-webpack-loader',
+        options: {
+          bypassOnDebug: true
+        }
+      }]
+    }]
+  }
+};
+/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ })
 /******/ ]);
