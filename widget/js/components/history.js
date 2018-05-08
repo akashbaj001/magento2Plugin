@@ -42,7 +42,8 @@ const HistoryCard = ({
     <AccordionItemTitle className="History-card-title">
       <div className="History-card-title-left">
         <p className="History-card-title-date">
-          {formatDate(new Date(created_at))}
+          {/* Replace dashes with slashes for Safari. */}
+          {formatDate(new Date(created_at.replace(/-/g, '/')))}
         </p>
         <p className="History-card-title-id">Order ID: {increment_id}</p>
       </div>

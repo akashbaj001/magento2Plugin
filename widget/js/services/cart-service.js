@@ -13,6 +13,22 @@ export const getCart = token =>
     })
   );
 
+export const estimateShippingMethods = (address, token) =>
+  Promise.resolve(
+    $.ajax({
+      url: `${apiBasePath}${encodeURIComponent(
+        'carts/mine/estimate-shipping-methods-by-address-id'
+      )}`,
+      method: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        addressId: address
+      }),
+      headers: { Authorization: `Bearer ${token}` }
+    })
+  );
+
 export const getShippingMethods = token =>
   Promise.resolve(
     $.ajax({
@@ -54,7 +70,7 @@ export const removeFromCart = (itemID, token) =>
 export const getBillingAddress = token =>
   Promise.resolve(
     $.ajax({
-      url: `${apiBasePath}${encodeURIComponent('carts/mine/billing-address')}`,
+      url: `${apiBasePath}${encodeURIComponent('customers/me/billingAddress')}`,
       method: 'GET',
       dataType: 'json',
       headers: { Authorization: `Bearer ${token}` }
@@ -71,6 +87,31 @@ export const getPaymentMethods = token =>
     })
   );
 
+export const setShippingAddress = (
+  address,
+  shippingCarrierCode,
+  shippingMethodCode,
+  token
+) =>
+  Promise.resolve(
+    $.ajax({
+      url: `${apiBasePath}${encodeURIComponent(
+        'carts/mine/shipping-information'
+      )}`,
+      method: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        addressInformation: {
+          shippingAddress: { ...address },
+          shippingCarrierCode,
+          shippingMethodCode
+        }
+      }),
+      headers: { Authorization: `Bearer ${token}` }
+    })
+  );
+
 export const getShippingAddress = token =>
   Promise.resolve(
     $.ajax({
@@ -83,15 +124,49 @@ export const getShippingAddress = token =>
     })
   );
 
-export const placeOrder = ({ paymentMethod, shippingMethod }, token) =>
+export const setPaymentInformation = (cartId, billingAddress, token) =>
   Promise.resolve(
     $.ajax({
-      url: `${apiBasePath}${encodeURIComponent('carts/mine/order')}`,
-      data: JSON.stringify({ paymentMethod, shippingMethod }),
-      method: 'PUT',
+      url: `${apiBasePath}${encodeURIComponent(
+        'carts/mine/set-payment-information'
+      )}`,
+      method: 'POST',
       dataType: 'json',
       contentType: 'application/json',
+      data: JSON.stringify({
+        cartId,
+        paymentMethod: { method: 'authorizenet_directpost' },
+        billingAddress: { ...billingAddress }
+      }),
       headers: { Authorization: `Bearer ${token}` }
+    })
+  );
+
+export const placePayment = data =>
+  Promise.resolve(
+    $.ajax({
+      url: 'https://secure.authorize.net/gateway/transact.dll',
+      method: 'POST',
+      processData: false,
+      contentType: false,
+      data: Object.keys(data).reduce((formData, key) => {
+        formData.append(key, data[key]);
+        return formData;
+      }, new FormData())
+    })
+  );
+
+export const placeOrder = (data, token) =>
+  Promise.resolve(
+    $.ajax({
+      url: `${
+        window.buildfireConfig.domain
+      }/authorizenet/directpost_payment/place/`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: $.param(data)
     })
   );
 
@@ -140,5 +215,26 @@ export const getTotals = token =>
       headers: {
         Authorization: `Bearer ${token}`
       }
+    })
+  );
+
+export const addCoupon = (code, token) =>
+  Promise.resolve(
+    $.ajax({
+      url: `${apiBasePath}${encodeURIComponent(`carts/mine/coupons/${code}`)}`,
+      method: 'PUT',
+      contentType: 'application/json',
+      dataType: 'json',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+  );
+
+export const getCoupons = token =>
+  Promise.resolve(
+    $.ajax({
+      url: `${apiBasePath}${encodeURIComponent(`carts/mine/coupons`)}`,
+      method: 'GET',
+      dataType: 'json',
+      headers: { Authorization: `Bearer ${token}` }
     })
   );
