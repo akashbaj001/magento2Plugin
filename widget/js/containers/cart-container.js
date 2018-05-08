@@ -41,12 +41,12 @@ class CartContainer extends Component {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
-          this.fetchRemainingCartData(cart);
+          this.fetchRemainingCartData(cart, customer);
         } else {
           getCart(customer.SSO.accessToken).then(res => {
             const parsedRes = JSON.parse(res);
             sessionStorage.setItem('cart', res);
-            this.fetchRemainingCartData(parsedRes);
+            this.fetchRemainingCartData(parsedRes, customer);
           });
         }
       } else {
@@ -55,7 +55,7 @@ class CartContainer extends Component {
     });
   }
 
-  fetchRemainingCartData = cart =>
+  fetchRemainingCartData = (cart, customer) =>
     getCoupons(customer.SSO.accessToken).then(unparsedCoupons =>
       getTotals(customer.SSO.accessToken).then(unparsedTotals =>
         Promise.all(
@@ -100,7 +100,7 @@ class CartContainer extends Component {
                 Array.isArray(shippingAddress) &&
                 shippingAddress.length === 0
               ) {
-                this.props.history.push(info); // TODO some kind of indicator
+                this.props.history.push(info);
               }
               estimateShippingMethods(
                 shippingAddress.id,
@@ -252,7 +252,7 @@ class CartContainer extends Component {
                   Array.isArray(shippingAddress) &&
                   shippingAddress.length === 0
                 ) {
-                  this.props.history.push(info); // TODO some kind of indicator
+                  this.props.history.push(info);
                 }
                 setShippingAddress(
                   {
@@ -276,7 +276,7 @@ class CartContainer extends Component {
                         Array.isArray(billingAddress) &&
                         billingAddress.length === 0
                       ) {
-                        this.props.history.push(info); // TODO some kind of indicator
+                        this.props.history.push(info);
                       }
                       setPaymentInformation(
                         this.state.cart.id,

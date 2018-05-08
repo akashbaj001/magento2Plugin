@@ -41337,7 +41337,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       shippingMethods: [],
       items: [],
       cardMonth: 'Jan - 01'
-    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = cart => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])(customer.SSO.accessToken).then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
+    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = (cart, customer) => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])(customer.SSO.accessToken).then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
       const productFromStorage = sessionStorage.getItem(`product${sku}`);
       return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
     })).then(products => {
@@ -41360,7 +41360,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
         const shippingAddress = JSON.parse(unparsedShippingAddress);
         if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
-          this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]); // TODO some kind of indicator
+          this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
         }
         Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id, customer.SSO.accessToken).then(shippingMethods => {
           const parsedShippingMethods = JSON.parse(shippingMethods);
@@ -41426,7 +41426,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickSubmitCoupon = code => this.setState({ shouldShowCouponOverlay: false }, () => buildfire.auth.login({}, (err, customer) => this.setState({ couponCode: 'Applying code...' }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["a" /* addCoupon */])(code, customer.SSO.accessToken).then(() => this.setState({ couponCode: `Coupon Code: ${code}` }, this.fetchTotals)).catch(() => this.setState({ couponCode: 'Coupon code is not valid.' }))))), this.handleClickCheckout = () => this.setState({ shouldShowPaymentOverlay: true }), this.handleClickSubmitPayment = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
       const shippingAddress = JSON.parse(unparsedShippingAddress);
       if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
-        this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]); // TODO some kind of indicator
+        this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
       }
       Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["n" /* setShippingAddress */])({
         region: shippingAddress.region.region_code,
@@ -41440,7 +41440,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       }, this.state.selectedShippingMethod.carrier_code, this.state.selectedShippingMethod.method_code, customer.SSO.accessToken).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getBillingAddress */])(customer.SSO.accessToken).then(unparsedBillingAddress => {
         const billingAddress = JSON.parse(unparsedBillingAddress);
         if (Array.isArray(billingAddress) && billingAddress.length === 0) {
-          this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]); // TODO some kind of indicator
+          this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
         }
         Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* setPaymentInformation */])(this.state.cart.id, {
           city: billingAddress.city,
@@ -41492,12 +41492,12 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
-          this.fetchRemainingCartData(cart);
+          this.fetchRemainingCartData(cart, customer);
         } else {
           Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedRes = JSON.parse(res);
             sessionStorage.setItem('cart', res);
-            this.fetchRemainingCartData(parsedRes);
+            this.fetchRemainingCartData(parsedRes, customer);
           });
         }
       } else {
