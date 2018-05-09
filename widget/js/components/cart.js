@@ -7,6 +7,21 @@ import { getProductMediaUrl } from '../utilities/media-utils';
 import { Link } from 'react-router-dom';
 import '../../css/cart.css';
 
+const MONTH_LIST = [
+  'Jan - 01',
+  'Feb - 02',
+  'Mar - 03',
+  'Apr - 04',
+  'May - 05',
+  'Jun - 06',
+  'Jul - 07',
+  'Aug - 08',
+  'Sep - 09',
+  'Oct - 10',
+  'Nov - 11',
+  'Dec - 12'
+];
+
 const CartCard = ({
   sku,
   name,
@@ -18,7 +33,8 @@ const CartCard = ({
   onQuantityIncrement,
   eventName,
   onClickRemove,
-  productDetails
+  productDetails,
+  isInStock
 }) => (
   <div className="Cart-card">
     {window.buildfireConfig.productImageAtName &&
@@ -39,8 +55,11 @@ const CartCard = ({
       )}
     <div className="Cart-card-left">
       <p className="Cart-card-name clamp-one">
-        <Link to={`${products}/${sku}`} className="text-primary">
-          {name}
+        <Link
+          to={`${products}/${sku}`}
+          className={isInStock ? 'text-primary' : 'text-danger'}
+        >
+          {isInStock ? name : 'Out Of Stock'}
         </Link>
       </p>
       <p className="Cart-card-price">${price}</p>
@@ -87,7 +106,17 @@ const Cart = ({
   discount,
   taxes,
   total,
-  couponCode
+  couponCode,
+  couponCodeInput,
+  onClickSubmitCoupon,
+  cardNumber,
+  cardMonth,
+  verificationNumber,
+  shouldShowPaymentOverlay,
+  cardYear,
+  onClickSubmitPayment,
+  onClickClosePayment,
+  fetchingTotals
 }) => {
   if (items && items.length > 0) {
     return (
@@ -96,9 +125,7 @@ const Cart = ({
           <Overlay
             onClickClose={onClickCloseCouponOverlay}
             isLoading={isLoading}
-            onSubmit={() => {
-              /* TODO */
-            }}
+            onClickSubmit={() => onClickSubmitCoupon(couponCodeInput)}
             submitText="Apply Code"
             showSubmit
             render={() => (
@@ -108,10 +135,10 @@ const Cart = ({
                 </label>
                 <input
                   id="coupon-code"
-                  name="couponCode"
+                  name="couponCodeInput"
                   className="List-noItems Cart-coupon form-control"
                   onChange={onInputChange}
-                  value={couponCode}
+                  value={couponCodeInput}
                 />
               </div>
             )}
@@ -156,25 +183,80 @@ const Cart = ({
             )}
           />
         )}
-        <CartList
-          items={items.map(({ item_id, ...rest }) => ({
-            ...rest,
-            item_id,
-            uniqueKey: item_id
-          }))}
-          renderedElement={CartCard}
-          quantity={quantity}
-          onChangeQuantity={onChangeQuantity}
-          onQuantityDecrement={onQuantityDecrement}
-          onQuantityIncrement={onQuantityIncrement}
-          onClickRemove={onClickRemove}
-        />
-        <button
-          className="Cart-coupon-button btn btn-info"
-          onClick={onClickApplyCoupon}
-        >
-          Apply Coupon Code
-        </button>
+        {shouldShowPaymentOverlay && (
+          <Overlay
+            onClickClose={onClickClosePayment}
+            onClickSubmit={onClickSubmitPayment}
+            isLoading={isLoading}
+            render={() => (
+              <div className="Overlay-payment">
+                <label htmlFor="credit-card-number">Credit Card Number</label>
+                <input
+                  id="credit-card-number"
+                  name="cardNumber"
+                  className="form-control"
+                  value={cardNumber}
+                  onChange={onInputChange}
+                />
+                <label htmlFor="month">Expiration Date</label>
+                <select
+                  id="month"
+                  name="cardMonth"
+                  className="form-control"
+                  value={cardMonth}
+                  onChange={onInputChange}
+                >
+                  {MONTH_LIST.map(month => (
+                    <option key={month} id={month}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  id="year"
+                  name="cardYear"
+                  className="form-control"
+                  value={cardYear}
+                  onChange={onInputChange}
+                />
+                <label htmlFor="card-verification-number">
+                  Card Verification Number
+                </label>
+                <input
+                  id="credit-verification-number"
+                  name="verificationNumber"
+                  className="form-control"
+                  value={verificationNumber}
+                  onChange={onInputChange}
+                />
+              </div>
+            )}
+            submitText="Place Order"
+            showSubmit
+          />
+        )}
+        <div className="Cart-wrapper">
+          <CartList
+            items={items.map(({ item_id, ...rest }) => ({
+              ...rest,
+              item_id,
+              uniqueKey: item_id
+            }))}
+            renderedElement={CartCard}
+            quantity={quantity}
+            onChangeQuantity={onChangeQuantity}
+            onQuantityDecrement={onQuantityDecrement}
+            onQuantityIncrement={onQuantityIncrement}
+            onClickRemove={onClickRemove}
+          />
+          <button
+            className="Cart-coupon-button btn btn-info"
+            onClick={onClickApplyCoupon}
+          >
+            Apply Coupon Code
+          </button>
+          <p className="text-warning">{couponCode}</p>
+        </div>
         <div className="Cart-bottom">
           <div className="Cart-bottom-left">
             <p className="Cart-amount">
@@ -205,14 +287,14 @@ const Cart = ({
               <span className="align-left">Total</span>{' '}
               <span className="align-right">${total}</span>
             </p>
-            {/* TODO see /carts/mine/collect-totals */}
           </div>
           <div className="Cart-bottom-right">
             <button
               className="Cart-checkout btn-lg btn-primary"
               onClick={onClickCheckout}
+              disabled={fetchingTotals}
             >
-              Check Out
+              {fetchingTotals ? 'Updating totals...' : 'Check Out'}
             </button>
             {/* TODO you can get a message: Shipping address not set. if shipping address isn't set and you try to GET shipping-methods */}
           </div>

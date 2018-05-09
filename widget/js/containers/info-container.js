@@ -42,30 +42,42 @@ class InfoContainer extends Component {
                     const billing = customerRes.addresses.find(
                       ({ default_billing }) => default_billing
                     );
+                    let newState = {};
+                    if (billing) {
+                      newState = {
+                        ...newState,
+                        billingFirstName: billing.firstname || '',
+                        billingLastName: billing.lastname || '',
+                        billingPhoneNumber: billing.telephone || '',
+                        billingStreetAddressOne: billing.street[0] || '',
+                        billingStreetAddressTwo: billing.street[1] || '',
+                        billingCity: billing.city || '',
+                        billingStateProvince: billing.region.region || '',
+                        billingZip: billing.postcode || '',
+                        billingCountry:
+                          billing.full_name_english || 'United States'
+                      };
+                    }
+                    if (shipping) {
+                      newState = {
+                        ...newState,
+                        shippingFirstName: shipping.firstname || '',
+                        shippingLastName: shipping.lastname || '',
+                        shippingPhoneNumber: shipping.telephone || '',
+                        shippingStreetAddressOne: shipping.street[0] || '',
+                        shippingStreetAddressTwo: shipping.street[1] || '',
+                        shippingCity: shipping.city || '',
+                        shippingStateProvince: shipping.region.region || '',
+                        shippingZip: shipping.postcode || '',
+                        shippingCountry:
+                          shipping.full_name_english || 'United States'
+                      };
+                    }
                     return {
+                      ...newState,
                       isHydrated: true,
                       customer: customerRes,
-                      countryList: JSON.parse(unparsedCountries),
-                      billingFirstName: billing.firstname || '',
-                      billingLastName: billing.lastname || '',
-                      billingPhoneNumber: billing.telephone || '',
-                      billingStreetAddressOne: billing.street[0] || '',
-                      billingStreetAddressTwo: billing.street[1] || '',
-                      billingCity: billing.city || '',
-                      billingStateProvince: billing.region.region || '',
-                      billingZip: billing.postcode || '',
-                      billingCountry:
-                        billing.full_name_english || 'United States',
-                      shippingFirstName: shipping.firstname || '',
-                      shippingLastName: shipping.lastname || '',
-                      shippingPhoneNumber: shipping.telephone || '',
-                      shippingStreetAddressOne: shipping.street[0] || '',
-                      shippingStreetAddressTwo: shipping.street[1] || '',
-                      shippingCity: shipping.city || '',
-                      shippingStateProvince: shipping.region.region || '',
-                      shippingZip: shipping.postcode || '',
-                      shippingCountry:
-                        shipping.full_name_english || 'United States'
+                      countryList: JSON.parse(unparsedCountries)
                     };
                   })
                 )
@@ -102,10 +114,18 @@ class InfoContainer extends Component {
                 );
                 const addressToUpdateWithRegion =
                   customerToUpdate.addresses[addressIndex];
-                const {
-                  region,
-                  ...addressToUpdate
-                } = addressToUpdateWithRegion;
+
+                let addressToUpdate = {};
+                let region = null;
+                if (addressToUpdateWithRegion != null) {
+                  region = addressToUpdateWithRegion.region;
+                  const {
+                    region: removedRegion,
+                    ...rest
+                  } = addressToUpdateWithRegion;
+                  addressToUpdate = rest;
+                }
+
                 addressToUpdate.city = this.state[
                   `${this.state.overlayType}City`
                 ];
@@ -150,10 +170,19 @@ class InfoContainer extends Component {
                 ).id;
                 addressToUpdate.customer_id = customerToUpdate.id;
                 addressToUpdate.default_billing =
-                  addressToUpdate.default_billing;
+                  addressToUpdate.default_billing ||
+                  this.state.overlayType == TYPE_BILLING;
                 addressToUpdate.default_shipping =
-                  addressToUpdate.default_shipping;
-                customerToUpdate.addresses[addressIndex] = addressToUpdate;
+                  addressToUpdate.default_shipping ||
+                  this.state.overlayType == TYPE_SHIPPING;
+                if (addressToUpdateWithRegion != null) {
+                  customerToUpdate.addresses[addressIndex] = addressToUpdate;
+                } else {
+                  customerToUpdate.addresses = [
+                    ...customerToUpdate.addresses,
+                    addressToUpdate
+                  ];
+                }
                 return {
                   shouldShowEditOverlay: false,
                   customer: customerToUpdate

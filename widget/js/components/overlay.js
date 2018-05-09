@@ -16,7 +16,9 @@ const Overlay = ({
       <Spinner />
     ) : (
       <Fragment>
-        <div className="Overlay-main">{render({ isLoading, ...rest })}</div>
+        <div className="Overlay-main">
+          {render({ isLoading, onClickClose, ...rest })}
+        </div>
         <hr className="Overlay-divider" />
         <div className="Overlay-controls">
           {showSubmit && (

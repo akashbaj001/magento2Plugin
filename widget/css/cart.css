@@ -75,9 +75,17 @@
   color: #a93239;
 }
 
+.Cart-wrapper {
+  overflow: auto;
+  height: 60%;
+}
+
 .Cart-bottom {
   display: flex;
   width: 100%;
+  position: fixed;
+  bottom: 10%;
+  height: 25%;
 }
 
 .Cart-bottom-left,
@@ -112,4 +120,15 @@
 
 .Cart-coupon-button {
   margin-bottom: 5% !important;
+}
+
+.Cart .Overlay-payment select,
+.Cart .Overlay-payment input {
+  margin-bottom: 5%;
+}
+
+.Cart .Overlay-payment {
+  padding-top: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
 }

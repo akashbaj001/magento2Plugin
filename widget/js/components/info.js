@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Overlay from './overlay';
 import '../../css/info.css';
 
@@ -172,12 +172,18 @@ const Info = ({
       <h2>Billing Address:</h2>
       <div className="Info-item-body">
         <div className="Info-item-body-left">
-          <p>{billingAddress.street[0]}</p>
-          {billingAddress.street[1] && <p>{billingAddress.street[1]}</p>}
-          <p>
-            {billingAddress.city}, {billingAddress.region_code}{' '}
-            {billingAddress.postcode}
-          </p>
+          {billingAddress ? (
+            <Fragment>
+              <p>{billingAddress.street[0]}</p>
+              {billingAddress.street[1] && <p>{billingAddress.street[1]}</p>}
+              <p>
+                {billingAddress.city}, {billingAddress.region_code}{' '}
+                {billingAddress.postcode}
+              </p>
+            </Fragment>
+          ) : (
+            <p>Please set a shipping address.</p>
+          )}
         </div>
         <div className="Info-item-body-right">
           <button
@@ -194,12 +200,18 @@ const Info = ({
       <h2>Shipping Address:</h2>
       <div className="Info-item-body">
         <div className="Info-item-body-left">
-          <p>{shippingAddress.street[0]}</p>
-          {shippingAddress.street[1] && <p>{shippingAddress.street[1]}</p>}
-          <p>
-            {shippingAddress.city}, {shippingAddress.region.region_code}{' '}
-            {shippingAddress.postcode}
-          </p>
+          {shippingAddress ? (
+            <Fragment>
+              <p>{shippingAddress.street[0]}</p>
+              {shippingAddress.street[1] && <p>{shippingAddress.street[1]}</p>}
+              <p>
+                {shippingAddress.city}, {shippingAddress.region.region_code}{' '}
+                {shippingAddress.postcode}
+              </p>
+            </Fragment>
+          ) : (
+            <p>Please set a shipping address.</p>
+          )}
         </div>
         <div className="Info-item-body-right">
           <button

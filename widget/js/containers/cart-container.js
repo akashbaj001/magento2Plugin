@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import {
   getCart,
-  getShippingMethods,
   placeOrder,
   removeFromCart,
-  getTotals
+  getTotals,
+  addCoupon,
+  getCoupons,
+  getShippingAddress,
+  setShippingAddress,
+  setPaymentInformation,
+  getBillingAddress,
+  estimateShippingMethods
 } from '../services/cart-service';
-import { getProduct } from '../services/product-service';
+import { getProduct, getQuantityForProduct } from '../services/product-service';
 import Cart from '../components/cart';
 import Spinner from 'react-spinkit';
-import { home, root } from '../constants/routes';
+import { info, home, root } from '../constants/routes';
 import { withRouter } from 'react-router-dom';
 
 class CartContainer extends Component {
@@ -17,9 +23,12 @@ class CartContainer extends Component {
     isHydrated: false,
     shouldShowShippingMenu: false,
     shouldShowCouponOverlay: false,
-    couponCode: '',
+    shouldShowPaymentOverlay: false,
+    couponCodeInput: '',
     shippingMethods: [],
-    items: []
+    items: [],
+    cardMonth: 'Jan - 01',
+    fetchingTotals: false
   };
 
   isHome = () =>
@@ -33,40 +42,83 @@ class CartContainer extends Component {
       if (customer) {
         const cart = JSON.parse(sessionStorage.getItem('cart'));
         if (cart) {
-          getTotals(customer.SSO.accessToken).then(unparsedTotals =>
-            Promise.all(
-              cart.items.map(({ sku }) => {
-                const productFromStorage = sessionStorage.getItem(
-                  `product${sku}`
-                );
-                return productFromStorage
-                  ? Promise.resolve(productFromStorage)
-                  : getProduct(sku);
-              })
-            ).then(products => {
-              products.map(product =>
-                sessionStorage.setItem(
-                  `product${product.sku}`,
-                  JSON.stringify(product)
-                )
-              );
-              const totals = JSON.parse(unparsedTotals);
-              this.setState({
-                isHydrated: true,
-                items: cart.items.map(item => ({
-                  ...item,
-                  productDetails: products
-                    .map(product => JSON.parse(product))
-                    .find(({ sku }) => sku === item.sku)
-                })),
-                discount: totals.discount_amount,
-                taxes: totals.tax_amount,
-                subTotal: totals.subtotal,
-                shipping: totals.shipping_amount,
-                total: totals.grand_total
-              });
-              getShippingMethods(customer.SSO.accessToken)
-                .then(shippingMethods => {
+          this.fetchRemainingCartData(cart, customer);
+        } else {
+          getCart(customer.SSO.accessToken).then(res => {
+            const parsedRes = JSON.parse(res);
+            sessionStorage.setItem('cart', res);
+            this.fetchRemainingCartData(parsedRes, customer);
+          });
+        }
+      } else {
+        this.goBack();
+      }
+    });
+  }
+
+  fetchRemainingCartData = (cart, customer) =>
+    getCoupons(customer.SSO.accessToken).then(unparsedCoupons =>
+      getTotals(customer.SSO.accessToken).then(unparsedTotals =>
+        Promise.all(
+          cart.items.map(({ sku }) => {
+            const productFromStorage = sessionStorage.getItem(`product${sku}`);
+            return productFromStorage
+              ? Promise.resolve(productFromStorage)
+              : getProduct(sku);
+          })
+        ).then(products => {
+          Promise.all(
+            products.map(({ sku }) => getQuantityForProduct(sku))
+          ).then(quantities => {
+            const productsWithQuantities = products.map(product => ({
+              ...product,
+              isInStock: quantities.find(
+                quantity =>
+                  parseInt(JSON.parse(quantity).product_id, 10) ===
+                  parseInt(JSON.parse(product).id, 10)
+              ).isInStock
+            }));
+
+            productsWithQuantities.map(product =>
+              sessionStorage.setItem(
+                `product${product.sku}`,
+                JSON.stringify(product)
+              )
+            );
+            const totals = JSON.parse(unparsedTotals);
+            const couponCodes = JSON.parse(unparsedCoupons);
+            this.setState({
+              isHydrated: true,
+              items: cart.items.map(item => ({
+                ...item,
+                productDetails: productsWithQuantities
+                  .map(product => JSON.parse(product))
+                  .find(({ sku }) => sku === item.sku)
+              })),
+              discount: totals.discount_amount,
+              taxes: totals.tax_amount,
+              subTotal: totals.subtotal,
+              shipping: totals.shipping_amount,
+              total: totals.grand_total,
+              couponCode:
+                couponCodes && couponCodes.length > 0
+                  ? `Coupon Code: ${couponCodes}`
+                  : '',
+              cart
+            });
+            getShippingAddress(customer.SSO.accessToken)
+              .then(unparsedShippingAddress => {
+                const shippingAddress = JSON.parse(unparsedShippingAddress);
+                if (
+                  Array.isArray(shippingAddress) &&
+                  shippingAddress.length === 0
+                ) {
+                  this.props.history.push(info);
+                }
+                estimateShippingMethods(
+                  shippingAddress.id,
+                  customer.SSO.accessToken
+                ).then(shippingMethods => {
                   const parsedShippingMethods = JSON.parse(shippingMethods);
                   this.setState({
                     shippingMethods: parsedShippingMethods.filter(
@@ -78,75 +130,40 @@ class CartContainer extends Component {
                         parsedShippingMethods[0]) ||
                       null
                   });
-                })
-                .catch(
-                  err => console.log(err) || this.setState({ isHydrated: true })
-                ); // TODO check if it's the shipping method error
-            })
-          );
-        } else {
-          getCart(customer.SSO.accessToken).then(res => {
-            const parsedRes = JSON.parse(res);
-            sessionStorage.setItem('cart', res);
-            getTotals(customer.SSO.accessToken).then(unparsedTotals =>
-              Promise.all(
-                parsedRes.items.map(({ sku }) => {
-                  const productFromStorage = sessionStorage.getItem(
-                    `product${sku}`
-                  );
-                  return productFromStorage
-                    ? Promise.resolve(productFromStorage)
-                    : getProduct(sku);
-                })
-              ).then(products => {
-                products.map(product =>
-                  sessionStorage.setItem(
-                    `product${product.sku}`,
-                    JSON.stringify(product)
-                  )
-                );
-                const totals = JSON.parse(unparsedTotals);
-                this.setState({
-                  isHydrated: true,
-                  items: parsedRes.items.map(item => ({
-                    ...item,
-                    productDetails: products
-                      .map(product => JSON.parse(product))
-                      .find(({ sku }) => sku === item.sku)
-                  })),
-                  discount: totals.discount_amount,
-                  taxes: totals.tax_amount,
-                  subTotal: totals.subtotal,
-                  shipping: totals.shipping_amount,
-                  total: totals.grand_total
                 });
-                getShippingMethods(customer.SSO.accessToken)
-                  .then(shippingMethods => {
-                    const parsedShippingMethods = JSON.parse(shippingMethods);
-                    this.setState({
-                      shippingMethods: parsedShippingMethods.filter(
-                        ({ available }) => available
-                      ),
-                      selectedShippingMethod:
-                        (parsedShippingMethods &&
-                          parsedShippingMethods.length > 0 &&
-                          parsedShippingMethods[0]) ||
-                        null
-                    });
-                  })
-                  .catch(
-                    err =>
-                      console.log(err) || this.setState({ isHydrated: true })
-                  ); // TODO check if it's the shipping method error
               })
-            );
+              .catch(
+                err => console.log(err) || this.setState({ isHydrated: true })
+              );
           });
-        }
-      } else {
-        this.goBack();
+        })
+      )
+    );
+
+  fetchTotals = () =>
+    buildfire.auth.login({}, (err, customer) => {
+      if (customer) {
+        clearTimeout(this.totalsTimer);
+        this.totalsTimer = setTimeout(() => retrieveTotals(customer), 3000);
       }
     });
-  }
+
+  retrieveTotals = customer => {
+    this.setState({ fetchingTotals: true });
+    Promise.resolve(
+      getTotals(customer.SSO.accessToken).then(unparsedTotals => {
+        const totals = JSON.parse(unparsedTotals);
+        this.setState({
+          discount: totals.discount_amount,
+          taxes: totals.tax_amount,
+          subTotal: totals.subtotal,
+          shipping: totals.shipping_amount,
+          total: totals.grand_total,
+          fetchingTotals: false
+        });
+      })
+    );
+  };
 
   handleChangeQuantity = ({ target }) =>
     this.setState(({ items }) => {
@@ -164,7 +181,7 @@ class CartContainer extends Component {
       }
 
       return { items: newItems };
-    });
+    }, this.fetchTotals);
 
   handleQuantityDecrement = id =>
     this.setState(({ items }) => {
@@ -181,7 +198,7 @@ class CartContainer extends Component {
       const itemIndex = newItems.findIndex(item => item.item_id === id);
       newItems[itemIndex].qty += 1;
       return { items: newItems };
-    });
+    }, this.fetchTotals);
 
   handleClickRemove = id => {
     buildfire.auth.login({}, (err, customer) => {
@@ -195,7 +212,10 @@ class CartContainer extends Component {
           },
           () =>
             removeFromCart(id, customer.SSO.accessToken)
-              .then(() => sessionStorage.removeItem('cart'))
+              .then(() => {
+                this.fetchTotals();
+                sessionStorage.removeItem('cart');
+              })
               .catch(() => this.setState({ items: oldItems }))
         );
       }
@@ -206,7 +226,7 @@ class CartContainer extends Component {
     this.setState({ shouldShowShippingMenu: true });
 
   handleClickCloseShipping = () =>
-    this.setState({ shouldShowShippingMenu: false });
+    this.setState({ shouldShowShippingMenu: false }, this.fetchTotals);
 
   handleClickShippingMethod = methodCode =>
     this.setState({
@@ -221,41 +241,182 @@ class CartContainer extends Component {
   handleClickApplyCoupon = () =>
     this.setState({ shouldShowCouponOverlay: true });
 
-  handleClickCheckout = () =>
+  handleClickSubmitCoupon = code =>
+    this.setState({ shouldShowCouponOverlay: false }, () =>
+      buildfire.auth.login({}, (err, customer) =>
+        this.setState({ couponCode: 'Applying code...' }, () =>
+          addCoupon(code, customer.SSO.accessToken)
+            .then(() =>
+              this.setState(
+                { couponCode: `Coupon Code: ${code}` },
+                this.fetchTotals
+              )
+            )
+            .catch(() =>
+              this.setState({ couponCode: 'Coupon code is not valid.' })
+            )
+        )
+      )
+    );
+
+  handleClickCheckout = () => this.setState({ shouldShowPaymentOverlay: true });
+
+  handleClickSubmitPayment = () =>
     buildfire.auth.login(
       null,
       (err, customer) =>
         customer
-          ? placeOrder({}, customer.SSO.accessToken)
-              .then(res => {
-                console.log(res);
-                // TODO
-                // to get the two below custom attributes you have to do a GET to the product details for every product purchased
-                // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
-                // when adding to data store, include app_product_reminder_message
-                if (true) {
-                  buildfire.datastore.insert(
-                    {
-                      reminders: [
-                        {
-                          reminder:
-                            'Time to order new blades. Save 10% if you order in the next two days.',
-                          sku: '01007',
-                          date: ''
-                        }
-                      ]
-                    },
-                    'reminders',
-                    false
-                  );
+          ? getShippingAddress(customer.SSO.accessToken).then(
+              unparsedShippingAddress => {
+                const shippingAddress = JSON.parse(unparsedShippingAddress);
+                if (
+                  Array.isArray(shippingAddress) &&
+                  shippingAddress.length === 0
+                ) {
+                  this.props.history.push(info);
                 }
-              })
-              .catch(err => console.log(err))
+                setShippingAddress(
+                  {
+                    region: shippingAddress.region.region_code,
+                    country_id: shippingAddress.country_id,
+                    street: shippingAddress.street,
+                    telephone: shippingAddress.telephone,
+                    postcode: shippingAddress.postcode,
+                    city: shippingAddress.city,
+                    firstname: shippingAddress.firstname,
+                    lastname: shippingAddress.lastname
+                  },
+                  this.state.selectedShippingMethod.carrier_code,
+                  this.state.selectedShippingMethod.method_code,
+                  customer.SSO.accessToken
+                ).then(() =>
+                  getBillingAddress(customer.SSO.accessToken).then(
+                    unparsedBillingAddress => {
+                      const billingAddress = JSON.parse(unparsedBillingAddress);
+                      if (
+                        Array.isArray(billingAddress) &&
+                        billingAddress.length === 0
+                      ) {
+                        this.props.history.push(info);
+                      }
+                      setPaymentInformation(
+                        this.state.cart.id,
+                        {
+                          city: billingAddress.city,
+                          countryId: billingAddress.country_id,
+                          customerId: billingAddress.customer_id,
+                          firstname: billingAddress.firstname,
+                          lastname: billingAddress.lastname,
+                          postcode: billingAddress.postcode,
+                          region: billingAddress.region.region,
+                          regionCode: billingAddress.region.region_code,
+                          regionId: billingAddress.region.region_id,
+                          street: billingAddress.street,
+                          telephone: billingAddress.telephone
+                        },
+                        customer.SSO.accessToken
+                      ).then(() =>
+                        placeOrder(
+                          {
+                            payment: {
+                              method: 'authorizenet_directpost'
+                            },
+                            'billing-address-same-as-shipping': 'on', // TODO this should probably be off
+                            billing_address_id: '',
+                            controller: 'checkout_flow',
+                            cc_type: 'VI' // TODO won't always be visa... https://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
+                          },
+                          customer.SSO.accessToken
+                        )
+                          .then(res =>
+                            placePayment({
+                              ...res.authorizenet_directpost,
+                              x_card_code: this.state.verificationNumber,
+                              x_exp_date:
+                                this.state.cardMonth + this.state.cardYear, // TODO need to format this MM/YY
+                              x_card_num: this.state.cardNumber
+                            }) // TODO all the arguments to placePayment should be either in the state (CC) or in the response from placeOrder
+                              .then(res => {
+                                console.log(res);
+                                this.state.items.forEach(
+                                  ({
+                                    app_product_reminder_enabled,
+                                    app_product_reminder_message,
+                                    app_product_reminder_frequency
+                                  }) =>
+                                    !isNaN(
+                                      parseInt(app_product_reminder_enabled)
+                                    ) &&
+                                    parseInt(
+                                      app_product_reminder_enabled,
+                                      10
+                                    ) === 1
+                                      ? buildfire.publicData.get(
+                                          `reminders${customer.userToken}`,
+                                          (err, res) =>
+                                            res.data.areRemindersEnabled
+                                              ? buildfire.notifications.localNotification.schedule(
+                                                  {
+                                                    title: 'Every Man Jack',
+                                                    text: app_product_reminder_message,
+                                                    at: currentDatePlusWeeks(
+                                                      app_product_reminder_frequency
+                                                    ),
+                                                    data: { sku }
+                                                  },
+                                                  (err, data) =>
+                                                    buildfire.publicData.save(
+                                                      {
+                                                        ...res.data,
+                                                        reminders: [
+                                                          ...(res.data.reminders
+                                                            ? res.data.reminders
+                                                            : []),
+                                                          {
+                                                            reminder: app_product_reminder_message,
+                                                            sku,
+                                                            date: currentDatePlusWeeks(
+                                                              app_product_reminder_frequency
+                                                            ).toString(),
+                                                            notificationId:
+                                                              data.id
+                                                          }
+                                                        ]
+                                                      },
+                                                      `reminders${
+                                                        customer.userToken
+                                                      }`,
+                                                      () => {}
+                                                    )
+                                                )
+                                              : {}
+                                        )
+                                      : {}
+                                );
+                              })
+                              .catch(err => console.log(err))
+                          )
+                          .catch(err => console.log(err))
+                      );
+                    }
+                  )
+                );
+              }
+            )
           : {}
     );
 
+  currentDatePlusWeeks = weeks => {
+    const now = new Date();
+    now.setDate(now.getDate() + 7 * weeks);
+    return now;
+  };
+
   handleInputChange = ({ target: { name, value } }) =>
     this.setState({ [name]: value });
+
+  handleClickClosePayment = () =>
+    this.setState({ shouldShowPaymentOverlay: false });
 
   render() {
     return this.state.isHydrated ? (
@@ -282,6 +443,16 @@ class CartContainer extends Component {
         discount={this.state.discount}
         taxes={this.state.taxes}
         total={this.state.total}
+        couponCodeInput={this.state.couponCodeInput}
+        onClickSubmitCoupon={this.handleClickSubmitCoupon}
+        cardNumber={this.state.cardNumber}
+        cardMonth={this.state.cardMonth}
+        verificationNumber={this.state.verificationNumber}
+        shouldShowPaymentOverlay={this.state.shouldShowPaymentOverlay}
+        cardYear={this.state.cardYear}
+        onClickSubmitPayment={this.handleClickSubmitPayment}
+        onClickClosePayment={this.handleClickClosePayment}
+        fetchingTotals={this.state.fetchingTotals}
       />
     ) : (
       <Spinner color="gray" />

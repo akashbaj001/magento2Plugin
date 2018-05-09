@@ -15,38 +15,54 @@ class RemindersContainer extends Component {
           ? buildfire.publicData.get(
               `reminders${customer.userToken}`,
               (err, res) =>
-                buildfire.notifications.localNotification.schedule(
-                  { title: '', text: '', at: new Date(), data: { sku: '' } },
-                  (err, data) =>
-                    buildfire.publicData.save(
+                res.data.areRemindersEnabled
+                  ? buildfire.notifications.localNotification.schedule(
                       {
-                        ...res.data,
-                        reminders: [
-                          ...(res.data.reminders ? res.data.reminders : []),
-                          {
-                            reminder:
-                              'Time to order new blades. Save 10% if you order in the next two days.',
-                            sku: '00156',
-                            date: new Date().toString(),
-                            notificationId: data.id
-                          }
-                        ]
+                        title: 'Every Man Jack',
+                        text:
+                          'Time to order new blades. Save 10% if you order in the next two days.',
+                        at: new Date(),
+                        data: { sku: '00156' }
                       },
-                      `reminders${customer.userToken}`,
-                      () =>
-                        buildfire.publicData.get(
+                      (err, data) =>
+                        buildfire.publicData.save(
+                          {
+                            ...res.data,
+                            reminders: [
+                              ...(res.data.reminders ? res.data.reminders : []),
+                              {
+                                reminder:
+                                  'Time to order new blades. Save 10% if you order in the next two days.',
+                                sku: '00156',
+                                date: new Date().toString(),
+                                notificationId: data.id
+                              }
+                            ]
+                          },
                           `reminders${customer.userToken}`,
-                          (err, res) =>
-                            this.setState({
-                              isHydrated: true,
-                              reminders: res.data.reminders.sort(
-                                (a, b) => new Date(b.date) - new Date(a.date)
-                              ),
-                              areRemindersEnabled: res.data.areRemindersEnabled
-                            })
+                          () =>
+                            buildfire.publicData.get(
+                              `reminders${customer.userToken}`,
+                              (err, res) =>
+                                this.setState({
+                                  isHydrated: true,
+                                  reminders: res.data.reminders.sort(
+                                    (a, b) =>
+                                      new Date(b.date) - new Date(a.date)
+                                  ),
+                                  areRemindersEnabled:
+                                    res.data.areRemindersEnabled
+                                })
+                            )
                         )
                     )
-                )
+                  : this.setState({
+                      isHydrated: true,
+                      reminders: res.data.reminders.sort(
+                        (a, b) => new Date(b.date) - new Date(a.date)
+                      ),
+                      areRemindersEnabled: res.data.areRemindersEnabled
+                    })
             )
           : this.setState({
               isHydrated: true,
@@ -57,7 +73,6 @@ class RemindersContainer extends Component {
   }
 
   handleToggleReminders = () =>
-    // TODO also cancel all or reschedule all local notifications
     buildfire.auth.login(
       null,
       (err, customer) =>
@@ -76,9 +91,26 @@ class RemindersContainer extends Component {
                   (err, status) =>
                     err
                       ? this.setState(prevState => ({
-                          areRemindersEnabled: !areRemindersEnabled
+                          areRemindersEnabled: !prevState.areRemindersEnabled
                         }))
-                      : {}
+                      : this.state.areRemindersEnabled
+                        ? this.state.reminders.forEach(
+                            ({ date, reminder, sku }) =>
+                              buildfire.notifications.localNotification.schedule(
+                                // TODO check that its date is greater than now() before scheduling a duplicate one
+                                {
+                                  title: 'Every Man Jack',
+                                  text: reminder,
+                                  at: date,
+                                  data: { sku }
+                                }
+                              )
+                          )
+                        : this.state.reminders.forEach(({ notificationId }) =>
+                            buildfire.notifications.localNotification.cancel(
+                              notificationId
+                            )
+                          )
                 )
             )
           : {}
@@ -89,30 +121,26 @@ class RemindersContainer extends Component {
       null,
       (err, customer) =>
         customer
-          ? this.setState(
-              ({ reminders }) => ({
-                reminders: [
-                  ...reminders.slice(0, parseInt(name, 10)),
-                  ...reminders.slice(parseInt(name, 10) + 1)
-                ]
-              }),
-              () =>
-                buildfire.publicData.save(
-                  {
-                    reminders: [
-                      ...this.state.reminders.slice(0, parseInt(name, 10)),
-                      ...this.state.reminders.slice(parseInt(name, 10) + 1)
-                    ],
-                    areRemindersEnabled: this.state.areRemindersEnabled
-                  },
-                  `reminders${customer.userToken}`,
-                  (err, status) =>
-                    err
-                      ? this.setState({ reminders })
-                      : window.buildfire.notifications.localNotification.cancel(
-                          reminders[parseInt(name, 10)].notificationId
-                        )
-                )
+          ? buildfire.publicData.save(
+              {
+                reminders: this.state.reminders.filter(
+                  (reminder, idx) => idx !== parseInt(name, 10)
+                ),
+                areRemindersEnabled: this.state.areRemindersEnabled
+              },
+              `reminders${customer.userToken}`,
+              (err, status) => {
+                if (!err) {
+                  window.buildfire.notifications.localNotification.cancel(
+                    this.state.reminders[parseInt(name, 10)].notificationId
+                  );
+                  this.setState(({ reminders }) => ({
+                    reminders: reminders.filter(
+                      (reminder, idx) => idx !== parseInt(name, 10)
+                    )
+                  }));
+                }
+              }
             )
           : {}
     );
