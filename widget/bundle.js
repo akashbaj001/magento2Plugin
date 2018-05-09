@@ -12937,7 +12937,7 @@ const Overlay = (_ref) => {
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'Overlay-main' },
-        render(_extends({ isLoading }, rest))
+        render(_extends({ isLoading, onClickClose }, rest))
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', { className: 'Overlay-divider' }),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -13007,6 +13007,17 @@ const getProductsForCategory = categoryID => Promise.resolve(__WEBPACK_IMPORTED_
   dataType: 'json'
 }));
 /* harmony export (immutable) */ __webpack_exports__["c"] = getProductsForCategory;
+
+
+const getQuantityForProduct = sku => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+  url: `${apiBasePath}${encodeURIComponent(`stockItems/${sku}`)}`,
+  method: 'GET',
+  dataType: 'json',
+  headers: {
+    Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
+  }
+}));
+/* harmony export (immutable) */ __webpack_exports__["d"] = getQuantityForProduct;
 
 
 /***/ }),
@@ -41336,54 +41347,66 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       couponCodeInput: '',
       shippingMethods: [],
       items: [],
-      cardMonth: 'Jan - 01'
+      cardMonth: 'Jan - 01',
+      fetchingTotals: false
     }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = (cart, customer) => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])(customer.SSO.accessToken).then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
       const productFromStorage = sessionStorage.getItem(`product${sku}`);
       return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
     })).then(products => {
-      products.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
-      const totals = JSON.parse(unparsedTotals);
-      const couponCodes = JSON.parse(unparsedCoupons);
-      this.setState({
-        isHydrated: true,
-        items: cart.items.map(item => _extends({}, item, {
-          productDetails: products.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
-        })),
-        discount: totals.discount_amount,
-        taxes: totals.tax_amount,
-        subTotal: totals.subtotal,
-        shipping: totals.shipping_amount,
-        total: totals.grand_total,
-        couponCode: couponCodes && couponCodes.length > 0 ? `Coupon Code: ${couponCodes}` : '',
-        cart
-      });
-      Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
-        const shippingAddress = JSON.parse(unparsedShippingAddress);
-        if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
-          this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
-        }
-        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id, customer.SSO.accessToken).then(shippingMethods => {
-          const parsedShippingMethods = JSON.parse(shippingMethods);
-          this.setState({
-            shippingMethods: parsedShippingMethods.filter(({ available }) => available),
-            selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
-          });
+      Promise.all(products.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["d" /* getQuantityForProduct */])(sku))).then(quantities => {
+        const productsWithQuantities = products.map(product => _extends({}, product, {
+          isInStock: quantities.find(quantity => parseInt(JSON.parse(quantity).product_id, 10) === parseInt(JSON.parse(product).id, 10)).isInStock
+        }));
+
+        productsWithQuantities.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
+        const totals = JSON.parse(unparsedTotals);
+        const couponCodes = JSON.parse(unparsedCoupons);
+        this.setState({
+          isHydrated: true,
+          items: cart.items.map(item => _extends({}, item, {
+            productDetails: productsWithQuantities.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
+          })),
+          discount: totals.discount_amount,
+          taxes: totals.tax_amount,
+          subTotal: totals.subtotal,
+          shipping: totals.shipping_amount,
+          total: totals.grand_total,
+          couponCode: couponCodes && couponCodes.length > 0 ? `Coupon Code: ${couponCodes}` : '',
+          cart
         });
-      }).catch(err => console.log(err) || this.setState({ isHydrated: true }));
+        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
+          const shippingAddress = JSON.parse(unparsedShippingAddress);
+          if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
+            this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
+          }
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id, customer.SSO.accessToken).then(shippingMethods => {
+            const parsedShippingMethods = JSON.parse(shippingMethods);
+            this.setState({
+              shippingMethods: parsedShippingMethods.filter(({ available }) => available),
+              selectedShippingMethod: parsedShippingMethods && parsedShippingMethods.length > 0 && parsedShippingMethods[0] || null
+            });
+          });
+        }).catch(err => console.log(err) || this.setState({ isHydrated: true }));
+      });
     }))), this.fetchTotals = () => buildfire.auth.login({}, (err, customer) => {
       if (customer) {
-        Promise.resolve(Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => {
-          const totals = JSON.parse(unparsedTotals);
-          this.setState({
-            discount: totals.discount_amount,
-            taxes: totals.tax_amount,
-            subTotal: totals.subtotal,
-            shipping: totals.shipping_amount,
-            total: totals.grand_total
-          });
-        }));
+        clearTimeout(this.totalsTimer);
+        this.totalsTimer = setTimeout(() => retrieveTotals(customer), 3000);
       }
-    }), this.handleChangeQuantity = ({ target }) => this.setState(({ items }) => {
+    }), this.retrieveTotals = customer => {
+      this.setState({ fetchingTotals: true });
+      Promise.resolve(Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => {
+        const totals = JSON.parse(unparsedTotals);
+        this.setState({
+          discount: totals.discount_amount,
+          taxes: totals.tax_amount,
+          subTotal: totals.subtotal,
+          shipping: totals.shipping_amount,
+          total: totals.grand_total,
+          fetchingTotals: false
+        });
+      }));
+    }, this.handleChangeQuantity = ({ target }) => this.setState(({ items }) => {
       if (isNaN(target.value)) {
         return {};
       }
@@ -41538,7 +41561,8 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       shouldShowPaymentOverlay: this.state.shouldShowPaymentOverlay,
       cardYear: this.state.cardYear,
       onClickSubmitPayment: this.handleClickSubmitPayment,
-      onClickClosePayment: this.handleClickClosePayment
+      onClickClosePayment: this.handleClickClosePayment,
+      fetchingTotals: this.state.fetchingTotals
     }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4_react_spinkit___default.a, { color: 'gray' });
   }
 }
@@ -41586,7 +41610,8 @@ const CartCard = ({
   onQuantityIncrement,
   eventName,
   onClickRemove,
-  productDetails
+  productDetails,
+  isInStock
 }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
   'div',
   { className: 'Cart-card' },
@@ -41602,8 +41627,11 @@ const CartCard = ({
       { className: 'Cart-card-name clamp-one' },
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_6_react_router_dom__["b" /* Link */],
-        { to: `${__WEBPACK_IMPORTED_MODULE_4__constants_routes__["i" /* products */]}/${sku}`, className: 'text-primary' },
-        name
+        {
+          to: `${__WEBPACK_IMPORTED_MODULE_4__constants_routes__["i" /* products */]}/${sku}`,
+          className: isInStock ? 'text-primary' : 'text-danger'
+        },
+        isInStock ? name : 'Out Of Stock'
       )
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41667,7 +41695,8 @@ const Cart = ({
   shouldShowPaymentOverlay,
   cardYear,
   onClickSubmitPayment,
-  onClickClosePayment
+  onClickClosePayment,
+  fetchingTotals
 }) => {
   if (items && items.length > 0) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41926,9 +41955,10 @@ const Cart = ({
             'button',
             {
               className: 'Cart-checkout btn-lg btn-primary',
-              onClick: onClickCheckout
+              onClick: onClickCheckout,
+              disabled: fetchingTotals
             },
-            'Check Out'
+            fetchingTotals ? 'Updating totals...' : 'Check Out'
           )
         )
       )

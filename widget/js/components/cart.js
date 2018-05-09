@@ -33,7 +33,8 @@ const CartCard = ({
   onQuantityIncrement,
   eventName,
   onClickRemove,
-  productDetails
+  productDetails,
+  isInStock
 }) => (
   <div className="Cart-card">
     {window.buildfireConfig.productImageAtName &&
@@ -54,8 +55,11 @@ const CartCard = ({
       )}
     <div className="Cart-card-left">
       <p className="Cart-card-name clamp-one">
-        <Link to={`${products}/${sku}`} className="text-primary">
-          {name}
+        <Link
+          to={`${products}/${sku}`}
+          className={isInStock ? 'text-primary' : 'text-danger'}
+        >
+          {isInStock ? name : 'Out Of Stock'}
         </Link>
       </p>
       <p className="Cart-card-price">${price}</p>
@@ -111,7 +115,8 @@ const Cart = ({
   shouldShowPaymentOverlay,
   cardYear,
   onClickSubmitPayment,
-  onClickClosePayment
+  onClickClosePayment,
+  fetchingTotals
 }) => {
   if (items && items.length > 0) {
     return (
@@ -287,8 +292,9 @@ const Cart = ({
             <button
               className="Cart-checkout btn-lg btn-primary"
               onClick={onClickCheckout}
+              disabled={fetchingTotals}
             >
-              Check Out
+              {fetchingTotals ? 'Updating totals...' : 'Check Out'}
             </button>
             {/* TODO you can get a message: Shipping address not set. if shipping address isn't set and you try to GET shipping-methods */}
           </div>

@@ -12,7 +12,7 @@ import {
   getBillingAddress,
   estimateShippingMethods
 } from '../services/cart-service';
-import { getProduct } from '../services/product-service';
+import { getProduct, getQuantityForProduct } from '../services/product-service';
 import Cart from '../components/cart';
 import Spinner from 'react-spinkit';
 import { info, home, root } from '../constants/routes';
@@ -27,7 +27,8 @@ class CartContainer extends Component {
     couponCodeInput: '',
     shippingMethods: [],
     items: [],
-    cardMonth: 'Jan - 01'
+    cardMonth: 'Jan - 01',
+    fetchingTotals: false
   };
 
   isHome = () =>
@@ -66,62 +67,75 @@ class CartContainer extends Component {
               : getProduct(sku);
           })
         ).then(products => {
-          products.map(product =>
-            sessionStorage.setItem(
-              `product${product.sku}`,
-              JSON.stringify(product)
-            )
-          );
-          const totals = JSON.parse(unparsedTotals);
-          const couponCodes = JSON.parse(unparsedCoupons);
-          this.setState({
-            isHydrated: true,
-            items: cart.items.map(item => ({
-              ...item,
-              productDetails: products
-                .map(product => JSON.parse(product))
-                .find(({ sku }) => sku === item.sku)
-            })),
-            discount: totals.discount_amount,
-            taxes: totals.tax_amount,
-            subTotal: totals.subtotal,
-            shipping: totals.shipping_amount,
-            total: totals.grand_total,
-            couponCode:
-              couponCodes && couponCodes.length > 0
-                ? `Coupon Code: ${couponCodes}`
-                : '',
-            cart
-          });
-          getShippingAddress(customer.SSO.accessToken)
-            .then(unparsedShippingAddress => {
-              const shippingAddress = JSON.parse(unparsedShippingAddress);
-              if (
-                Array.isArray(shippingAddress) &&
-                shippingAddress.length === 0
-              ) {
-                this.props.history.push(info);
-              }
-              estimateShippingMethods(
-                shippingAddress.id,
-                customer.SSO.accessToken
-              ).then(shippingMethods => {
-                const parsedShippingMethods = JSON.parse(shippingMethods);
-                this.setState({
-                  shippingMethods: parsedShippingMethods.filter(
-                    ({ available }) => available
-                  ),
-                  selectedShippingMethod:
-                    (parsedShippingMethods &&
-                      parsedShippingMethods.length > 0 &&
-                      parsedShippingMethods[0]) ||
-                    null
-                });
-              });
-            })
-            .catch(
-              err => console.log(err) || this.setState({ isHydrated: true })
+          Promise.all(
+            products.map(({ sku }) => getQuantityForProduct(sku))
+          ).then(quantities => {
+            const productsWithQuantities = products.map(product => ({
+              ...product,
+              isInStock: quantities.find(
+                quantity =>
+                  parseInt(JSON.parse(quantity).product_id, 10) ===
+                  parseInt(JSON.parse(product).id, 10)
+              ).isInStock
+            }));
+
+            productsWithQuantities.map(product =>
+              sessionStorage.setItem(
+                `product${product.sku}`,
+                JSON.stringify(product)
+              )
             );
+            const totals = JSON.parse(unparsedTotals);
+            const couponCodes = JSON.parse(unparsedCoupons);
+            this.setState({
+              isHydrated: true,
+              items: cart.items.map(item => ({
+                ...item,
+                productDetails: productsWithQuantities
+                  .map(product => JSON.parse(product))
+                  .find(({ sku }) => sku === item.sku)
+              })),
+              discount: totals.discount_amount,
+              taxes: totals.tax_amount,
+              subTotal: totals.subtotal,
+              shipping: totals.shipping_amount,
+              total: totals.grand_total,
+              couponCode:
+                couponCodes && couponCodes.length > 0
+                  ? `Coupon Code: ${couponCodes}`
+                  : '',
+              cart
+            });
+            getShippingAddress(customer.SSO.accessToken)
+              .then(unparsedShippingAddress => {
+                const shippingAddress = JSON.parse(unparsedShippingAddress);
+                if (
+                  Array.isArray(shippingAddress) &&
+                  shippingAddress.length === 0
+                ) {
+                  this.props.history.push(info);
+                }
+                estimateShippingMethods(
+                  shippingAddress.id,
+                  customer.SSO.accessToken
+                ).then(shippingMethods => {
+                  const parsedShippingMethods = JSON.parse(shippingMethods);
+                  this.setState({
+                    shippingMethods: parsedShippingMethods.filter(
+                      ({ available }) => available
+                    ),
+                    selectedShippingMethod:
+                      (parsedShippingMethods &&
+                        parsedShippingMethods.length > 0 &&
+                        parsedShippingMethods[0]) ||
+                      null
+                  });
+                });
+              })
+              .catch(
+                err => console.log(err) || this.setState({ isHydrated: true })
+              );
+          });
         })
       )
     );
@@ -129,20 +143,27 @@ class CartContainer extends Component {
   fetchTotals = () =>
     buildfire.auth.login({}, (err, customer) => {
       if (customer) {
-        Promise.resolve(
-          getTotals(customer.SSO.accessToken).then(unparsedTotals => {
-            const totals = JSON.parse(unparsedTotals);
-            this.setState({
-              discount: totals.discount_amount,
-              taxes: totals.tax_amount,
-              subTotal: totals.subtotal,
-              shipping: totals.shipping_amount,
-              total: totals.grand_total
-            });
-          })
-        );
+        clearTimeout(this.totalsTimer);
+        this.totalsTimer = setTimeout(() => retrieveTotals(customer), 3000);
       }
     });
+
+  retrieveTotals = customer => {
+    this.setState({ fetchingTotals: true });
+    Promise.resolve(
+      getTotals(customer.SSO.accessToken).then(unparsedTotals => {
+        const totals = JSON.parse(unparsedTotals);
+        this.setState({
+          discount: totals.discount_amount,
+          taxes: totals.tax_amount,
+          subTotal: totals.subtotal,
+          shipping: totals.shipping_amount,
+          total: totals.grand_total,
+          fetchingTotals: false
+        });
+      })
+    );
+  };
 
   handleChangeQuantity = ({ target }) =>
     this.setState(({ items }) => {
@@ -317,26 +338,61 @@ class CartContainer extends Component {
                             }) // TODO all the arguments to placePayment should be either in the state (CC) or in the response from placeOrder
                               .then(res => {
                                 console.log(res);
-                                // TODO
-                                // to get the two below custom attributes you have to do a GET to the product details for every product purchased
-                                // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
-                                // when adding to data store, include app_product_reminder_message. Also check if areRemindersEnabled in publicData.
-                                if (true) {
-                                  buildfire.datastore.insert(
-                                    {
-                                      reminders: [
-                                        {
-                                          reminder:
-                                            'Time to order new blades. Save 10% if you order in the next two days.',
-                                          sku: '01007',
-                                          date: ''
-                                        }
-                                      ]
-                                    },
-                                    'reminders',
-                                    false
-                                  );
-                                }
+                                this.state.items.forEach(
+                                  ({
+                                    app_product_reminder_enabled,
+                                    app_product_reminder_message,
+                                    app_product_reminder_frequency
+                                  }) =>
+                                    !isNaN(
+                                      parseInt(app_product_reminder_enabled)
+                                    ) &&
+                                    parseInt(
+                                      app_product_reminder_enabled,
+                                      10
+                                    ) === 1
+                                      ? buildfire.publicData.get(
+                                          `reminders${customer.userToken}`,
+                                          (err, res) =>
+                                            res.data.areRemindersEnabled
+                                              ? buildfire.notifications.localNotification.schedule(
+                                                  {
+                                                    title: 'Every Man Jack',
+                                                    text: app_product_reminder_message,
+                                                    at: currentDatePlusWeeks(
+                                                      app_product_reminder_frequency
+                                                    ),
+                                                    data: { sku }
+                                                  },
+                                                  (err, data) =>
+                                                    buildfire.publicData.save(
+                                                      {
+                                                        ...res.data,
+                                                        reminders: [
+                                                          ...(res.data.reminders
+                                                            ? res.data.reminders
+                                                            : []),
+                                                          {
+                                                            reminder: app_product_reminder_message,
+                                                            sku,
+                                                            date: currentDatePlusWeeks(
+                                                              app_product_reminder_frequency
+                                                            ).toString(),
+                                                            notificationId:
+                                                              data.id
+                                                          }
+                                                        ]
+                                                      },
+                                                      `reminders${
+                                                        customer.userToken
+                                                      }`,
+                                                      () => {}
+                                                    )
+                                                )
+                                              : {}
+                                        )
+                                      : {}
+                                );
                               })
                               .catch(err => console.log(err))
                           )
@@ -349,6 +405,12 @@ class CartContainer extends Component {
             )
           : {}
     );
+
+  currentDatePlusWeeks = weeks => {
+    const now = new Date();
+    now.setDate(now.getDate() + 7 * weeks);
+    return now;
+  };
 
   handleInputChange = ({ target: { name, value } }) =>
     this.setState({ [name]: value });
@@ -390,6 +452,7 @@ class CartContainer extends Component {
         cardYear={this.state.cardYear}
         onClickSubmitPayment={this.handleClickSubmitPayment}
         onClickClosePayment={this.handleClickClosePayment}
+        fetchingTotals={this.state.fetchingTotals}
       />
     ) : (
       <Spinner color="gray" />

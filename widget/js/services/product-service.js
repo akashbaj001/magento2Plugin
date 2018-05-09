@@ -36,3 +36,15 @@ export const getProductsForCategory = categoryID =>
       dataType: 'json'
     })
   );
+
+export const getQuantityForProduct = sku =>
+  Promise.resolve(
+    $.ajax({
+      url: `${apiBasePath}${encodeURIComponent(`stockItems/${sku}`)}`,
+      method: 'GET',
+      dataType: 'json',
+      headers: {
+        Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
+      }
+    })
+  );
