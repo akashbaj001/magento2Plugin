@@ -10,7 +10,8 @@ import {
   setShippingAddress,
   setPaymentInformation,
   getBillingAddress,
-  estimateShippingMethods
+  estimateShippingMethods,
+  placePayment
 } from '../services/cart-service';
 import { getProduct, getQuantityForProduct } from '../services/product-service';
 import Cart from '../components/cart';
@@ -68,15 +69,19 @@ class CartContainer extends Component {
           })
         ).then(products => {
           Promise.all(
-            products.map(({ sku }) => getQuantityForProduct(sku))
+            products.map(product =>
+              getQuantityForProduct(JSON.parse(product).sku)
+            )
           ).then(quantities => {
             const productsWithQuantities = products.map(product => ({
-              ...product,
-              isInStock: quantities.find(
-                quantity =>
-                  parseInt(JSON.parse(quantity).product_id, 10) ===
-                  parseInt(JSON.parse(product).id, 10)
-              ).isInStock
+              ...JSON.parse(product),
+              isInStock: JSON.parse(
+                quantities.find(
+                  quantity =>
+                    parseInt(JSON.parse(quantity).product_id, 10) ===
+                    parseInt(JSON.parse(product).id, 10)
+                )
+              ).is_in_stock
             }));
 
             productsWithQuantities.map(product =>
@@ -91,9 +96,9 @@ class CartContainer extends Component {
               isHydrated: true,
               items: cart.items.map(item => ({
                 ...item,
-                productDetails: productsWithQuantities
-                  .map(product => JSON.parse(product))
-                  .find(({ sku }) => sku === item.sku)
+                productDetails: productsWithQuantities.find(
+                  ({ sku }) => sku === item.sku
+                )
               })),
               discount: totals.discount_amount,
               taxes: totals.tax_amount,
@@ -337,62 +342,7 @@ class CartContainer extends Component {
                               x_card_num: this.state.cardNumber
                             }) // TODO all the arguments to placePayment should be either in the state (CC) or in the response from placeOrder
                               .then(res => {
-                                console.log(res);
-                                this.state.items.forEach(
-                                  ({
-                                    app_product_reminder_enabled,
-                                    app_product_reminder_message,
-                                    app_product_reminder_frequency
-                                  }) =>
-                                    !isNaN(
-                                      parseInt(app_product_reminder_enabled)
-                                    ) &&
-                                    parseInt(
-                                      app_product_reminder_enabled,
-                                      10
-                                    ) === 1
-                                      ? buildfire.publicData.get(
-                                          `reminders${customer.userToken}`,
-                                          (err, res) =>
-                                            res.data.areRemindersEnabled
-                                              ? buildfire.notifications.localNotification.schedule(
-                                                  {
-                                                    title: 'Every Man Jack',
-                                                    text: app_product_reminder_message,
-                                                    at: currentDatePlusWeeks(
-                                                      app_product_reminder_frequency
-                                                    ),
-                                                    data: { sku }
-                                                  },
-                                                  (err, data) =>
-                                                    buildfire.publicData.save(
-                                                      {
-                                                        ...res.data,
-                                                        reminders: [
-                                                          ...(res.data.reminders
-                                                            ? res.data.reminders
-                                                            : []),
-                                                          {
-                                                            reminder: app_product_reminder_message,
-                                                            sku,
-                                                            date: currentDatePlusWeeks(
-                                                              app_product_reminder_frequency
-                                                            ).toString(),
-                                                            notificationId:
-                                                              data.id
-                                                          }
-                                                        ]
-                                                      },
-                                                      `reminders${
-                                                        customer.userToken
-                                                      }`,
-                                                      () => {}
-                                                    )
-                                                )
-                                              : {}
-                                        )
-                                      : {}
-                                );
+                                this.setReminders(customer);
                               })
                               .catch(err => console.log(err))
                           )
@@ -404,6 +354,65 @@ class CartContainer extends Component {
               }
             )
           : {}
+    );
+
+  setReminders = customer =>
+    this.state.items.forEach(
+      ({ sku, productDetails: { custom_attributes } }) => {
+        const { value: app_product_reminder_enabled } =
+          custom_attributes.find(
+            attribute =>
+              attribute.attribute_code === 'app_product_reminder_enabled'
+          ) || {};
+        const { value: app_product_reminder_message } =
+          custom_attributes.find(
+            attribute =>
+              attribute.attribute_code === 'app_product_reminder_message'
+          ) || {};
+        const { value: app_product_reminder_frequency } =
+          custom_attributes.find(
+            attribute =>
+              attribute.attribute_code === 'app_product_reminder_frequency'
+          ) || {};
+        !isNaN(parseInt(app_product_reminder_enabled)) &&
+        parseInt(app_product_reminder_enabled, 10) === 1
+          ? buildfire.publicData.get(
+              `reminders${customer.userToken}`,
+              (err, res) =>
+                res.data.areRemindersEnabled
+                  ? buildfire.notifications.localNotification.schedule(
+                      {
+                        title: 'Every Man Jack',
+                        text: app_product_reminder_message,
+                        at: this.currentDatePlusWeeks(
+                          app_product_reminder_frequency
+                        ),
+                        data: { sku }
+                      },
+                      (err, data) =>
+                        buildfire.publicData.save(
+                          {
+                            ...res.data,
+                            reminders: [
+                              ...(res.data.reminders ? res.data.reminders : []),
+                              {
+                                reminder: app_product_reminder_message,
+                                sku,
+                                date: this.currentDatePlusWeeks(
+                                  app_product_reminder_frequency
+                                ).toString(),
+                                notificationId: data.id
+                              }
+                            ]
+                          },
+                          `reminders${customer.userToken}`,
+                          () => {}
+                        )
+                    )
+                  : {}
+            )
+          : {};
+      }
     );
 
   currentDatePlusWeeks = weeks => {

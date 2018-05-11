@@ -33,8 +33,7 @@ const CartCard = ({
   onQuantityIncrement,
   eventName,
   onClickRemove,
-  productDetails,
-  isInStock
+  productDetails
 }) => (
   <div className="Cart-card">
     {window.buildfireConfig.productImageAtName &&
@@ -57,9 +56,9 @@ const CartCard = ({
       <p className="Cart-card-name clamp-one">
         <Link
           to={`${products}/${sku}`}
-          className={isInStock ? 'text-primary' : 'text-danger'}
+          className={productDetails.isInStock ? 'text-primary' : 'text-danger'}
         >
-          {isInStock ? name : 'Out Of Stock'}
+          {productDetails.isInStock ? name : 'Out Of Stock'}
         </Link>
       </p>
       <p className="Cart-card-price">${price}</p>

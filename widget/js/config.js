@@ -1,5 +1,5 @@
 const proxy =
-  'https://ktuw266wb7.execute-api.us-east-1.amazonaws.com/dev/hop?url=';
+  'https://jklyjr9rfh.execute-api.us-east-1.amazonaws.com/production/hop?url=';
 const apiVersion = 'V1';
 export default {
   apiBasePath: `${proxy}${encodeURIComponent(
@@ -7,5 +7,6 @@ export default {
   )}`,
   rootPath: '/',
   mediaPath: 'pub/media/catalog',
-  baseMedia: 'media'
+  baseMedia: 'media',
+  proxyBasePath: proxy
 };
