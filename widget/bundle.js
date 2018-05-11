@@ -1283,13 +1283,14 @@ module.exports = emptyFunction;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-const proxy = 'https://ktuw266wb7.execute-api.us-east-1.amazonaws.com/dev/hop?url=';
+const proxy = 'https://jklyjr9rfh.execute-api.us-east-1.amazonaws.com/production/hop?url=';
 const apiVersion = 'V1';
 /* harmony default export */ __webpack_exports__["default"] = ({
   apiBasePath: `${proxy}${encodeURIComponent(`${window.buildfireConfig.domain}/rest/${apiVersion}/`)}`,
   rootPath: '/',
   mediaPath: 'pub/media/catalog',
-  baseMedia: 'media'
+  baseMedia: 'media',
+  proxyBasePath: proxy
 });
 
 /***/ }),
@@ -1759,7 +1760,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
-const { apiBasePath } = __WEBPACK_IMPORTED_MODULE_1__config__["default"];
+const { apiBasePath, proxyBasePath } = __WEBPACK_IMPORTED_MODULE_1__config__["default"];
 
 const getCart = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
   url: `${apiBasePath}${encodeURIComponent('carts/mine')}`,
@@ -1815,7 +1816,7 @@ const removeFromCart = (itemID, token) => Promise.resolve(__WEBPACK_IMPORTED_MOD
   dataType: 'json',
   headers: { Authorization: `Bearer ${token}` }
 }));
-/* harmony export (immutable) */ __webpack_exports__["l"] = removeFromCart;
+/* harmony export (immutable) */ __webpack_exports__["m"] = removeFromCart;
 
 
 const getBillingAddress = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -1850,7 +1851,7 @@ const setShippingAddress = (address, shippingCarrierCode, shippingMethodCode, to
   }),
   headers: { Authorization: `Bearer ${token}` }
 }));
-/* harmony export (immutable) */ __webpack_exports__["n"] = setShippingAddress;
+/* harmony export (immutable) */ __webpack_exports__["o"] = setShippingAddress;
 
 
 const getShippingAddress = token => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -1874,7 +1875,7 @@ const setPaymentInformation = (cartId, billingAddress, token) => Promise.resolve
   }),
   headers: { Authorization: `Bearer ${token}` }
 }));
-/* harmony export (immutable) */ __webpack_exports__["m"] = setPaymentInformation;
+/* harmony export (immutable) */ __webpack_exports__["n"] = setPaymentInformation;
 
 
 const placePayment = data => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -1887,11 +1888,11 @@ const placePayment = data => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery_
     return formData;
   }, new FormData())
 }));
-/* unused harmony export placePayment */
+/* harmony export (immutable) */ __webpack_exports__["l"] = placePayment;
 
 
 const placeOrder = (data, token) => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
-  url: `${window.buildfireConfig.domain}/authorizenet/directpost_payment/place/`,
+  url: `${proxyBasePath}${encodeURIComponent(`${window.buildfireConfig.domain}/authorizenet/directpost_payment/place/`)}`,
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -1920,7 +1921,7 @@ const updateCustomer = customer => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_j
     Authorization: `Bearer ${window.buildfireConfig.integrationToken}`
   }
 }));
-/* harmony export (immutable) */ __webpack_exports__["o"] = updateCustomer;
+/* harmony export (immutable) */ __webpack_exports__["p"] = updateCustomer;
 
 
 const getCountryList = () => Promise.resolve(__WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
@@ -41353,9 +41354,9 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       const productFromStorage = sessionStorage.getItem(`product${sku}`);
       return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
     })).then(products => {
-      Promise.all(products.map(({ sku }) => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["d" /* getQuantityForProduct */])(sku))).then(quantities => {
-        const productsWithQuantities = products.map(product => _extends({}, product, {
-          isInStock: quantities.find(quantity => parseInt(JSON.parse(quantity).product_id, 10) === parseInt(JSON.parse(product).id, 10)).isInStock
+      Promise.all(products.map(product => Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["d" /* getQuantityForProduct */])(JSON.parse(product).sku))).then(quantities => {
+        const productsWithQuantities = products.map(product => _extends({}, JSON.parse(product), {
+          isInStock: JSON.parse(quantities.find(quantity => parseInt(JSON.parse(quantity).product_id, 10) === parseInt(JSON.parse(product).id, 10))).is_in_stock
         }));
 
         productsWithQuantities.map(product => sessionStorage.setItem(`product${product.sku}`, JSON.stringify(product)));
@@ -41364,7 +41365,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         this.setState({
           isHydrated: true,
           items: cart.items.map(item => _extends({}, item, {
-            productDetails: productsWithQuantities.map(product => JSON.parse(product)).find(({ sku }) => sku === item.sku)
+            productDetails: productsWithQuantities.find(({ sku }) => sku === item.sku)
           })),
           discount: totals.discount_amount,
           taxes: totals.tax_amount,
@@ -41438,7 +41439,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(({ items }) => {
             const newItems = [...items];
             return { items: newItems.filter(item => item.item_id != id) };
-          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["l" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => {
+          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => {
             this.fetchTotals();
             sessionStorage.removeItem('cart');
           }).catch(() => this.setState({ items: oldItems })));
@@ -41451,7 +41452,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
         this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
       }
-      Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["n" /* setShippingAddress */])({
+      Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["o" /* setShippingAddress */])({
         region: shippingAddress.region.region_code,
         country_id: shippingAddress.country_id,
         street: shippingAddress.street,
@@ -41465,7 +41466,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         if (Array.isArray(billingAddress) && billingAddress.length === 0) {
           this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
         }
-        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* setPaymentInformation */])(this.state.cart.id, {
+        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["n" /* setPaymentInformation */])(this.state.cart.id, {
           city: billingAddress.city,
           countryId: billingAddress.country_id,
           customerId: billingAddress.customer_id,
@@ -41485,29 +41486,37 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           billing_address_id: '',
           controller: 'checkout_flow',
           cc_type: 'VI' // TODO won't always be visa... https://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
-        }, customer.SSO.accessToken).then(res => placePayment(_extends({}, res.authorizenet_directpost, {
+        }, customer.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["l" /* placePayment */])(_extends({}, res.authorizenet_directpost, {
           x_card_code: this.state.verificationNumber,
           x_exp_date: this.state.cardMonth + this.state.cardYear, // TODO need to format this MM/YY
           x_card_num: this.state.cardNumber
         })) // TODO all the arguments to placePayment should be either in the state (CC) or in the response from placeOrder
         .then(res => {
-          console.log(res);
-          // TODO
-          // to get the two below custom attributes you have to do a GET to the product details for every product purchased
-          // if purchased product has app_product_reminder_enabled = "1", add reminder to datastore, schedule local notification (if enabled)
-          // when adding to data store, include app_product_reminder_message. Also check if areRemindersEnabled in publicData.
-          if (true) {
-            buildfire.datastore.insert({
-              reminders: [{
-                reminder: 'Time to order new blades. Save 10% if you order in the next two days.',
-                sku: '01007',
-                date: ''
-              }]
-            }, 'reminders', false);
-          }
+          this.setReminders(customer);
         }).catch(err => console.log(err))).catch(err => console.log(err)));
       }));
-    }) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), this.handleClickClosePayment = () => this.setState({ shouldShowPaymentOverlay: false }), _temp;
+    }) : {}), this.setReminders = customer => this.state.items.forEach(({ sku, productDetails: { custom_attributes } }) => {
+      const { value: app_product_reminder_enabled } = custom_attributes.find(attribute => attribute.attribute_code === 'app_product_reminder_enabled') || {};
+      const { value: app_product_reminder_message } = custom_attributes.find(attribute => attribute.attribute_code === 'app_product_reminder_message') || {};
+      const { value: app_product_reminder_frequency } = custom_attributes.find(attribute => attribute.attribute_code === 'app_product_reminder_frequency') || {};
+      !isNaN(parseInt(app_product_reminder_enabled)) && parseInt(app_product_reminder_enabled, 10) === 1 ? buildfire.publicData.get(`reminders${customer.userToken}`, (err, res) => res.data.areRemindersEnabled ? buildfire.notifications.localNotification.schedule({
+        title: 'Every Man Jack',
+        text: app_product_reminder_message,
+        at: this.currentDatePlusWeeks(app_product_reminder_frequency),
+        data: { sku }
+      }, (err, data) => buildfire.publicData.save(_extends({}, res.data, {
+        reminders: [...(res.data.reminders ? res.data.reminders : []), {
+          reminder: app_product_reminder_message,
+          sku,
+          date: this.currentDatePlusWeeks(app_product_reminder_frequency).toString(),
+          notificationId: data.id
+        }]
+      }), `reminders${customer.userToken}`, () => {})) : {}) : {};
+    }), this.currentDatePlusWeeks = weeks => {
+      const now = new Date();
+      now.setDate(now.getDate() + 7 * weeks);
+      return now;
+    }, this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), this.handleClickClosePayment = () => this.setState({ shouldShowPaymentOverlay: false }), _temp;
   }
 
   componentDidMount() {
@@ -41610,8 +41619,7 @@ const CartCard = ({
   onQuantityIncrement,
   eventName,
   onClickRemove,
-  productDetails,
-  isInStock
+  productDetails
 }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
   'div',
   { className: 'Cart-card' },
@@ -41629,9 +41637,9 @@ const CartCard = ({
         __WEBPACK_IMPORTED_MODULE_6_react_router_dom__["b" /* Link */],
         {
           to: `${__WEBPACK_IMPORTED_MODULE_4__constants_routes__["i" /* products */]}/${sku}`,
-          className: isInStock ? 'text-primary' : 'text-danger'
+          className: productDetails.isInStock ? 'text-primary' : 'text-danger'
         },
-        isInStock ? name : 'Out Of Stock'
+        productDetails.isInStock ? name : 'Out Of Stock'
       )
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -47902,7 +47910,7 @@ class InfoContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         shouldShowEditOverlay: false,
         customer: customerToUpdate
       };
-    }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["o" /* updateCustomer */])(this.state.customer)) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
+    }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["p" /* updateCustomer */])(this.state.customer)) : {}), this.handleInputChange = ({ target: { name, value } }) => this.setState({ [name]: value }), _temp;
   }
 
   componentDidMount() {

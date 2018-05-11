@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import config from '../config';
 
-const { apiBasePath } = config;
+const { apiBasePath, proxyBasePath } = config;
 
 export const getCart = token =>
   Promise.resolve(
@@ -159,9 +159,11 @@ export const placePayment = data =>
 export const placeOrder = (data, token) =>
   Promise.resolve(
     $.ajax({
-      url: `${
-        window.buildfireConfig.domain
-      }/authorizenet/directpost_payment/place/`,
+      url: `${proxyBasePath}${encodeURIComponent(
+        `${
+          window.buildfireConfig.domain
+        }/authorizenet/directpost_payment/place/`
+      )}`,
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
