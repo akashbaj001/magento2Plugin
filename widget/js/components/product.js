@@ -6,6 +6,17 @@ import '../../css/product.css';
 import '../../css/slick.css';
 import '../../css/slick-theme.css';
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const Product = ({
   product,
   quantity,
@@ -43,7 +54,7 @@ const Product = ({
       )}
       <div className="Product-details">
         <h1 className="Product-title">{product.name}</h1>
-        <p className="Product-price">${product.price}</p>
+        <p className="Product-price">{formatMoney(product.price)}</p>
         {customAttributeDetails.map(
           ({ name, value }) =>
             product.custom_attributes.find(

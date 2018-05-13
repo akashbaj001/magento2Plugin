@@ -5,6 +5,17 @@ import { Link } from 'react-router-dom';
 import { getProductMediaUrl } from '../utilities/media-utils';
 import '../../css/browse.css';
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const Browse = ({
   products,
   categoryName,
@@ -79,7 +90,7 @@ const BrowseProductCard = ({
       </div>
       <div className="Browse-card-right-bottom">
         <div className="Browse-card-price">
-          <p>${price}</p>
+          <p>{formatMoney(price)}</p>
         </div>
         <div className="Browse-card-button">
           <button

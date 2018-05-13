@@ -27,6 +27,17 @@ const MONTHS = [
   'Dec'
 ];
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const formatDate = date =>
   `${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
@@ -49,10 +60,12 @@ const HistoryCard = ({
       </div>
       <div className="History-card-title-right">
         <p className="History-card-title-price">
-          ${items.reduce(
-            (acc, { base_price, qty_ordered }) =>
-              (acc += base_price * qty_ordered),
-            0
+          {formatMoney(
+            items.reduce(
+              (acc, { base_price, qty_ordered }) =>
+                (acc += base_price * qty_ordered),
+              0
+            )
           )}
         </p>
         <Arrow direction={expandedKeys.includes(arrayIndex) ? 'up' : 'down'} />
