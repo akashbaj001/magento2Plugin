@@ -7,6 +7,17 @@ import { getProductMediaUrl } from '../utilities/media-utils';
 import { Link } from 'react-router-dom';
 import '../../css/cart.css';
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const MONTH_LIST = [
   'Jan - 01',
   'Feb - 02',
@@ -61,7 +72,7 @@ const CartCard = ({
           {productDetails.isInStock ? name : 'Out Of Stock'}
         </Link>
       </p>
-      <p className="Cart-card-price">${price}</p>
+      <p className="Cart-card-price">{formatMoney(price)}</p>
     </div>
     <div className="Cart-card-right">
       <QuantitySelect
@@ -211,13 +222,21 @@ const Cart = ({
                     </option>
                   ))}
                 </select>
-                <input
+                <select
                   id="year"
                   name="cardYear"
                   className="form-control"
                   value={cardYear}
                   onChange={onInputChange}
-                />
+                >
+                  {Array.from(Array(11).keys())
+                    .map(year => year + new Date().getFullYear())
+                    .map(year => (
+                      <option key={year} id={year}>
+                        {year}
+                      </option>
+                    ))}
+                </select>
                 <label htmlFor="card-verification-number">
                   Card Verification Number
                 </label>

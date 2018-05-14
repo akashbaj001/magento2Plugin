@@ -29,6 +29,7 @@ class CartContainer extends Component {
     shippingMethods: [],
     items: [],
     cardMonth: 'Jan - 01',
+    cardYear: new Date().getFullYear(),
     fetchingTotals: false
   };
 

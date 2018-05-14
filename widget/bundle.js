@@ -38199,6 +38199,17 @@ class ProductContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] 
 
 
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const Product = ({
   product,
   quantity,
@@ -38241,8 +38252,7 @@ const Product = ({
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'p',
         { className: 'Product-price' },
-        '$',
-        product.price
+        formatMoney(product.price)
       ),
       customAttributeDetails.map(({ name, value }) => product.custom_attributes.find(attribute => attribute.attribute_code === value) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
@@ -41184,6 +41194,17 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const Browse = ({
   products,
   categoryName,
@@ -41271,8 +41292,7 @@ const BrowseProductCard = ({
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'p',
           null,
-          '$',
-          price
+          formatMoney(price)
         )
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41349,8 +41369,9 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       shippingMethods: [],
       items: [],
       cardMonth: 'Jan - 01',
+      cardYear: new Date().getFullYear(),
       fetchingTotals: false
-    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = (cart, customer) => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])(customer.SSO.accessToken).then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
+    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = (cart, customer) => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])().then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])().then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
       const productFromStorage = sessionStorage.getItem(`product${sku}`);
       return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
     })).then(products => {
@@ -41375,12 +41396,12 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           couponCode: couponCodes && couponCodes.length > 0 ? `Coupon Code: ${couponCodes}` : '',
           cart
         });
-        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
+        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])().then(unparsedShippingAddress => {
           const shippingAddress = JSON.parse(unparsedShippingAddress);
           if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
             this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
           }
-          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id, customer.SSO.accessToken).then(shippingMethods => {
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id).then(shippingMethods => {
             const parsedShippingMethods = JSON.parse(shippingMethods);
             this.setState({
               shippingMethods: parsedShippingMethods.filter(({ available }) => available),
@@ -41396,7 +41417,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       }
     }), this.retrieveTotals = customer => {
       this.setState({ fetchingTotals: true });
-      Promise.resolve(Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => {
+      Promise.resolve(Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])().then(unparsedTotals => {
         const totals = JSON.parse(unparsedTotals);
         this.setState({
           discount: totals.discount_amount,
@@ -41439,7 +41460,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(({ items }) => {
             const newItems = [...items];
             return { items: newItems.filter(item => item.item_id != id) };
-          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => {
+          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* removeFromCart */])(id).then(() => {
             this.fetchTotals();
             sessionStorage.removeItem('cart');
           }).catch(() => this.setState({ items: oldItems })));
@@ -41447,7 +41468,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       });
     }, this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }, this.fetchTotals), this.handleClickShippingMethod = methodCode => this.setState({
       selectedShippingMethod: this.state.shippingMethods.find(({ method_code }) => methodCode === method_code)
-    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickSubmitCoupon = code => this.setState({ shouldShowCouponOverlay: false }, () => buildfire.auth.login({}, (err, customer) => this.setState({ couponCode: 'Applying code...' }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["a" /* addCoupon */])(code, customer.SSO.accessToken).then(() => this.setState({ couponCode: `Coupon Code: ${code}` }, this.fetchTotals)).catch(() => this.setState({ couponCode: 'Coupon code is not valid.' }))))), this.handleClickCheckout = () => this.setState({ shouldShowPaymentOverlay: true }), this.handleClickSubmitPayment = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
+    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickSubmitCoupon = code => this.setState({ shouldShowCouponOverlay: false }, () => buildfire.auth.login({}, (err, customer) => this.setState({ couponCode: 'Applying code...' }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["a" /* addCoupon */])(code).then(() => this.setState({ couponCode: `Coupon Code: ${code}` }, this.fetchTotals)).catch(() => this.setState({ couponCode: 'Coupon code is not valid.' }))))), this.handleClickCheckout = () => this.setState({ shouldShowPaymentOverlay: true }), this.handleClickSubmitPayment = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])().then(unparsedShippingAddress => {
       const shippingAddress = JSON.parse(unparsedShippingAddress);
       if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
         this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
@@ -41461,7 +41482,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         city: shippingAddress.city,
         firstname: shippingAddress.firstname,
         lastname: shippingAddress.lastname
-      }, this.state.selectedShippingMethod.carrier_code, this.state.selectedShippingMethod.method_code, customer.SSO.accessToken).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getBillingAddress */])(customer.SSO.accessToken).then(unparsedBillingAddress => {
+      }, this.state.selectedShippingMethod.carrier_code, this.state.selectedShippingMethod.method_code).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getBillingAddress */])().then(unparsedBillingAddress => {
         const billingAddress = JSON.parse(unparsedBillingAddress);
         if (Array.isArray(billingAddress) && billingAddress.length === 0) {
           this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
@@ -41478,7 +41499,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           regionId: billingAddress.region.region_id,
           street: billingAddress.street,
           telephone: billingAddress.telephone
-        }, customer.SSO.accessToken).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["k" /* placeOrder */])({
+        }).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["k" /* placeOrder */])({
           payment: {
             method: 'authorizenet_directpost'
           },
@@ -41486,7 +41507,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           billing_address_id: '',
           controller: 'checkout_flow',
           cc_type: 'VI' // TODO won't always be visa... https://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
-        }, customer.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["l" /* placePayment */])(_extends({}, res.authorizenet_directpost, {
+        }).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["l" /* placePayment */])(_extends({}, res.authorizenet_directpost, {
           x_card_code: this.state.verificationNumber,
           x_exp_date: this.state.cardMonth + this.state.cardYear, // TODO need to format this MM/YY
           x_card_num: this.state.cardNumber
@@ -41526,7 +41547,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         if (cart) {
           this.fetchRemainingCartData(cart, customer);
         } else {
-          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getCart */])(customer.SSO.accessToken).then(res => {
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getCart */])().then(res => {
             const parsedRes = JSON.parse(res);
             sessionStorage.setItem('cart', res);
             this.fetchRemainingCartData(parsedRes, customer);
@@ -41606,6 +41627,17 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const MONTH_LIST = ['Jan - 01', 'Feb - 02', 'Mar - 03', 'Apr - 04', 'May - 05', 'Jun - 06', 'Jul - 07', 'Aug - 08', 'Sep - 09', 'Oct - 10', 'Nov - 11', 'Dec - 12'];
 
 const CartCard = ({
@@ -41645,8 +41677,7 @@ const CartCard = ({
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'p',
       { className: 'Cart-card-price' },
-      '$',
-      price
+      formatMoney(price)
     )
   ),
   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -41804,13 +41835,21 @@ const Cart = ({
               month
             ))
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', {
-            id: 'year',
-            name: 'cardYear',
-            className: 'form-control',
-            value: cardYear,
-            onChange: onInputChange
-          }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'select',
+            {
+              id: 'year',
+              name: 'cardYear',
+              className: 'form-control',
+              value: cardYear,
+              onChange: onInputChange
+            },
+            Array.from(Array(11).keys()).map(year => year + new Date().getFullYear()).map(year => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'option',
+              { key: year, id: year },
+              year
+            ))
+          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'label',
             { htmlFor: 'card-verification-number' },
@@ -41991,7 +42030,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 5px;\n  margin-right: 5px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-card-name {\n  font-weight: bold;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 35%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-wrapper {\n  overflow: auto;\n  height: 60%;\n}\n\n.Cart-bottom {\n  display: flex;\n  width: 100%;\n  position: fixed;\n  bottom: 10%;\n  height: 25%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 5% !important;\n}\n\n.Cart .Overlay-payment select,\n.Cart .Overlay-payment input {\n  margin-bottom: 5%;\n}\n\n.Cart .Overlay-payment {\n  padding-top: 5%;\n  padding-left: 5%;\n  padding-right: 5%;\n}\n", ""]);
+exports.push([module.i, ".Cart {\n  padding: 4%;\n  overflow: auto;\n  font-size: 0.9em;\n}\n\n.Cart .QuantityInput span {\n  margin-left: 5px;\n  margin-right: 5px;\n  width: 20px;\n  text-align: center;\n  border-radius: 100%;\n  padding: 0;\n  background: gray;\n}\n\n.Cart,\n.Cart-card-image {\n  height: 100%;\n}\n\n.Cart-card-name {\n  font-weight: bold;\n}\n\n.Cart-total {\n  padding-top: 10%;\n  font-size: 1.4em;\n}\n\n.Cart-checkout {\n  margin-left: 15%;\n  margin-top: 4%;\n}\n\n.Cart-card {\n  width: 100%;\n  display: flex;\n  padding-bottom: 10%;\n}\n\n.Cart-card-left {\n  width: 35%;\n  padding-left: 4%;\n}\n\n.Cart-editShipping {\n  font-size: 0.8em;\n}\n\n.Cart-coupon-label {\n  position: fixed;\n  left: 50%;\n  top: 40%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-card-right {\n  width: 55%;\n}\n\n.Cart-card-image {\n  width: 20%;\n}\n\n.Cart-card-left,\n.Cart-card-right,\n.Cart-card-image {\n  display: inline-block;\n  height: 100%;\n}\n\n.Cart-card-remove {\n  width: 10%;\n  cursor: pointer;\n  color: #a93239;\n}\n\n.Cart-wrapper {\n  overflow: auto;\n  height: 70%;\n}\n\n.Cart-bottom {\n  border-top: solid rgba(169, 169, 169, 0.5) 1px;\n  display: flex;\n  width: 100%;\n  position: fixed;\n  bottom: 10%;\n  height: 25%;\n}\n\n.Cart-bottom-left,\n.Cart-bottom-right {\n  width: 50%;\n  display: inline-block;\n}\n\n.Cart .QuantityInput {\n  width: 90%;\n  display: inline-block;\n}\n\n.Cart-empty {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.Cart-coupon {\n  width: 50% !important;\n}\n\n.Cart .align-left {\n  text-align: left;\n}\n\n.Cart .align-right {\n  float: right;\n}\n\n.Cart-coupon-button {\n  margin-bottom: 5% !important;\n}\n\n.Cart .Overlay-payment select,\n.Cart .Overlay-payment input {\n  margin-bottom: 5%;\n}\n\n.Cart .Overlay-payment {\n  padding-top: 5%;\n  padding-left: 5%;\n  padding-right: 5%;\n}\n", ""]);
 
 // exports
 
@@ -42250,6 +42289,17 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+const formatMoney = amount => {
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2
+    // the default value for minimumFractionDigits depends on the currency
+    // and is usually already 2
+  });
+  return formatter.format(amount);
+};
+
 const formatDate = date => `${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
 const HistoryCard = ({
@@ -42286,8 +42336,7 @@ const HistoryCard = ({
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'p',
         { className: 'History-card-title-price' },
-        '$',
-        items.reduce((acc, { base_price, qty_ordered }) => acc += base_price * qty_ordered, 0)
+        formatMoney(items.reduce((acc, { base_price, qty_ordered }) => acc += base_price * qty_ordered, 0))
       ),
       __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__link_arrow__["a" /* default */], { direction: expandedKeys.includes(arrayIndex) ? 'up' : 'down' })
     )

@@ -30,6 +30,7 @@
 
 .Cart-checkout {
   margin-left: 15%;
+  margin-top: 4%;
 }
 
 .Cart-card {
@@ -77,10 +78,11 @@
 
 .Cart-wrapper {
   overflow: auto;
-  height: 60%;
+  height: 70%;
 }
 
 .Cart-bottom {
+  border-top: solid rgba(169, 169, 169, 0.5) 1px;
   display: flex;
   width: 100%;
   position: fixed;
