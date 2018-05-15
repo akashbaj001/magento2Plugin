@@ -41371,9 +41371,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       cardMonth: 'Jan - 01',
       cardYear: new Date().getFullYear(),
       fetchingTotals: false
-    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = (cart, customer) => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])(
-    /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(
-    /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
+    }, this.isHome = () => this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["k" /* root */] || this.props.location.pathname === __WEBPACK_IMPORTED_MODULE_5__constants_routes__["f" /* home */], this.goBack = () => !this.isHome() && this.props.history.goBack(), this.fetchRemainingCartData = (cart, customer) => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["g" /* getCoupons */])(customer.SSO.accessToken).then(unparsedCoupons => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => Promise.all(cart.items.map(({ sku }) => {
       const productFromStorage = sessionStorage.getItem(`product${sku}`);
       return productFromStorage ? Promise.resolve(productFromStorage) : Object(__WEBPACK_IMPORTED_MODULE_2__services_product_service__["b" /* getProduct */])(sku);
     })).then(products => {
@@ -41398,14 +41396,12 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           couponCode: couponCodes && couponCodes.length > 0 ? `Code: ${couponCodes}` : '',
           cart
         });
-        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(
-        /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(unparsedShippingAddress => {
+        Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
           const shippingAddress = JSON.parse(unparsedShippingAddress);
           if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
             this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
           }
-          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id,
-          /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(shippingMethods => {
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["c" /* estimateShippingMethods */])(shippingAddress.id, customer.SSO.accessToken).then(shippingMethods => {
             const parsedShippingMethods = JSON.parse(shippingMethods);
             this.setState({
               shippingMethods: parsedShippingMethods.filter(({ available }) => available),
@@ -41421,8 +41417,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         this.totalsTimer = setTimeout(() => this.retrieveTotals(customer), 3000);
       }
     }), this.retrieveTotals = customer => {
-      Promise.resolve(Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(
-      /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(unparsedTotals => {
+      Promise.resolve(Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["j" /* getTotals */])(customer.SSO.accessToken).then(unparsedTotals => {
         const totals = JSON.parse(unparsedTotals);
         this.setState({
           discount: totals.discount_amount,
@@ -41465,8 +41460,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           this.setState(({ items }) => {
             const newItems = [...items];
             return { items: newItems.filter(item => item.item_id != id) };
-          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* removeFromCart */])(id,
-          /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(() => {
+          }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["m" /* removeFromCart */])(id, customer.SSO.accessToken).then(() => {
             this.fetchTotals();
             sessionStorage.removeItem('cart');
           }).catch(() => this.setState({ items: oldItems })));
@@ -41474,9 +41468,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
       });
     }, this.handleClickChangeShipping = () => this.setState({ shouldShowShippingMenu: true }), this.handleClickCloseShipping = () => this.setState({ shouldShowShippingMenu: false }, this.fetchTotals), this.handleClickShippingMethod = methodCode => this.setState({
       selectedShippingMethod: this.state.shippingMethods.find(({ method_code }) => methodCode === method_code)
-    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickSubmitCoupon = code => this.setState({ shouldShowCouponOverlay: false }, () => buildfire.auth.login({}, (err, customer) => this.setState({ couponCode: 'Applying code...' }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["a" /* addCoupon */])(code,
-    /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(() => this.setState({ couponCode: `Code: ${code}` }, this.fetchTotals)).catch(() => this.setState({ couponCode: 'Coupon code is not valid.' }))))), this.handleClickCheckout = () => this.setState({ shouldShowPaymentOverlay: true }), this.handleClickSubmitPayment = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(
-    /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(unparsedShippingAddress => {
+    }), this.handleClickCloseCouponOverlay = () => this.setState({ shouldShowCouponOverlay: false }), this.handleClickApplyCoupon = () => this.setState({ shouldShowCouponOverlay: true }), this.handleClickSubmitCoupon = code => this.setState({ shouldShowCouponOverlay: false }, () => buildfire.auth.login({}, (err, customer) => this.setState({ couponCode: 'Applying code...' }, () => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["a" /* addCoupon */])(code, customer.SSO.accessToken).then(() => this.setState({ couponCode: `Code: ${code}` }, this.fetchTotals)).catch(() => this.setState({ couponCode: 'Coupon code is not valid.' }))))), this.handleClickCheckout = () => this.setState({ shouldShowPaymentOverlay: true }), this.handleClickSubmitPayment = () => buildfire.auth.login(null, (err, customer) => customer ? Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["i" /* getShippingAddress */])(customer.SSO.accessToken).then(unparsedShippingAddress => {
       const shippingAddress = JSON.parse(unparsedShippingAddress);
       if (Array.isArray(shippingAddress) && shippingAddress.length === 0) {
         this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
@@ -41490,9 +41482,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         city: shippingAddress.city,
         firstname: shippingAddress.firstname,
         lastname: shippingAddress.lastname
-      }, this.state.selectedShippingMethod.carrier_code, this.state.selectedShippingMethod.method_code,
-      /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getBillingAddress */])(
-      /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(unparsedBillingAddress => {
+      }, this.state.selectedShippingMethod.carrier_code, this.state.selectedShippingMethod.method_code, customer.SSO.accessToken).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["d" /* getBillingAddress */])(customer.SSO.accessToken).then(unparsedBillingAddress => {
         const billingAddress = JSON.parse(unparsedBillingAddress);
         if (Array.isArray(billingAddress) && billingAddress.length === 0) {
           this.props.history.push(__WEBPACK_IMPORTED_MODULE_5__constants_routes__["g" /* info */]);
@@ -41509,8 +41499,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           regionId: billingAddress.region.region_id,
           street: billingAddress.street,
           telephone: billingAddress.telephone
-        },
-        /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["k" /* placeOrder */])({
+        }, customer.SSO.accessToken).then(() => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["k" /* placeOrder */])({
           payment: {
             method: 'authorizenet_directpost'
           },
@@ -41518,8 +41507,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
           billing_address_id: '',
           controller: 'checkout_flow',
           cc_type: 'VI' // TODO won't always be visa... https://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
-        },
-        /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["l" /* placePayment */])(_extends({}, res.authorizenet_directpost, {
+        }, customer.SSO.accessToken).then(res => Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["l" /* placePayment */])(_extends({}, res.authorizenet_directpost, {
           x_card_code: this.state.verificationNumber,
           x_exp_date: this.state.cardMonth + this.state.cardYear, // TODO need to format this MM/YY
           x_card_num: this.state.cardNumber
@@ -41559,8 +41547,7 @@ class CartContainer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         if (cart) {
           this.fetchRemainingCartData(cart, customer);
         } else {
-          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getCart */])(
-          /*customer.SSO.accessToken*/'r5d972f147yo78p91ur6975lgfmrfvb1').then(res => {
+          Object(__WEBPACK_IMPORTED_MODULE_1__services_cart_service__["e" /* getCart */])(customer.SSO.accessToken).then(res => {
             const parsedRes = JSON.parse(res);
             sessionStorage.setItem('cart', res);
             this.fetchRemainingCartData(parsedRes, customer);
