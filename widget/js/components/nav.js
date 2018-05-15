@@ -68,7 +68,7 @@ class Nav extends Component {
 
   render() {
     return (
-      <nav className="Nav footerBackgroundColorTheme">
+      <nav className="Nav primaryBackgroundTheme">
         {this.state.shouldShowOverlay && (
           <Overlay
             onClickClose={this.handleClickClose}

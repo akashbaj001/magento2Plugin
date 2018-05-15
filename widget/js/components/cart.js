@@ -267,19 +267,12 @@ const Cart = ({
             onQuantityIncrement={onQuantityIncrement}
             onClickRemove={onClickRemove}
           />
-          <button
-            className="Cart-coupon-button btn btn-info"
-            onClick={onClickApplyCoupon}
-          >
-            Apply Coupon Code
-          </button>
-          <p className="text-warning">{couponCode}</p>
         </div>
         <div className="Cart-bottom">
           <div className="Cart-bottom-left">
             <p className="Cart-amount">
               <span className="align-left">Subtotal</span>{' '}
-              <span className="align-right">${subTotal}</span>
+              <span className="align-right">{formatMoney(subTotal)}</span>
             </p>
             <p className="Cart-amount">
               <span className="align-left">Shipping</span>{' '}
@@ -291,19 +284,19 @@ const Cart = ({
                   [edit]
                 </span>
               )}
-              <span className="align-right">${shipping}</span>
+              <span className="align-right">{formatMoney(shipping)}</span>
             </p>
             <p className="Cart-amount">
               <span className="align-left">Discount</span>{' '}
-              <span className="align-right">${discount}</span>
+              <span className="align-right">{formatMoney(discount)}</span>
             </p>
             <p className="Cart-amount">
               <span className="align-left">Taxes</span>{' '}
-              <span className="align-right">${taxes}</span>
+              <span className="align-right">{formatMoney(taxes)}</span>
             </p>
             <p className="Cart-total">
               <span className="align-left">Total</span>{' '}
-              <span className="align-right">${total}</span>
+              <span className="align-right">{formatMoney(total)}</span>
             </p>
           </div>
           <div className="Cart-bottom-right">
@@ -314,7 +307,13 @@ const Cart = ({
             >
               {fetchingTotals ? 'Updating totals...' : 'Check Out'}
             </button>
-            {/* TODO you can get a message: Shipping address not set. if shipping address isn't set and you try to GET shipping-methods */}
+            <button
+              className="Cart-coupon-button btn btn-info"
+              onClick={onClickApplyCoupon}
+            >
+              Add Coupon Code
+            </button>
+            <p className="text-warning">{couponCode}</p>
           </div>
         </div>
       </div>

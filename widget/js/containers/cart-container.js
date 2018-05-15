@@ -46,7 +46,9 @@ class CartContainer extends Component {
         if (cart) {
           this.fetchRemainingCartData(cart, customer);
         } else {
-          getCart(customer.SSO.accessToken).then(res => {
+          getCart(
+            /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+          ).then(res => {
             const parsedRes = JSON.parse(res);
             sessionStorage.setItem('cart', res);
             this.fetchRemainingCartData(parsedRes, customer);
@@ -59,8 +61,12 @@ class CartContainer extends Component {
   }
 
   fetchRemainingCartData = (cart, customer) =>
-    getCoupons(customer.SSO.accessToken).then(unparsedCoupons =>
-      getTotals(customer.SSO.accessToken).then(unparsedTotals =>
+    getCoupons(
+      /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+    ).then(unparsedCoupons =>
+      getTotals(
+        /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+      ).then(unparsedTotals =>
         Promise.all(
           cart.items.map(({ sku }) => {
             const productFromStorage = sessionStorage.getItem(`product${sku}`);
@@ -108,11 +114,13 @@ class CartContainer extends Component {
               total: totals.grand_total,
               couponCode:
                 couponCodes && couponCodes.length > 0
-                  ? `Coupon Code: ${couponCodes}`
+                  ? `Code: ${couponCodes}`
                   : '',
               cart
             });
-            getShippingAddress(customer.SSO.accessToken)
+            getShippingAddress(
+              /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+            )
               .then(unparsedShippingAddress => {
                 const shippingAddress = JSON.parse(unparsedShippingAddress);
                 if (
@@ -123,7 +131,7 @@ class CartContainer extends Component {
                 }
                 estimateShippingMethods(
                   shippingAddress.id,
-                  customer.SSO.accessToken
+                  /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
                 ).then(shippingMethods => {
                   const parsedShippingMethods = JSON.parse(shippingMethods);
                   this.setState({
@@ -149,15 +157,20 @@ class CartContainer extends Component {
   fetchTotals = () =>
     buildfire.auth.login({}, (err, customer) => {
       if (customer) {
+        this.setState({ fetchingTotals: true });
         clearTimeout(this.totalsTimer);
-        this.totalsTimer = setTimeout(() => retrieveTotals(customer), 3000);
+        this.totalsTimer = setTimeout(
+          () => this.retrieveTotals(customer),
+          3000
+        );
       }
     });
 
   retrieveTotals = customer => {
-    this.setState({ fetchingTotals: true });
     Promise.resolve(
-      getTotals(customer.SSO.accessToken).then(unparsedTotals => {
+      getTotals(
+        /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+      ).then(unparsedTotals => {
         const totals = JSON.parse(unparsedTotals);
         this.setState({
           discount: totals.discount_amount,
@@ -217,7 +230,10 @@ class CartContainer extends Component {
             return { items: newItems.filter(item => item.item_id != id) };
           },
           () =>
-            removeFromCart(id, customer.SSO.accessToken)
+            removeFromCart(
+              id,
+              /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+            )
               .then(() => {
                 this.fetchTotals();
                 sessionStorage.removeItem('cart');
@@ -251,12 +267,12 @@ class CartContainer extends Component {
     this.setState({ shouldShowCouponOverlay: false }, () =>
       buildfire.auth.login({}, (err, customer) =>
         this.setState({ couponCode: 'Applying code...' }, () =>
-          addCoupon(code, customer.SSO.accessToken)
+          addCoupon(
+            code,
+            /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+          )
             .then(() =>
-              this.setState(
-                { couponCode: `Coupon Code: ${code}` },
-                this.fetchTotals
-              )
+              this.setState({ couponCode: `Code: ${code}` }, this.fetchTotals)
             )
             .catch(() =>
               this.setState({ couponCode: 'Coupon code is not valid.' })
@@ -272,88 +288,88 @@ class CartContainer extends Component {
       null,
       (err, customer) =>
         customer
-          ? getShippingAddress(customer.SSO.accessToken).then(
-              unparsedShippingAddress => {
-                const shippingAddress = JSON.parse(unparsedShippingAddress);
-                if (
-                  Array.isArray(shippingAddress) &&
-                  shippingAddress.length === 0
-                ) {
-                  this.props.history.push(info);
-                }
-                setShippingAddress(
-                  {
-                    region: shippingAddress.region.region_code,
-                    country_id: shippingAddress.country_id,
-                    street: shippingAddress.street,
-                    telephone: shippingAddress.telephone,
-                    postcode: shippingAddress.postcode,
-                    city: shippingAddress.city,
-                    firstname: shippingAddress.firstname,
-                    lastname: shippingAddress.lastname
-                  },
-                  this.state.selectedShippingMethod.carrier_code,
-                  this.state.selectedShippingMethod.method_code,
-                  customer.SSO.accessToken
-                ).then(() =>
-                  getBillingAddress(customer.SSO.accessToken).then(
-                    unparsedBillingAddress => {
-                      const billingAddress = JSON.parse(unparsedBillingAddress);
-                      if (
-                        Array.isArray(billingAddress) &&
-                        billingAddress.length === 0
-                      ) {
-                        this.props.history.push(info);
-                      }
-                      setPaymentInformation(
-                        this.state.cart.id,
-                        {
-                          city: billingAddress.city,
-                          countryId: billingAddress.country_id,
-                          customerId: billingAddress.customer_id,
-                          firstname: billingAddress.firstname,
-                          lastname: billingAddress.lastname,
-                          postcode: billingAddress.postcode,
-                          region: billingAddress.region.region,
-                          regionCode: billingAddress.region.region_code,
-                          regionId: billingAddress.region.region_id,
-                          street: billingAddress.street,
-                          telephone: billingAddress.telephone
-                        },
-                        customer.SSO.accessToken
-                      ).then(() =>
-                        placeOrder(
-                          {
-                            payment: {
-                              method: 'authorizenet_directpost'
-                            },
-                            'billing-address-same-as-shipping': 'on', // TODO this should probably be off
-                            billing_address_id: '',
-                            controller: 'checkout_flow',
-                            cc_type: 'VI' // TODO won't always be visa... https://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
-                          },
-                          customer.SSO.accessToken
-                        )
-                          .then(res =>
-                            placePayment({
-                              ...res.authorizenet_directpost,
-                              x_card_code: this.state.verificationNumber,
-                              x_exp_date:
-                                this.state.cardMonth + this.state.cardYear, // TODO need to format this MM/YY
-                              x_card_num: this.state.cardNumber
-                            }) // TODO all the arguments to placePayment should be either in the state (CC) or in the response from placeOrder
-                              .then(res => {
-                                this.setReminders(customer);
-                              })
-                              .catch(err => console.log(err))
-                          )
-                          .catch(err => console.log(err))
-                      );
-                    }
-                  )
-                );
+          ? getShippingAddress(
+              /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+            ).then(unparsedShippingAddress => {
+              const shippingAddress = JSON.parse(unparsedShippingAddress);
+              if (
+                Array.isArray(shippingAddress) &&
+                shippingAddress.length === 0
+              ) {
+                this.props.history.push(info);
               }
-            )
+              setShippingAddress(
+                {
+                  region: shippingAddress.region.region_code,
+                  country_id: shippingAddress.country_id,
+                  street: shippingAddress.street,
+                  telephone: shippingAddress.telephone,
+                  postcode: shippingAddress.postcode,
+                  city: shippingAddress.city,
+                  firstname: shippingAddress.firstname,
+                  lastname: shippingAddress.lastname
+                },
+                this.state.selectedShippingMethod.carrier_code,
+                this.state.selectedShippingMethod.method_code,
+                /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+              ).then(() =>
+                getBillingAddress(
+                  /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+                ).then(unparsedBillingAddress => {
+                  const billingAddress = JSON.parse(unparsedBillingAddress);
+                  if (
+                    Array.isArray(billingAddress) &&
+                    billingAddress.length === 0
+                  ) {
+                    this.props.history.push(info);
+                  }
+                  setPaymentInformation(
+                    this.state.cart.id,
+                    {
+                      city: billingAddress.city,
+                      countryId: billingAddress.country_id,
+                      customerId: billingAddress.customer_id,
+                      firstname: billingAddress.firstname,
+                      lastname: billingAddress.lastname,
+                      postcode: billingAddress.postcode,
+                      region: billingAddress.region.region,
+                      regionCode: billingAddress.region.region_code,
+                      regionId: billingAddress.region.region_id,
+                      street: billingAddress.street,
+                      telephone: billingAddress.telephone
+                    },
+                    /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+                  ).then(() =>
+                    placeOrder(
+                      {
+                        payment: {
+                          method: 'authorizenet_directpost'
+                        },
+                        'billing-address-same-as-shipping': 'on', // TODO this should probably be off
+                        billing_address_id: '',
+                        controller: 'checkout_flow',
+                        cc_type: 'VI' // TODO won't always be visa... https://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
+                      },
+                      /*customer.SSO.accessToken*/ 'r5d972f147yo78p91ur6975lgfmrfvb1'
+                    )
+                      .then(res =>
+                        placePayment({
+                          ...res.authorizenet_directpost,
+                          x_card_code: this.state.verificationNumber,
+                          x_exp_date:
+                            this.state.cardMonth + this.state.cardYear, // TODO need to format this MM/YY
+                          x_card_num: this.state.cardNumber
+                        }) // TODO all the arguments to placePayment should be either in the state (CC) or in the response from placeOrder
+                          .then(res => {
+                            this.setReminders(customer);
+                          })
+                          .catch(err => console.log(err))
+                      )
+                      .catch(err => console.log(err))
+                  );
+                })
+              );
+            })
           : {}
     );
 
