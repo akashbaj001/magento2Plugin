@@ -108,7 +108,7 @@ class CartContainer extends Component {
               total: totals.grand_total,
               couponCode:
                 couponCodes && couponCodes.length > 0
-                  ? `Coupon Code: ${couponCodes}`
+                  ? `Code: ${couponCodes}`
                   : '',
               cart
             });
@@ -149,13 +149,16 @@ class CartContainer extends Component {
   fetchTotals = () =>
     buildfire.auth.login({}, (err, customer) => {
       if (customer) {
+        this.setState({ fetchingTotals: true });
         clearTimeout(this.totalsTimer);
-        this.totalsTimer = setTimeout(() => retrieveTotals(customer), 3000);
+        this.totalsTimer = setTimeout(
+          () => this.retrieveTotals(customer),
+          3000
+        );
       }
     });
 
   retrieveTotals = customer => {
-    this.setState({ fetchingTotals: true });
     Promise.resolve(
       getTotals(customer.SSO.accessToken).then(unparsedTotals => {
         const totals = JSON.parse(unparsedTotals);
@@ -253,10 +256,7 @@ class CartContainer extends Component {
         this.setState({ couponCode: 'Applying code...' }, () =>
           addCoupon(code, customer.SSO.accessToken)
             .then(() =>
-              this.setState(
-                { couponCode: `Coupon Code: ${code}` },
-                this.fetchTotals
-              )
+              this.setState({ couponCode: `Code: ${code}` }, this.fetchTotals)
             )
             .catch(() =>
               this.setState({ couponCode: 'Coupon code is not valid.' })

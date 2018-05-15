@@ -21,18 +21,18 @@ const Overlay = ({
         </div>
         <hr className="Overlay-divider" />
         <div className="Overlay-controls">
+          <button
+            key="closeButton"
+            className="Overlay-close btn btn-secondary"
+            onClick={onClickClose}
+          >
+            Close
+          </button>
           {showSubmit && (
             <button className="btn btn-primary" onClick={onClickSubmit}>
               {submitText || 'Submit'}
             </button>
           )}
-          <button
-            key="closeButton"
-            className="Overlay-close btn btn-primary"
-            onClick={onClickClose}
-          >
-            Close
-          </button>
         </div>
       </Fragment>
     )}
